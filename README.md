@@ -55,6 +55,13 @@ Existing temporal action detection (TAD) methods rely on a large number of train
 
 ## Getting Started
 
+### GPUClient Environment Setup
+```shell script
+python -m venv myenv # Python 3.8
+source myenv/bin/activate
+pip install -r req.txt
+```
+
 ### Requirements
 - Python 3.7
 - PyTorch == 1.9.0  **(Please make sure your pytorch version is atleast 1.8)**
