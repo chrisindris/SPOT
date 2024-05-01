@@ -12,7 +12,7 @@ import os
 from .utils_eval import get_blocked_videos
 from .utils_eval import interpolated_prec_rec
 from .utils_eval import segment_iou
-from config.dataset_class import activity_dict
+from configs.dataset_class import activity_dict
 
 import warnings
 warnings.filterwarnings("ignore", message="numpy.dtype size changed")

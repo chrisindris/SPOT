@@ -9,13 +9,15 @@ import h5py
 from torch.functional import F
 import os
 import math
-from config.dataset_class import activity_dict
+from configs.dataset_class import activity_dict
 import yaml
 import tqdm
 
+import pdb 
 
+# TODO: the 3 classes SPOTDataset, SPOTDatasetPretrain, SPOTDatasetUnlabeled should be made into one class
 
-with open("./config/anet.yaml", 'r', encoding='utf-8') as f:
+with open("./configs/anet.yaml", 'r', encoding='utf-8') as f:
         tmp = f.read()
         config = yaml.load(tmp, Loader=yaml.FullLoader)
 
@@ -44,6 +46,13 @@ class SPOTDataset(data.Dataset):
         video_infos = self.get_video_info(self.video_info_path)
         self.info = video_infos
         video_annos = self.get_video_anno(video_infos, self.video_anno_path)
+        # TODO: the self.subset_mask == {}, leading to the issue of no data.
+        """
+        Issue: it is looking for a CSV file within self.feature_path, rather than expecting a .npy
+        (Pdb) self.getVideoData(0)
+        *** FileNotFoundError: [Errno 2] No such file or directory: '/data/i5O/ActivityNet1.3/train/v_---9CpRcKoU.csv'
+        """
+        #breakpoint()
         self.subset_mask = self.getVideoMask(video_annos,self.temporal_scale)
         self.subset_mask_list = list(self.subset_mask.keys())
         
@@ -116,10 +125,9 @@ class SPOTDataset(data.Dataset):
         self.anno_final = idx_list
         self.anno_final_idx = list(idx_list.keys())
 
-        print('Loading '+self.subset+' Video Information ...')
-
+        print('Loading '+self.subset+' Video Information ...') 
         for idx in tqdm.tqdm(list(video_annos.keys()),ncols=0):
-            if os.path.exists(os.path.join(self.feature_path+"/",idx+".csv")) and idx in list(idx_list.keys()):
+            if os.path.exists(os.path.join(self.feature_path+"/",idx+".npy")) and idx in list(idx_list.keys()):
                 cur_annos = idx_list[idx]["labels"]
                 mask_list=[]
                 for l_id in range(len(cur_annos)):
@@ -131,14 +139,17 @@ class SPOTDataset(data.Dataset):
 
         # print("Total vid", len(self.video_mask.keys()))
         return self.video_mask
-                
+             
+
     def loadFeature(self, idx):
 
-        feat_path = os.path.join(self.feature_path,self.subset)
-        # feat = np.load(os.path.joina(feat_path, idx+".npy"))
-        # print(idx)
-        feat = pd.read_csv(os.path.join(self.feature_path, idx+".csv"))
-        feat = feat.values[:, :]
+        #feat_path = os.path.join(self.feature_path,self.subset)
+        ## feat = np.load(os.path.joina(feat_path, idx+".npy"))
+        ## print(idx)
+        #feat = pd.read_csv(os.path.join(self.feature_path, idx+".csv"))
+        #feat = feat.values[:, :]
+        feat = np.load(os.path.join(self.feature_path, idx+".npy"))
+
         feat_tensor = torch.Tensor(feat)
         video_data = torch.transpose(feat_tensor, 0, 1)
         video_data_ = F.interpolate(video_data.unsqueeze(0), size=self.temporal_scale, mode='linear',align_corners=False)[0,...]
@@ -342,10 +353,9 @@ class SPOTDatasetUnlabeled(data.Dataset):
         self.anno_final = idx_list
         self.anno_final_idx = list(idx_list.keys())
 
-        print('Loading '+self.subset+' Video Information ...')
-
+        print('Loading '+self.subset+' Video Information ...') 
         for idx in tqdm.tqdm(list(video_annos.keys()),ncols=0):
-            if os.path.exists(os.path.join(self.feature_path+"/",idx+".csv")) and idx in list(idx_list.keys()):
+            if os.path.exists(os.path.join(self.feature_path+"/",idx+".npy")) and idx in list(idx_list.keys()):
                 cur_annos = idx_list[idx]["labels"]
                 mask_list=[]
                 for l_id in range(len(cur_annos)):
@@ -359,10 +369,12 @@ class SPOTDatasetUnlabeled(data.Dataset):
                 
     def loadFeature(self, idx):
 
-        feat_path = os.path.join(self.feature_path,self.subset)
-        # feat = np.load(os.path.join(feat_path, idx+".npy"))
-        feat = pd.read_csv(os.path.join(self.feature_path, idx+".csv"))
-        feat = feat.values[:, :]
+        #feat_path = os.path.join(self.feature_path,self.subset)
+        ## feat = np.load(os.path.join(feat_path, idx+".npy"))
+        #feat = pd.read_csv(os.path.join(self.feature_path, idx+".csv"))
+        #feat = feat.values[:, :]
+        feat = np.load(os.path.join(self.feature_path, idx+".npy"))
+
         feat_tensor = torch.Tensor(feat)
         video_data = torch.transpose(feat_tensor, 0, 1)
         video_data_ = F.interpolate(video_data.unsqueeze(0), size=self.temporal_scale, mode='linear',align_corners=False)[0,...]
@@ -469,10 +481,6 @@ class SPOTDatasetUnlabeled(data.Dataset):
             return index, mask_data , mask_data_big, mask_data_small
 
 
-
-
-
-
     def __len__(self):
         return len(self.subset_mask_list)
 
@@ -570,10 +578,9 @@ class SPOTDatasetPretrain(data.Dataset):
         self.anno_final = idx_list
         self.anno_final_idx = list(idx_list.keys())
 
-        print('Loading '+self.subset+' Video Information ...')
-
+        print('Loading '+self.subset+' Video Information ...') 
         for idx in tqdm.tqdm(list(video_annos.keys()),ncols=0):
-            if os.path.exists(os.path.join(self.feature_path+"/",idx+".csv")) and idx in list(idx_list.keys()):
+            if os.path.exists(os.path.join(self.feature_path+"/",idx+".npy")) and idx in list(idx_list.keys()):
                 cur_annos = idx_list[idx]["labels"]
                 mask_list=[]
                 for l_id in range(len(cur_annos)):
@@ -587,10 +594,12 @@ class SPOTDatasetPretrain(data.Dataset):
                 
     def loadFeature(self, idx):
 
-        feat_path = os.path.join(self.feature_path,self.subset)
-        # feat = np.load(os.path.join(feat_path, idx+".npy"))
-        feat = pd.read_csv(os.path.join(self.feature_path, idx+".csv"))
-        feat = feat.values[:, :]
+        #feat_path = os.path.join(self.feature_path,self.subset)
+        ## feat = np.load(os.path.join(feat_path, idx+".npy"))
+        #feat = pd.read_csv(os.path.join(self.feature_path, idx+".csv"))
+        #feat = feat.values[:, :]
+        feat = np.load(os.path.join(self.feature_path, idx+".npy"))
+        
         feat_tensor = torch.Tensor(feat)
         video_data = torch.transpose(feat_tensor, 0, 1)
         video_data_ = F.interpolate(video_data.unsqueeze(0), size=self.temporal_scale, mode='linear',align_corners=False)[0,...]

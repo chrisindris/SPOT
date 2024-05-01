@@ -1,11 +1,12 @@
 dataset:
-  num_classes: 200
+  name: "thumos"
+  num_classes: 20
   training:
     video_info_path: "./data/activitynet_annotations/video_info_new.csv"
     video_info_path_unlabeled: "./data/activitynet_annotations/"
     video_anno_path: "./data/activitynet_annotations/anet_anno_action.json"
     num_frame: 16
-    output_path: '/path/to/output/'
+    output_path: '/root/models/SPOT/output/'
     unlabel_percent: 0.9
     use_semi: True
     
@@ -14,7 +15,7 @@ dataset:
     video_info_path_unlabeled: "./data/activitynet_annotations/"
     video_anno_path: "./data/activitynet_annotations/anet_anno_action.json"
     num_frame: 16
-    output_path: '/path/to/output/'
+    output_path: '/root/models/SPOT/output/'
     unlabel_percent: 0.9
     use_semi: True
 
@@ -28,11 +29,11 @@ training:
   learning_rate: 0.0004
   weight_decay: 0.005
   max_epoch: 25
-  checkpoint_path: "/path/to/output/"
+  checkpoint_path: "/root/models/SPOT/output/"
   random_seed: 1
   step: 10
   gamma: 0.2
-  feature_path: "/path/to/data/"
+  feature_path: "/root/models/SPOT/data/"
   num_gpu: 1
 
 loss:

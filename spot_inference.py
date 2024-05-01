@@ -15,14 +15,14 @@ import torch.nn.functional as F
 from collections import Counter
 import cv2
 import json
-from config.dataset_class import activity_dict
+from configs.dataset_class import activity_dict
 import yaml
 from utils.postprocess_utils import multithread_detection , get_infer_dict, load_json
 from joblib import Parallel, delayed
 from spot_lib.tsne import viusalize
 
 
-with open("./config/anet.yaml", 'r', encoding='utf-8') as f:
+with open("./configs/anet.yaml", 'r', encoding='utf-8') as f:
         tmp = f.read()
         config = yaml.load(tmp, Loader=yaml.FullLoader)
 

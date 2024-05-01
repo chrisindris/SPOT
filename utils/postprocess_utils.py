@@ -4,12 +4,12 @@ import pandas as pd
 import json
 import os
 from joblib import Parallel, delayed
-from config.dataset_class import activity_dict
+from configs.dataset_class import activity_dict
 # from gsm_lib import opts
 import yaml
 
 
-with open("./config/anet.yaml", 'r', encoding='utf-8') as f:
+with open("./configs/anet.yaml", 'r', encoding='utf-8') as f:
         tmp = f.read()
         config = yaml.load(tmp, Loader=yaml.FullLoader)
 

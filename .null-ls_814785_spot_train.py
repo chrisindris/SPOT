@@ -23,8 +23,6 @@ from collections import Counter
 from spot_lib.tsne import viusalize
 # writer = SummaryWriter()
 
-# TODO: things like num_workers batch_size should be specifiable in the configs or with cli args
-
 
 contrast_loss = SniCoLoss()
 # writer = SummaryWriter()
@@ -774,25 +772,25 @@ if __name__ == '__main__':
                            weight_decay=decay)
     
     train_loader = torch.utils.data.DataLoader(spot_dataset.SPOTDataset(subset="train"),
-                                               batch_size=num_batch, shuffle=False,
-                                               num_workers=1, pin_memory=False)
+                                               batch_size=num_batch, shuffle=True,
+                                               num_workers=8, pin_memory=False)
     train_loader_pretrain = torch.utils.data.DataLoader(spot_dataset.SPOTDataset(subset="train"),
-                                               batch_size=num_batch, shuffle=False,
-                                               num_workers=1, pin_memory=False)
+                                               batch_size=num_batch, shuffle=True,
+                                               num_workers=8, pin_memory=False)
 
 
     if use_semi and unlabel_percent > 0.:
         train_loader_unlabel = torch.utils.data.DataLoader(spot_dataset.SPOTDatasetUnlabeled(subset="unlabel"),
                                             #    batch_size=num_batch, shuffle=True,
-                                               batch_size=min(max(round(num_batch*unlabel_percent/(4*(1.-unlabel_percent)))*4, 4), 24), shuffle=False,drop_last=True,
-                                               num_workers=1, pin_memory=False)
+                                               batch_size=min(max(round(num_batch*unlabel_percent/(4*(1.-unlabel_percent)))*4, 4), 24), shuffle=True,drop_last=True,
+                                               num_workers=8, pin_memory=False)
     
     
         
 
     test_loader = torch.utils.data.DataLoader(spot_dataset.SPOTDataset(subset="validation"),
                                               batch_size=num_batch, shuffle=False,
-                                              num_workers=1, pin_memory=False)
+                                              num_workers=8, pin_memory=False)
 
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_train, gamma=gamma_train)
     best_loss = 1e10

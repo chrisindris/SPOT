@@ -5,7 +5,7 @@ import torch.nn.functional as F
 import torch.nn as nn
 import yaml
 
-with open("./config/anet.yaml", 'r', encoding='utf-8') as f:
+with open("./configs/anet.yaml", 'r', encoding='utf-8') as f:
         tmp = f.read()
         config = yaml.load(tmp, Loader=yaml.FullLoader)
 
@@ -228,7 +228,9 @@ def bottom_branch_loss(gt_action, pred_action):
     loss_pos = coef_1 * torch.log(pred_action + epsilon) * pmask
     loss_neg = coef_0 * torch.log(1.0 - pred_action + epsilon) * nmask
     w_bce_loss = -1 * torch.sum(loss_pos + loss_neg) / num_entries
-    BCE_loss = F.binary_cross_entropy(pred_action,gt_action,reduce=False)
+    # FIX: pred_action sometimes contains nan; figure out which cases cause this, and why, and fix with https://stackoverflow.com/questions/66456541
+    print("pred_action: shape, max, min", pred_action.shape, pred_action.max(), pred_action.min())
+    BCE_loss = F.binary_cross_entropy(gt_action,gt_action,reduce=False)
     pt = torch.exp(-BCE_loss)
     # F_loss = 0.4*loss2 + 0.6*dice(pred_action,gt_action)
     F_loss = lambda_2*w_bce_loss + (1 - lambda_2)*dice(pred_action,gt_action)

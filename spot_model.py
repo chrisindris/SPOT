@@ -9,7 +9,7 @@ import yaml
 import random
 # from performer_pytorch import Performer
 
-with open("./config/anet.yaml", 'r', encoding='utf-8') as f:
+with open("./configs/anet.yaml", 'r', encoding='utf-8') as f:
         tmp = f.read()
         config = yaml.load(tmp, Loader=yaml.FullLoader)
 
