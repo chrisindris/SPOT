@@ -1,9 +1,10 @@
 
 import os
+from typing import final
 import torch
 import torch.nn.parallel
 import torch.optim as optim
-from torch import autograd
+from torch import autograd, dropout_
 import numpy as np
 # from gsm_lib import opts
 from spot_model import SPOT, TemporalShift, TemporalShift_random
@@ -23,6 +24,10 @@ from collections import Counter
 from spot_lib.tsne import viusalize
 # writer = SummaryWriter()
 
+import pdb
+
+# TODO: num_workers and pretrain() warmup_epoch should be specifiable in the config file.
+# TODO: for the model, it would be nice to be able to control the size of it and output different feature vector sizes
 
 contrast_loss = SniCoLoss()
 # writer = SummaryWriter()
@@ -132,6 +137,10 @@ def softmax_mse_loss(input_logits, target_logits):
 
 def TemporalCrop(input_feat,top_br):
 
+    print("input_feat", torch.sum(torch.isnan(input_feat)))
+
+    breakpoint()
+
     n_btach, feat_dim, tmp_dim = input_feat.size()
     n_batch ,_,_ = top_br.size()
     batch_start = np.zeros([n_batch])
@@ -139,7 +148,7 @@ def TemporalCrop(input_feat,top_br):
     temp_mask_cls = np.zeros([100])
     
     bottom_gt = np.zeros([n_batch,100,100])
-    fg_action_idx = torch.argmax(top_br[:,:200,:],dim=1)
+    fg_action_idx = torch.argmax(top_br[:,:200,:],dim=1) # selects the class val
     fg_action_idx_mode, _ = torch.mode(fg_action_idx,dim=1)
     new_mask = np.zeros([n_batch,100])
     empty_gt = np.zeros_like(top_br.detach().cpu().numpy())
@@ -188,6 +197,8 @@ def TemporalCrop(input_feat,top_br):
     mask_top = torch.Tensor(empty_gt)
     label_gt = torch.Tensor(labeled_gt)
 
+    print("TemporalCrop", [torch.sum(torch.isnan(x)) for x in [temp_data, top_gt_crop, bottom_gt_crop , mask_top, label_gt]])
+
     return temp_data, top_gt_crop, bottom_gt_crop , mask_top, label_gt
 
 
@@ -208,6 +219,8 @@ def softmax_kl_loss(input_logits, target_logits):
 
 
 def Motion_MSEloss(output,clip_label,motion_mask=torch.ones(100).cuda()):
+    #print(torch.sum(torch.isnan(output)))
+    #print(torch.sum(torch.isnan(clip_label)))
     z = torch.pow((output-clip_label),2)
     loss = torch.mean(motion_mask*z)
     return loss
@@ -252,25 +265,49 @@ def pretrain(data_loader, model, optimizer):
         model.module.classifier[0].bias.requires_grad = False
     model.train()
     
-    warmup_epoch = 30
+    warmup_epoch = 25
     order_clip_criterion = nn.CrossEntropyLoss()
-    for ep in range(warmup_epoch):
-        for n_iter, (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt, input_data_big, input_data_small, _) in enumerate(data_loader):
 
+    for ep in range(warmup_epoch): 
+
+        for n_iter, (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt, input_data_big, input_data_small, _) in enumerate(data_loader):
+            # input_data.size = batch_size, dimension of inputted numpy features, base temporal scale
+
+            #breakpoint()
+
+            # Perform dropout on the three scales of input feature
             input_data_tdrop = F.dropout(input_data.cuda(),0.1)
             input_data_tdrop_big = F.dropout(input_data_big.cuda(),0.1)
             input_data_tdrop_small = F.dropout(input_data_small.cuda(),0.1)
-            input_data_aug = torch.stack([input_data.cuda(),input_data_tdrop],dim=0).view(-1,400,100)
+            #print(torch.stack([input_data.cuda(),input_data_tdrop],dim=0).shape)
+            input_data_aug = torch.stack([input_data.cuda(),input_data_tdrop],dim=0).view(-1,400,100) # with an without dropout is being stacked together; I suspect this is for the different branches that need one or the other. [25+25, 2048, 100] -> [256, 400, 100] (same temporal scale, feature vector size goes from 2048 to 400)
+            input_data_aug[input_data_aug != input_data_aug] = 0 # seems to be behaving okay
+
+
+            #print(input_data_aug.shape)
             input_data_aug_b = torch.stack([input_data_big.cuda(),input_data_tdrop_big],dim=0).view(-1,400,200)
             input_data_aug_s = torch.stack([input_data_small.cuda(),input_data_tdrop_small],dim=0).view(-1,400,50)
-            top_br_pred, bottom_br_pred, feat = model(input_data_aug)
-            mod_input_data, top_br_gt, bottom_br_gt, action_gt, label_gt  = TemporalCrop(input_data_aug,top_br_pred)
+
+            #breakpoint() # let's look at the effect of the TemporalCrop on the size, since I feel like loss and loss_crop being the same is kind of odd.
+            top_br_pred, bottom_br_pred, feat = model(input_data_aug) # the model gives a top branch result, bottom branch result, and outputs its features. [torch.Size([256, 201, 100]), torch.Size([256, 100, 100]), torch.Size([256, 400, 100])]
+            print(torch.sum(torch.isnan(feat)))
+
+            # FIX: mod_input_data appears to have about 50 to 250 nans in n_iter=1,2 (and this varies depending on the running), but after that no nans.
+            print("input_data", torch.sum(torch.isnan(input_data)))
+            mod_input_data, top_br_gt, bottom_br_gt, action_gt, label_gt  = TemporalCrop(input_data_aug,top_br_pred) # [torch.Size([256, 400, 100]), torch.Size([256, 100]), torch.Size([256, 100, 100]), torch.Size([256, 201, 100]), torch.Size([256, 200])]
+            mod_input_data[mod_input_data != mod_input_data] = 0
+            print("mod_input_data", torch.sum(torch.isnan(mod_input_data))) 
 
             if not_freeze_class:
                 easy_dict_label = easy_snippets_mining(top_br_pred, feat) 
                 hard_dict_label = hard_snippets_mining(bottom_br_pred, feat)
+ 
+            #print("mod_input_data.shape", mod_input_data.shape)
+            #breakpoint()
+            top_br_pred_crop, bottom_br_pred_crop, feat_crop = model(mod_input_data) # [torch.Size([256, 201, 100]), torch.Size([256, 100, 100]), torch.Size([256, 400, 100])]
+            #print([x.shape for x in model(mod_input_data)])
 
-            top_br_pred_crop, bottom_br_pred_crop, feat_crop = model(mod_input_data)
+            # top_br_pred/top_br_pred_crop and bottom_br_pred/bottom_br_pred_crop remain the same shape (torch.Size([256, 201, 100]), torch.Size([256, 100, 100]) respectively), but do not contain the same elements.
 
             if not_freeze_class:
                 easy_dict_label_crop = easy_snippets_mining(top_br_pred_crop, feat_crop) 
@@ -294,23 +331,31 @@ def pretrain(data_loader, model, optimizer):
                 con_loss = contrast_loss(c_pair_label)
                 con_loss_crop = contrast_loss(c_pair_label_crop)
 
-            feat_loss = Motion_MSEloss(feat,input_data_aug)
-            feat_loss_crop = Motion_MSEloss(feat,input_data_aug)
+            #breakpoint() # NOTE: Motion_MSEloss seems to lead to nans later on. 
+            #print(torch.sum(torch.isnan(input_data)), torch.sum(torch.isnan(input_data_aug)))
+            feat_loss = Motion_MSEloss(feat,input_data_aug) # by the second iteration, input_data_aug seems to be going in here containing some nans. I should check above to see how input_data_aug got its nans. We could map them to something sensible, or fix what causes them.
+            #print(torch.sum(torch.isnan(input_data)), torch.sum(torch.isnan(input_data_aug)), feat_loss)
+            feat_loss_crop = Motion_MSEloss(feat,input_data_aug) # would a "input_data_aug_crop" go here? feat_loss_crop is not being changed in the following code, so it will be the same as feat_loss in this setup.
             
 
             # clip order 
 
-            input_data_all = torch.cat([input_data_aug,mod_input_data], 0).view(-1,400,100)
+            input_data_all = torch.cat([input_data_aug,mod_input_data], 0).view(-1,400,100) # input_data_aug (input_data and the dropout input_data_tdrop) and the TemporalCrop'd mod_input data come together and will be sent through the model. [512, 400, 100]
+            input_data_all[input_data_all != input_data_all] = 0
+            print("input_data_all", torch.sum(torch.isnan(input_data_all)))
             batch_size, C, T = input_data_all.size()
-            idx = torch.randperm(batch_size)
-            input_data_all_new = input_data_all[idx]
+            
+            #idx = torch.randperm(batch_size)
+            #input_data_all_new = input_data_all[idx] # shuffle the order of the batch; perhaps useful through the epochs?
+            input_data_all_new = input_data_all
+
             forw_input = torch.cat(
-                [input_data_all_new[:batch_size // 2, :, T // 2:], input_data_all_new[:batch_size // 2, :, :T // 2]], 2)
-            back_input = input_data_all_new[batch_size // 2:, :, :]
+                [input_data_all_new[:batch_size // 2, :, T // 2:], input_data_all_new[:batch_size // 2, :, :T // 2]], 2) # the second half of the back_size stack is used
+            back_input = input_data_all_new[batch_size // 2:, :, :] # the first half of the batch_size stack is used for this.
             input_all = torch.cat([forw_input, back_input], 0)
-            label_order = [0] * (batch_size // 2) + [1] * (batch_size - batch_size // 2)
+            label_order = [0] * (batch_size // 2) + [1] * (batch_size - batch_size // 2) # [0, ..., 0, 1, ..., 1]
             label_order = torch.tensor(label_order).long().cuda()
-            out = model(input_all ,clip_order=True)
+            out = model(input_all, clip_order=True) # [512, 2]
             loss_clip_order = order_clip_criterion(out, label_order)
 
             if not_freeze_class:
@@ -324,7 +369,17 @@ def pretrain(data_loader, model, optimizer):
                 tot_loss = feat_loss
                 tot_loss_crop = feat_loss_crop 
 
-            final_loss = loss + tot_loss + tot_loss_crop + loss_clip_order
+            # Assumes that at least one of the four is not nan
+            final_loss = torch.stack([loss, tot_loss, tot_loss_crop, loss_clip_order])
+            final_loss = final_loss[~torch.isnan(final_loss)]
+            final_loss = torch.mean(final_loss)
+
+            #final_loss = loss + tot_loss + tot_loss_crop + loss_clip_order
+
+            #final_loss = loss #+ loss_clip_order #loss + tot_loss + tot_loss_crop + loss_clip_order # FIX: tot_loss and tot_loss_crop are nan. They are equal to feat_loss and feat_loss_crop.
+            print("losses =", float(loss), float(tot_loss), float(tot_loss_crop), float(loss_clip_order), float(final_loss))
+            #breakpoint()        
+    
             # update step
             optimizer.zero_grad()
             final_loss.backward()
@@ -772,25 +827,25 @@ if __name__ == '__main__':
                            weight_decay=decay)
     
     train_loader = torch.utils.data.DataLoader(spot_dataset.SPOTDataset(subset="train"),
-                                               batch_size=num_batch, shuffle=True,
-                                               num_workers=8, pin_memory=False)
+                                               batch_size=num_batch, shuffle=False,
+                                               num_workers=1, pin_memory=False, drop_last=True)
     train_loader_pretrain = torch.utils.data.DataLoader(spot_dataset.SPOTDataset(subset="train"),
-                                               batch_size=num_batch, shuffle=True,
-                                               num_workers=8, pin_memory=False)
+                                               batch_size=num_batch, shuffle=False,
+                                               num_workers=1, pin_memory=False, drop_last=True)
 
 
     if use_semi and unlabel_percent > 0.:
         train_loader_unlabel = torch.utils.data.DataLoader(spot_dataset.SPOTDatasetUnlabeled(subset="unlabel"),
                                             #    batch_size=num_batch, shuffle=True,
-                                               batch_size=min(max(round(num_batch*unlabel_percent/(4*(1.-unlabel_percent)))*4, 4), 24), shuffle=True,drop_last=True,
-                                               num_workers=8, pin_memory=False)
+                                               batch_size=min(max(round(num_batch*unlabel_percent/(4*(1.-unlabel_percent)))*4, 4), 24), shuffle=False,drop_last=True,
+                                               num_workers=1, pin_memory=False)
     
     
         
 
     test_loader = torch.utils.data.DataLoader(spot_dataset.SPOTDataset(subset="validation"),
                                               batch_size=num_batch, shuffle=False,
-                                              num_workers=8, pin_memory=False)
+                                              num_workers=1, pin_memory=False, drop_last=True)
 
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_train, gamma=gamma_train)
     best_loss = 1e10

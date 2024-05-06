@@ -13,7 +13,7 @@ from configs.dataset_class import activity_dict
 import yaml
 import tqdm
 
-import pdb 
+import pdb
 
 # TODO: the 3 classes SPOTDataset, SPOTDatasetPretrain, SPOTDatasetUnlabeled should be made into one class
 
@@ -52,10 +52,8 @@ class SPOTDataset(data.Dataset):
         (Pdb) self.getVideoData(0)
         *** FileNotFoundError: [Errno 2] No such file or directory: '/data/i5O/ActivityNet1.3/train/v_---9CpRcKoU.csv'
         """
-        #breakpoint()
         self.subset_mask = self.getVideoMask(video_annos,self.temporal_scale)
-        self.subset_mask_list = list(self.subset_mask.keys())
-        
+        self.subset_mask_list = list(self.subset_mask.keys())        
 
 
         
@@ -242,7 +240,7 @@ class SPOTDataset(data.Dataset):
         b_mask = torch.Tensor(temporary_mask)
 
 
-        
+        # TODO: figure out how all of these things are made        
         return mask_data, classifier_branch,global_mask_branch,mask_top,cas_mask, mask_data_big, mask_data_small, b_mask
 
 
