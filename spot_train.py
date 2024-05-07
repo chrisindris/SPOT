@@ -137,9 +137,14 @@ def softmax_mse_loss(input_logits, target_logits):
 
 def TemporalCrop(input_feat,top_br):
 
-    print("input_feat", torch.sum(torch.isnan(input_feat)))
+    def zero_to_nearzero(x):
+        """
+        Avoid divide-by-zero errors by replacing all 0. with 0.01
+        """
+        return torch.where(x != 0, x, x + 0.01)
 
-    breakpoint()
+
+    #breakpoint()
 
     n_btach, feat_dim, tmp_dim = input_feat.size()
     n_batch ,_,_ = top_br.size()
@@ -161,7 +166,7 @@ def TemporalCrop(input_feat,top_br):
         batch_feat = input_feat[i,:,:]
         # batch_feat 
         batch_feat -= batch_feat.min(1, keepdim=True)[0]
-        batch_feat /= batch_feat.max(1, keepdim=True)[0] - batch_feat.min(1, keepdim=True)[0] # NOTE: This can lead to a divide-by-zero nan if batch_feat.max(..) is zero (max value is 0). (see this at n_iter=1, i=9, (batch_feat.max(1, keepdim=True)[0])[148:157, 0])
+        batch_feat /= zero_to_nearzero(batch_feat.max(1, keepdim=True)[0]) - batch_feat.min(1, keepdim=True)[0] # NOTE: This can lead to a divide-by-zero nan if batch_feat.max(..) is zero (max value is 0). (see this at n_iter=1, i=9, (batch_feat.max(1, keepdim=True)[0])[148:157, 0])
        
         for p in range(0,2):
             rand_start = np.random.randint(0,94,size=1)[0]
@@ -196,8 +201,6 @@ def TemporalCrop(input_feat,top_br):
     bottom_gt_crop = torch.Tensor(bottom_gt)
     mask_top = torch.Tensor(empty_gt)
     label_gt = torch.Tensor(labeled_gt)
-
-    print("TemporalCrop", [torch.sum(torch.isnan(x)) for x in [temp_data, top_gt_crop, bottom_gt_crop , mask_top, label_gt]])
 
     return temp_data, top_gt_crop, bottom_gt_crop , mask_top, label_gt
 
@@ -290,13 +293,10 @@ def pretrain(data_loader, model, optimizer):
 
             #breakpoint() # let's look at the effect of the TemporalCrop on the size, since I feel like loss and loss_crop being the same is kind of odd.
             top_br_pred, bottom_br_pred, feat = model(input_data_aug) # the model gives a top branch result, bottom branch result, and outputs its features. [torch.Size([256, 201, 100]), torch.Size([256, 100, 100]), torch.Size([256, 400, 100])]
-            print(torch.sum(torch.isnan(feat)))
+            #print(torch.sum(torch.isnan(feat)))
 
-            # FIX: mod_input_data appears to have about 50 to 250 nans in n_iter=1,2 (and this varies depending on the running), but after that no nans.
-            print("input_data", torch.sum(torch.isnan(input_data)))
             mod_input_data, top_br_gt, bottom_br_gt, action_gt, label_gt  = TemporalCrop(input_data_aug,top_br_pred) # [torch.Size([256, 400, 100]), torch.Size([256, 100]), torch.Size([256, 100, 100]), torch.Size([256, 201, 100]), torch.Size([256, 200])]
             mod_input_data[mod_input_data != mod_input_data] = 0
-            print("mod_input_data", torch.sum(torch.isnan(mod_input_data))) 
 
             if not_freeze_class:
                 easy_dict_label = easy_snippets_mining(top_br_pred, feat) 
@@ -342,7 +342,6 @@ def pretrain(data_loader, model, optimizer):
 
             input_data_all = torch.cat([input_data_aug,mod_input_data], 0).view(-1,400,100) # input_data_aug (input_data and the dropout input_data_tdrop) and the TemporalCrop'd mod_input data come together and will be sent through the model. [512, 400, 100]
             input_data_all[input_data_all != input_data_all] = 0
-            print("input_data_all", torch.sum(torch.isnan(input_data_all)))
             batch_size, C, T = input_data_all.size()
             
             #idx = torch.randperm(batch_size)
@@ -370,14 +369,15 @@ def pretrain(data_loader, model, optimizer):
                 tot_loss_crop = feat_loss_crop 
 
             # Assumes that at least one of the four is not nan
-            final_loss = torch.stack([loss, tot_loss, tot_loss_crop, loss_clip_order])
-            final_loss = final_loss[~torch.isnan(final_loss)]
-            final_loss = torch.mean(final_loss)
+            #final_loss = torch.stack([loss, tot_loss, tot_loss_crop, loss_clip_order])
+            #final_loss = final_loss[~torch.isnan(final_loss)]
+            #final_loss = torch.mean(final_loss)
 
-            #final_loss = loss + tot_loss + tot_loss_crop + loss_clip_order
+            final_loss = loss + tot_loss + tot_loss_crop + loss_clip_order
 
             #final_loss = loss #+ loss_clip_order #loss + tot_loss + tot_loss_crop + loss_clip_order # FIX: tot_loss and tot_loss_crop are nan. They are equal to feat_loss and feat_loss_crop.
-            print("losses =", float(loss), float(tot_loss), float(tot_loss_crop), float(loss_clip_order), float(final_loss))
+            print("n_iter {0:2d} : loss ({1:03f}) + tot_loss ({2:03f}) + tot_loss_crop ({3:03f}) + loss_clip_order ({4:03f}) = final_loss = {5:03f}".format(n_iter, loss, tot_loss, tot_loss_crop, loss_clip_order, final_loss))
+            #print("loss =", float(loss), "tot_loss", float(tot_loss), "tot_loss_crop", float(tot_loss_crop), "loss_clip_order", float(loss_clip_order), "final_loss", float(final_loss))
             #breakpoint()        
     
             # update step
