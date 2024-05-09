@@ -268,7 +268,7 @@ def pretrain(data_loader, model, optimizer):
         model.module.classifier[0].bias.requires_grad = False
     model.train()
     
-    warmup_epoch = 25
+    warmup_epoch = 30
     order_clip_criterion = nn.CrossEntropyLoss()
 
     for ep in range(warmup_epoch): 
@@ -820,6 +820,7 @@ if __name__ == '__main__':
         param.requires_grad = True
     # print(model)
     total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(config)
     print("\nTotal Number of Learnable Paramters (in M) : ",total_params/1000000)
     print('No of Gpus using to Train :  {} '.format(num_gpu))
     print(" Saving all Checkpoints in path : "+ output_path )
