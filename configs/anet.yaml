@@ -24,8 +24,11 @@ model:
   feat_dim: 400
   temporal_scale: 100
 
+pretraining:
+  warmup_epoch: 0 # Default 30
+
 training:
-  batch_size: 25 # 100, 50, 25 make it run, but 100 crashes (the issue with the nan values)
+  batch_size: 25 # 100, 50, 25 make it run, but 100 crashes (CUDA out of memory on 80GB A100) 
   learning_rate: 0.0004
   weight_decay: 0.005
   max_epoch: 25

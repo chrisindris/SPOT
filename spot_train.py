@@ -268,7 +268,7 @@ def pretrain(data_loader, model, optimizer):
         model.module.classifier[0].bias.requires_grad = False
     model.train()
     
-    warmup_epoch = 30
+    warmup_epoch = config['pretraining']['warmup_epoch']
     order_clip_criterion = nn.CrossEntropyLoss()
 
     for ep in range(warmup_epoch): 
