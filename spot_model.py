@@ -9,6 +9,8 @@ import yaml
 import random
 # from performer_pytorch import Performer
 
+import pdb
+
 with open("./configs/anet.yaml", 'r', encoding='utf-8') as f:
         tmp = f.read()
         config = yaml.load(tmp, Loader=yaml.FullLoader)
@@ -169,6 +171,8 @@ class SPOT(nn.Module):
         #                             dim_head = 100
         #                         )   
 
+        self.feature_downsize = nn.Linear(2048, 400) # Equivalent & slightly faster than nn.Conv2d(2048, 400, 1). NOTE: this needs to be in the state_dict, so make sure to run the pretrain before running the train.
+
         self.embedding = SnippetEmbedding(self.n_heads, self.len_feat, self.len_feat, self.len_feat, 0.3)
         self.clip_trans = SnippetEmbedding(self.n_heads, self.len_feat, self.len_feat, self.len_feat , 0.1,True)
 
@@ -219,7 +223,14 @@ class SPOT(nn.Module):
 
     def forward(self, snip, recons=False, clip_order=False):
 
+        #breakpoint() 
+
         snip_ = snip.permute(0,2,1)
+
+        # HACK: later this switch will be specifiable based on a class attribute.
+        batch_size, feature_dim, temporal_scale = snip.size()
+        if feature_dim > 400:
+            snip_ = self.feature_downsize(snip_)
 
         out = self.embedding(snip_,snip_,snip_)
         out = out.permute(0,2,1)

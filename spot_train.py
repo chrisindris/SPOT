@@ -224,6 +224,7 @@ def softmax_kl_loss(input_logits, target_logits):
 def Motion_MSEloss(output,clip_label,motion_mask=torch.ones(100).cuda()):
     #print(torch.sum(torch.isnan(output)))
     #print(torch.sum(torch.isnan(clip_label)))
+    #breakpoint()
     z = torch.pow((output-clip_label),2)
     loss = torch.mean(motion_mask*z)
     return loss
@@ -475,6 +476,13 @@ def test(data_loader, model, epoch, best_loss):
 
 
 def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
+    # TODO: input data is modified to [256, 100, 400] in pretrain, but it seems to want the [25, 100, 2048] here (modifying it as in pretrain has later parts of train_semi complain about not having the right batch size).
+    # Plan of action: add an additional fc layer to reduce the size of the features, [25, 100, 2048] -> [25, 100, 400]
+    # - Add an extra layer nn.linear(2048, 400) to SPOT.__init__()
+    # - Give SPOT separate pretrain and train modes, something like SPOT.__init__(self, pretrain=True) followed by super(SPOT, self).__init__() (since parent nn.Module won't use pretrain=True)
+    # - model = SPOT() and model = SPOT(pretrain=True) are no longer the same object, so both would need to be initialized as model currently is in __main__() below; however, the pretraining weights are saved and used to initialize for the training, it should be okay to put those weights in the new version of model.
+    # - Speaking of weights, ensure that the new nn.linear(2048, 400) is properly handled when we load the weights; I don't know how much torch will complain if it tries to load weights when it sees a new weight being loaded. Either torch automatically saves the weights even if the function is not used (the new linear layer might be hidden by an if during pretraining, but perhaps it will be detected anyway and just recieve its default weights). Or, if it isn't automatically recognized, perhaps there is a standard torch way to deal with it if/when load_state_dict notices a layer it doesn't have an entry for. If this happens quietly, I can simply use the random initalization of the new layer; I shouldn't even need to check since if torch tried to shove a weight matrix from load_state_dict into my new layer, torch would probably complain about the shape (there are no other instances of nn.Linear(2048, 400) so it's not like another layer's weights would fit'). Last case scenario could be to manually manipulate the checkpoint?   
+
     global global_step
     model.module.classifier[0].weight.requires_grad = True
     model.module.classifier[0].bias.requires_grad = True
@@ -506,6 +514,10 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
     selected_label = selected_label.cuda()
     co = 0
     for n_iter, (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt, input_data_big, input_data_small, f_mask) in enumerate(data_loader):
+
+    
+        input_data = model.module.feature_downsize(input_data.cuda().permute(0,2,1)).permute(0,2,1) # HACK
+
         # forward pass
         co+=1
         ## labeled data 
@@ -530,8 +542,10 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
 
        ## weak augmentations -- temporal shift and flip on labeled
 
+        #breakpoint()
+
         top_br_pred, bottom_br_pred, feat = model(input_data.cuda())
-        
+                
         loss_shift = spot_loss(top_br_gt,top_br_pred,bottom_br_gt,bottom_br_pred, action_gt,label_gt) # supervised loss - weak augmentation 1 (shift)
 
         loss_feat_label = Motion_MSEloss(feat,input_data.cuda())
@@ -557,6 +571,7 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
             input_data_unlabel = input_data_unlabel[0].cuda()
 
         ## strong augmentations --
+        input_data_unlabel = model.module.feature_downsize(input_data_unlabel.cuda().permute(0,2,1)).permute(0,2,1)
         top_br_pred_unlabel, bottom_br_pred_unlabel, feat_unlabel = model(input_data_unlabel)
 
         dynmaic_thres = False
@@ -609,7 +624,8 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
             top_br_target_unlabel = targets_u
             bottom_br_target_unlabel = torch.ge(bottom_br_pred_unlabel, 0.7).float()
             loss_unlabel = spot_loss(top_br_target_unlabel,top_br_pred_unlabel, bottom_br_target_unlabel, bottom_br_pred_unlabel, mask_unlabel_gt, mask_unlabel_gt)
-        
+       
+        breakpoint()
         loss_feat_unlabel = Motion_MSEloss(feat_unlabel,input_data_unlabel)
         easy_dict_unlabel = easy_snippets_mining(top_br_pred_unlabel, feat_unlabel) 
         hard_dict_unlabel = hard_snippets_mining(bottom_br_pred_unlabel, feat_unlabel)
@@ -729,7 +745,7 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
             n_iter, total_loss/(n_iter+1), 
             top_loss/(n_iter+1), 
             bottom_loss/(n_iter+1),
-            consistency_loss_all/(n_iter+1),
+            consistency_loss_all/(n_iter+1), # NOTE: consistency_loss_all and consistency_loss_ema_all are 0.
             consistency_loss_ema_all/(n_iter+1)
                 )
             )

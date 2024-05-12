@@ -137,9 +137,14 @@ def softmax_mse_loss(input_logits, target_logits):
 
 def TemporalCrop(input_feat,top_br):
 
-    print("input_feat", torch.sum(torch.isnan(input_feat)))
+    def zero_to_nearzero(x):
+        """
+        Avoid divide-by-zero errors by replacing all 0. with 0.01
+        """
+        return torch.where(x != 0, x, x + 0.01)
 
-    breakpoint()
+
+    #breakpoint()
 
     n_btach, feat_dim, tmp_dim = input_feat.size()
     n_batch ,_,_ = top_br.size()
@@ -148,8 +153,8 @@ def TemporalCrop(input_feat,top_br):
     temp_mask_cls = np.zeros([100])
     
     bottom_gt = np.zeros([n_batch,100,100])
-    fg_action_idx = torch.argmax(top_br[:,:200,:],dim=1) # selects the class val
-    fg_action_idx_mode, _ = torch.mode(fg_action_idx,dim=1)
+    fg_action_idx = torch.argmax(top_br[:,:200,:],dim=1) # I assume this selects the most likely class from the top branch for each location in time
+    fg_action_idx_mode, _ = torch.mode(fg_action_idx,dim=1) # The most common class value through across the time locations 
     new_mask = np.zeros([n_batch,100])
     empty_gt = np.zeros_like(top_br.detach().cpu().numpy())
     labeled_gt = np.zeros([n_batch,200])
@@ -161,7 +166,7 @@ def TemporalCrop(input_feat,top_br):
         batch_feat = input_feat[i,:,:]
         # batch_feat 
         batch_feat -= batch_feat.min(1, keepdim=True)[0]
-        batch_feat /= batch_feat.max(1, keepdim=True)[0] - batch_feat.min(1, keepdim=True)[0]
+        batch_feat /= zero_to_nearzero(batch_feat.max(1, keepdim=True)[0]) - batch_feat.min(1, keepdim=True)[0] # NOTE: This can lead to a divide-by-zero nan if batch_feat.max(..) is zero (max value is 0). (see this at n_iter=1, i=9, (batch_feat.max(1, keepdim=True)[0])[148:157, 0])
        
         for p in range(0,2):
             rand_start = np.random.randint(0,94,size=1)[0]
@@ -197,8 +202,6 @@ def TemporalCrop(input_feat,top_br):
     mask_top = torch.Tensor(empty_gt)
     label_gt = torch.Tensor(labeled_gt)
 
-    print("TemporalCrop", [torch.sum(torch.isnan(x)) for x in [temp_data, top_gt_crop, bottom_gt_crop , mask_top, label_gt]])
-
     return temp_data, top_gt_crop, bottom_gt_crop , mask_top, label_gt
 
 
@@ -221,6 +224,7 @@ def softmax_kl_loss(input_logits, target_logits):
 def Motion_MSEloss(output,clip_label,motion_mask=torch.ones(100).cuda()):
     #print(torch.sum(torch.isnan(output)))
     #print(torch.sum(torch.isnan(clip_label)))
+    #breakpoint()
     z = torch.pow((output-clip_label),2)
     loss = torch.mean(motion_mask*z)
     return loss
@@ -265,7 +269,7 @@ def pretrain(data_loader, model, optimizer):
         model.module.classifier[0].bias.requires_grad = False
     model.train()
     
-    warmup_epoch = 25
+    warmup_epoch = config['pretraining']['warmup_epoch']
     order_clip_criterion = nn.CrossEntropyLoss()
 
     for ep in range(warmup_epoch): 
@@ -290,13 +294,10 @@ def pretrain(data_loader, model, optimizer):
 
             #breakpoint() # let's look at the effect of the TemporalCrop on the size, since I feel like loss and loss_crop being the same is kind of odd.
             top_br_pred, bottom_br_pred, feat = model(input_data_aug) # the model gives a top branch result, bottom branch result, and outputs its features. [torch.Size([256, 201, 100]), torch.Size([256, 100, 100]), torch.Size([256, 400, 100])]
-            print(torch.sum(torch.isnan(feat)))
+            #print(torch.sum(torch.isnan(feat)))
 
-            # FIX: mod_input_data appears to have about 50 to 250 nans in n_iter=1,2 (and this varies depending on the running), but after that no nans.
-            print("input_data", torch.sum(torch.isnan(input_data)))
             mod_input_data, top_br_gt, bottom_br_gt, action_gt, label_gt  = TemporalCrop(input_data_aug,top_br_pred) # [torch.Size([256, 400, 100]), torch.Size([256, 100]), torch.Size([256, 100, 100]), torch.Size([256, 201, 100]), torch.Size([256, 200])]
             mod_input_data[mod_input_data != mod_input_data] = 0
-            print("mod_input_data", torch.sum(torch.isnan(mod_input_data))) 
 
             if not_freeze_class:
                 easy_dict_label = easy_snippets_mining(top_br_pred, feat) 
@@ -342,7 +343,6 @@ def pretrain(data_loader, model, optimizer):
 
             input_data_all = torch.cat([input_data_aug,mod_input_data], 0).view(-1,400,100) # input_data_aug (input_data and the dropout input_data_tdrop) and the TemporalCrop'd mod_input data come together and will be sent through the model. [512, 400, 100]
             input_data_all[input_data_all != input_data_all] = 0
-            print("input_data_all", torch.sum(torch.isnan(input_data_all)))
             batch_size, C, T = input_data_all.size()
             
             #idx = torch.randperm(batch_size)
@@ -370,14 +370,15 @@ def pretrain(data_loader, model, optimizer):
                 tot_loss_crop = feat_loss_crop 
 
             # Assumes that at least one of the four is not nan
-            final_loss = torch.stack([loss, tot_loss, tot_loss_crop, loss_clip_order])
-            final_loss = final_loss[~torch.isnan(final_loss)]
-            final_loss = torch.mean(final_loss)
+            #final_loss = torch.stack([loss, tot_loss, tot_loss_crop, loss_clip_order])
+            #final_loss = final_loss[~torch.isnan(final_loss)]
+            #final_loss = torch.mean(final_loss)
 
-            #final_loss = loss + tot_loss + tot_loss_crop + loss_clip_order
+            final_loss = loss + tot_loss + tot_loss_crop + loss_clip_order
 
             #final_loss = loss #+ loss_clip_order #loss + tot_loss + tot_loss_crop + loss_clip_order # FIX: tot_loss and tot_loss_crop are nan. They are equal to feat_loss and feat_loss_crop.
-            print("losses =", float(loss), float(tot_loss), float(tot_loss_crop), float(loss_clip_order), float(final_loss))
+            print("n_iter {0:2d} : loss ({1:03f}) + tot_loss ({2:03f}) + tot_loss_crop ({3:03f}) + loss_clip_order ({4:03f}) = final_loss = {5:03f}".format(n_iter, loss, tot_loss, tot_loss_crop, loss_clip_order, final_loss))
+            #print("loss =", float(loss), "tot_loss", float(tot_loss), "tot_loss_crop", float(tot_loss_crop), "loss_clip_order", float(loss_clip_order), "final_loss", float(final_loss))
             #breakpoint()        
     
             # update step
@@ -475,6 +476,13 @@ def test(data_loader, model, epoch, best_loss):
 
 
 def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
+    # TODO: input data is modified to [256, 100, 400] in pretrain, but it seems to want the [25, 100, 2048] here (modifying it as in pretrain has later parts of train_semi complain about not having the right batch size).
+    # Plan of action: add an additional fc layer to reduce the size of the features, [25, 100, 2048] -> [25, 100, 400]
+    # - Add an extra layer nn.linear(2048, 400) to SPOT.__init__()
+    # - Give SPOT separate pretrain and train modes, something like SPOT.__init__(self, pretrain=True) followed by super(SPOT, self).__init__() (since parent nn.Module won't use pretrain=True)
+    # - model = SPOT() and model = SPOT(pretrain=True) are no longer the same object, so both would need to be initialized as model currently is in __main__() below; however, the pretraining weights are saved and used to initialize for the training, it should be okay to put those weights in the new version of model.
+    # - Speaking of weights, ensure that the new nn.linear(2048, 400) is properly handled when we load the weights; I don't know how much torch will complain if it tries to load weights when it sees a new weight being loaded. Either torch automatically saves the weights even if the function is not used (the new linear layer might be hidden by an if during pretraining, but perhaps it will be detected anyway and just recieve its default weights). Or, if it isn't automatically recognized, perhaps there is a standard torch way to deal with it if/when load_state_dict notices a layer it doesn't have an entry for. If this happens quietly, I can simply use the random initalization of the new layer; I shouldn't even need to check since if torch tried to shove a weight matrix from load_state_dict into my new layer, torch would probably complain about the shape (there are no other instances of nn.Linear(2048, 400) so it's not like another layer's weights would fit'). Last case scenario could be to manually manipulate the checkpoint?   
+
     global global_step
     model.module.classifier[0].weight.requires_grad = True
     model.module.classifier[0].bias.requires_grad = True
@@ -506,6 +514,7 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
     selected_label = selected_label.cuda()
     co = 0
     for n_iter, (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt, input_data_big, input_data_small, f_mask) in enumerate(data_loader):
+        print("n_iter", n_iter)
         # forward pass
         co+=1
         ## labeled data 
@@ -530,7 +539,10 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
 
        ## weak augmentations -- temporal shift and flip on labeled
 
+        #breakpoint()
+
         top_br_pred, bottom_br_pred, feat = model(input_data.cuda())
+        input_data = model.module.feature_downsize(input_data.cuda().permute(0,2,1)).permute(0,2,1) # HACK
         
         loss_shift = spot_loss(top_br_gt,top_br_pred,bottom_br_gt,bottom_br_pred, action_gt,label_gt) # supervised loss - weak augmentation 1 (shift)
 
@@ -609,7 +621,8 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
             top_br_target_unlabel = targets_u
             bottom_br_target_unlabel = torch.ge(bottom_br_pred_unlabel, 0.7).float()
             loss_unlabel = spot_loss(top_br_target_unlabel,top_br_pred_unlabel, bottom_br_target_unlabel, bottom_br_pred_unlabel, mask_unlabel_gt, mask_unlabel_gt)
-        
+       
+        breakpoint()
         loss_feat_unlabel = Motion_MSEloss(feat_unlabel,input_data_unlabel)
         easy_dict_unlabel = easy_snippets_mining(top_br_pred_unlabel, feat_unlabel) 
         hard_dict_unlabel = hard_snippets_mining(bottom_br_pred_unlabel, feat_unlabel)
@@ -820,6 +833,7 @@ if __name__ == '__main__':
         param.requires_grad = True
     # print(model)
     total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(config)
     print("\nTotal Number of Learnable Paramters (in M) : ",total_params/1000000)
     print('No of Gpus using to Train :  {} '.format(num_gpu))
     print(" Saving all Checkpoints in path : "+ output_path )

@@ -91,7 +91,7 @@ class SnippetEmbedding(nn.Module):
         self.dropout = nn.Dropout(dropout)
         
     def forward(self, q, k, v):
-        breakpoint()
+        #breakpoint()
         d_k, d_v, n_head = self.d_k, self.d_v, self.n_head
         sz_b, len_q, _ = q.size() # For q, k and v: [256, 100, 400] in pretrain, [25, 100, 2048] in train # TODO: find some way to make the model accomodate the different size of features in pretrain vs train. [256,100,400] is kind of like a batch_size=256 stack of size 400 features. Perhaps an extra linear layer could reduce the 2048 to 400? nn.Linear(2048, 400) could do this.
         sz_b, len_k, _ = k.size() 
