@@ -28,10 +28,10 @@ pretraining:
   warmup_epoch: 0 # Default 30
 
 training:
-  batch_size: 25 # 100, 50, 25 make it run, but 100 crashes (CUDA out of memory on 80GB A100) 
+  batch_size: 25 # 100, 50, 25 make it run, but 100 crashes (CUDA out of memory on 80GB A100), 1 seems to work for training but not pretraining 
   learning_rate: 0.0004
   weight_decay: 0.005
-  max_epoch: 25
+  max_epoch: 1
   checkpoint_path: "/root/models/SPOT/output/"
   random_seed: 1
   step: 10
@@ -44,6 +44,7 @@ loss:
   lambda_2: 0.4
 
 testing:
+  feature_path: "/data/i5O/ActivityNet1.3/test/"
   cls_thresh: 0.01
   mask_thresh: [0,0.2,0.4,0.6,0.8]
   class_thresh: [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]

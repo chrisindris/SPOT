@@ -34,7 +34,11 @@ class SPOTDataset(data.Dataset):
         self.temporal_gap = 1. / self.temporal_scale
         self.subset = subset
         self.mode = mode
-        self.feature_path = config['training']['feature_path']
+
+        # HACK: this is just for trying out this fix, really there should not be self.mode and self.split (until we want kfold). 
+        self.split = {'train': 'training', 'validation': 'testing'}[self.subset]
+
+        self.feature_path = config[self.split]['feature_path'] # FIX: something like config[self.mode] instead, and the same for other instances of config['training'] in this file.
         self.unlabel_percent = config['dataset']['training']['unlabel_percent']
         self.video_info_path_unlabeled = config['dataset']['training']['video_info_path_unlabeled']
         self.video_info_path = os.path.join(self.video_info_path_unlabeled,"video_info_new_"+str(self.unlabel_percent)+".csv")
@@ -88,6 +92,8 @@ class SPOTDataset(data.Dataset):
         return video_infos
 
     def getAnnotation(self, subset, anno):
+        """ Filters based on the temporal scale.
+        """
 
         temporal_dict={}
         for idx in anno.keys():
@@ -348,7 +354,7 @@ class SPOTDatasetUnlabeled(data.Dataset):
 
         self.video_mask = {}
         idx_list = self.getAnnotation(self.subset,video_annos)
-        self.anno_final = idx_list
+        self.anno_final = idx_list 
         self.anno_final_idx = list(idx_list.keys())
 
         print('Loading '+self.subset+' Video Information ...') 
