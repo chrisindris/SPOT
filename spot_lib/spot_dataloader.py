@@ -114,8 +114,8 @@ class SPOTDataset(data.Dataset):
                         action_end = tmp_info['segment'][1]*clip_factor
                         snip_end = max(min(1, tmp_info['segment'][1] / corr_sec), 0)
                         gt_label = tmp_info["label"]
-                    if action_end - action_start > 1:
-                        label_list.append([snip_start,snip_end,gt_label])    
+                        if action_end - action_start > 1:
+                            label_list.append([snip_start,snip_end,gt_label])    
             if len(label_list)>0:
                 temporal_dict[idx]= {"labels":label_list,
                                     "video_duration": num_sec}
@@ -342,8 +342,8 @@ class SPOTDatasetUnlabeled(data.Dataset):
                     action_end = tmp_info['segment'][1]*clip_factor
                     snip_end = max(min(1, tmp_info['segment'][1] / corr_sec), 0)
                     gt_label = tmp_info["label"]
-                if action_end - action_start > 1:
-                    label_list.append([snip_start,snip_end,gt_label])    
+                    if action_end - action_start > 1:
+                        label_list.append([snip_start,snip_end,gt_label])    
             if len(label_list)>0:
                 temporal_dict[idx]= {"labels":label_list,
                                     "video_duration": num_sec}
@@ -567,8 +567,8 @@ class SPOTDatasetPretrain(data.Dataset):
                     action_end = tmp_info['segment'][1]*clip_factor
                     snip_end = max(min(1, tmp_info['segment'][1] / corr_sec), 0)
                     gt_label = tmp_info["label"]
-                if action_end - action_start > 1:
-                    label_list.append([snip_start,snip_end,gt_label])    
+                    if action_end - action_start > 1:
+                        label_list.append([snip_start,snip_end,gt_label])    
             if len(label_list)>0:
                 temporal_dict[idx]= {"labels":label_list,
                                     "video_duration": num_sec}

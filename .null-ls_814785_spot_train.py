@@ -514,7 +514,10 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
     selected_label = selected_label.cuda()
     co = 0
     for n_iter, (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt, input_data_big, input_data_small, f_mask) in enumerate(data_loader):
-        print("n_iter", n_iter)
+
+    
+        input_data = model.module.feature_downsize(input_data.cuda().permute(0,2,1)).permute(0,2,1) # HACK
+
         # forward pass
         co+=1
         ## labeled data 
@@ -542,8 +545,7 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
         #breakpoint()
 
         top_br_pred, bottom_br_pred, feat = model(input_data.cuda())
-        input_data = model.module.feature_downsize(input_data.cuda().permute(0,2,1)).permute(0,2,1) # HACK
-        
+                
         loss_shift = spot_loss(top_br_gt,top_br_pred,bottom_br_gt,bottom_br_pred, action_gt,label_gt) # supervised loss - weak augmentation 1 (shift)
 
         loss_feat_label = Motion_MSEloss(feat,input_data.cuda())
@@ -569,6 +571,7 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
             input_data_unlabel = input_data_unlabel[0].cuda()
 
         ## strong augmentations --
+        input_data_unlabel = model.module.feature_downsize(input_data_unlabel.cuda().permute(0,2,1)).permute(0,2,1)
         top_br_pred_unlabel, bottom_br_pred_unlabel, feat_unlabel = model(input_data_unlabel)
 
         dynmaic_thres = False
@@ -622,7 +625,7 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
             bottom_br_target_unlabel = torch.ge(bottom_br_pred_unlabel, 0.7).float()
             loss_unlabel = spot_loss(top_br_target_unlabel,top_br_pred_unlabel, bottom_br_target_unlabel, bottom_br_pred_unlabel, mask_unlabel_gt, mask_unlabel_gt)
        
-        breakpoint()
+        #breakpoint()
         loss_feat_unlabel = Motion_MSEloss(feat_unlabel,input_data_unlabel)
         easy_dict_unlabel = easy_snippets_mining(top_br_pred_unlabel, feat_unlabel) 
         hard_dict_unlabel = hard_snippets_mining(bottom_br_pred_unlabel, feat_unlabel)
@@ -742,7 +745,7 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
             n_iter, total_loss/(n_iter+1), 
             top_loss/(n_iter+1), 
             bottom_loss/(n_iter+1),
-            consistency_loss_all/(n_iter+1),
+            consistency_loss_all/(n_iter+1), # NOTE: consistency_loss_all and consistency_loss_ema_all are 0.
             consistency_loss_ema_all/(n_iter+1)
                 )
             )
@@ -773,14 +776,16 @@ def train_semi_full(data_loader, model, optimizer, epoch):
     epoch, loss[0],loss[1],loss[2]))
 
 # semi-supervised validation
-def test_semi(data_loader, model, epoch, best_loss):
+def test_semi(data_loader, model, epoch, best_loss): # NOTE: if we set this dataloader's mode to anything other than train, this function doesn't work (even though ostensibly it is for testing purposes). 
+    #breakpoint()
     model.eval()
+    #breakpoint()
     with torch.no_grad():
-      for n_iter, (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt,input_data_big, input_data_small, _) in enumerate(data_loader):
+        for n_iter, (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt,input_data_big, input_data_small, _) in enumerate(data_loader): # FIX: len(data_loader) = 0? This is wrong since len([x['subset'] for x in infos.values() if x['subset'] == 'validation']) == 4728, where infos = test_loader.dataset.get_video_info(test_loader.dataset.video_info_path). get_video_anno seems to work as intended. get_video_mask seems to be the issue. 
 
-        # forward pass
-        top_br_pred, bottom_br_pred, _ = model(input_data.cuda())
-        loss = spot_loss(top_br_gt,top_br_pred,bottom_br_gt,bottom_br_pred, action_gt,label_gt)
+            # forward pass
+            top_br_pred, bottom_br_pred, _ = model(input_data.cuda())
+            loss = spot_loss(top_br_gt,top_br_pred,bottom_br_gt,bottom_br_pred, action_gt,label_gt)
     print("[Epoch {0:03d}] Total-Loss {1:.2f} = T-Loss {2:.2f} + B-Loss {3:.2f}  (val)".format(
     epoch, loss[0],loss[1],loss[2]))
 
@@ -856,10 +861,10 @@ if __name__ == '__main__':
     
     
         
-
+    #breakpoint()
     test_loader = torch.utils.data.DataLoader(spot_dataset.SPOTDataset(subset="validation"),
                                               batch_size=num_batch, shuffle=False,
-                                              num_workers=1, pin_memory=False, drop_last=True)
+                                              num_workers=2, pin_memory=False, drop_last=True)
 
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_train, gamma=gamma_train)
     best_loss = 1e10
@@ -875,6 +880,7 @@ if __name__ == '__main__':
     optimizer.load_state_dict(checkpoint_pre['optimizer'])
     # # top_th,bot_th = getThres(train_loader,model,optimizer)
     print("Pretraining Finished")
+    breakpoint()
     for epoch in range(epoch):
       with autograd.detect_anomaly():
 

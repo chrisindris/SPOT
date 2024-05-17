@@ -880,7 +880,7 @@ if __name__ == '__main__':
     optimizer.load_state_dict(checkpoint_pre['optimizer'])
     # # top_th,bot_th = getThres(train_loader,model,optimizer)
     print("Pretraining Finished")
-    breakpoint()
+    #breakpoint()
     for epoch in range(epoch):
       with autograd.detect_anomaly():
 
