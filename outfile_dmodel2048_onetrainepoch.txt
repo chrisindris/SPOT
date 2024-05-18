@@ -1,0 +1,45 @@
+(venv_SPOT) root@6c970ba04703:~/models/SPOT# python spot_train.py
+{'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_fra
+me': 16, 'output_path': '/root/models/SPOT/output/', 'unlabel_percent': 0.9, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activityne
+t_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': '/root/models/SPOT/output/', 'unlabel_percent': 0.9, 'use_semi': True}}, 'model': {'embedding_head': 4, 'feat_dim': 2048, 'temporal_scale': 100}, 'pretraining': {'warmup_epoch': 0}, 'training': {'batch_size': 25
+, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'max_epoch': 1, 'checkpoint_path': '/root/models/SPOT/output/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'
+feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
+
+Total Number of Learnable Paramters (in M) :  144.63554
+No of Gpus using to Train :  1 
+ Saving all Checkpoints in path : /root/models/SPOT/output/
+Loading train Video Information ...
+100% 9649/9649 [00:01<00:00, 6128.29it/s]
+Loading train Video Information ...
+100% 9649/9649 [00:00<00:00, 26895.23it/s]
+Loading unlabel Video Information ...
+100% 8683/8683 [00:01<00:00, 4575.74it/s]
+Loading validation Video Information ...
+100% 4728/4728 [00:01<00:00, 4273.43it/s]
+Pretraining Start
+Pretraining Finished
+spot_train.py:882: UserWarning: Anomaly Detection has been enabled. This mode will increase the runtime and should only be enabled for debugging.
+  with autograd.detect_anomaly():
+use Semi !!!
+/root/models/venv_SPOT/lib/python3.8/site-packages/torch/nn/_reduction.py:42: UserWarning: size_average and reduce args will be deprecated, please use reduction='none' instead.
+  warnings.warn(warning.format(ret))
+[Iteration 000] Total-Loss 3.37 = T-Loss 2.67 + B-Loss 0.70 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 3.03 = T-Loss 2.35 + B-Loss 0.68 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.97 = T-Loss 2.29 + B-Loss 0.68 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.96 = T-Loss 2.29 + B-Loss 0.68 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Epoch 000] Total-Loss 2.96 = T-Loss 2.29 + B-Loss 0.68 (train)
+[Epoch 000] Total-Loss 2.98 = T-Loss 2.33 + B-Loss 0.66  (val)
+Total Time taken for Running 0 epoch is :72.355984375 secs
+(venv_SPOT) root@6c970ba04703:~/models/SPOT# python spot_inference.py 
+Loading validation Video Information ...
+100% 4728/4728 [00:01<00:00, 4216.10it/s]
+Inference start
+Inference finished
+Start Post-Processing
+End Post-Processing
+(venv_SPOT) root@6c970ba04703:~/models/SPOT# python eval.py 
+Detection: average-mAP 25.067 mAP@0.50 42.702 mAP@0.55 38.501 mAP@0.60 34.832 mAP@0.65 31.437 mAP@0.70 27.405 mAP@0.75 24.037 mAP@0.80 19.917 mAP@0.85 15.220 mAP@0.90 10.723 mAP@0.95 5.894
+(venv_SPOT) root@6c970ba04703:~/models/SPOT#
+
+
+# Strangely, a single epoch of training has improved the result versus the full 25 epochs!

@@ -23,7 +23,7 @@ class TemporalShift(nn.Module):
         self.n_segment = n_segment
         self.fold_div = n_div
         self.inplace = inplace
-        self.channels_range = list(range(400))  # feature_channels
+        self.channels_range = list(range(2048))  # feature_channels
         if inplace:
             print('=> Using in-place shift...')
         # print('=> Using fold div: {}'.format(self.fold_div))
@@ -79,7 +79,7 @@ class TemporalShift_random(nn.Module):
         self.n_segment = n_segment
         self.fold_div = n_div
         self.inplace = inplace
-        self.channels_range = list(range(400))  # feature_channels
+        self.channels_range = list(range(2048))  # feature_channels
         if inplace:
             print('=> Using in-place shift...')
         # print('=> Using fold div: {}'.format(self.fold_div))
@@ -171,8 +171,6 @@ class SPOT(nn.Module):
         #                             dim_head = 100
         #                         )   
 
-        self.feature_downsize = nn.Linear(2048, 400) # Equivalent & slightly faster than nn.Conv2d(2048, 400, 1). NOTE: this needs to be in the state_dict, so make sure to run the pretrain before running the train.
-
         self.embedding = SnippetEmbedding(self.n_heads, self.len_feat, self.len_feat, self.len_feat, 0.3)
         self.clip_trans = SnippetEmbedding(self.n_heads, self.len_feat, self.len_feat, self.len_feat , 0.1,True)
 
@@ -185,7 +183,7 @@ class SPOT(nn.Module):
         self.clip_order_linear = nn.Linear(100, 2)
 
         self.clip_order = nn.Sequential(
-            nn.Conv1d(400, 1, kernel_size=3, padding=1),  # 256
+            nn.Conv1d(2048, 1, kernel_size=3, padding=1),  # 256
             nn.ReLU(inplace=True)
         )
 
@@ -194,7 +192,7 @@ class SPOT(nn.Module):
         self.maxpool_3 = nn.MaxPool1d(3,stride=4)
 
         self.global_mask = nn.Sequential(
-            nn.Conv1d(in_channels=400, out_channels=256, kernel_size=3,padding=1),
+            nn.Conv1d(in_channels=2048, out_channels=256, kernel_size=3,padding=1),
             nn.ReLU(inplace=True),
             nn.Conv1d(in_channels=256, out_channels=self.temporal_scale, kernel_size=1,stride=1, padding=0, bias=False),
             nn.Sigmoid()
@@ -229,8 +227,6 @@ class SPOT(nn.Module):
 
         # HACK: later this switch will be specifiable based on a class attribute.
         batch_size, feature_dim, temporal_scale = snip.size()
-        if feature_dim > 400:
-            snip_ = self.feature_downsize(snip_)
 
         out = self.embedding(snip_,snip_,snip_)
         out = out.permute(0,2,1)

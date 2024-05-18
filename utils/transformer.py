@@ -74,7 +74,7 @@ class SnippetEmbedding(nn.Module):
         self.n_head = n_head # 1
         self.d_k = d_k # 256
         self.d_v = d_v # 256 , d_model : 256
-        self.pos_enc = LearnedPositionalEncoding(400,400,100)
+        self.pos_enc = LearnedPositionalEncoding(2048,2048,100)
         self.clip_order = clip_order
         self.w_qs = nn.Linear(d_model, n_head * d_k, bias=False).cuda()
         self.w_qs.requires_grad = True
@@ -93,7 +93,7 @@ class SnippetEmbedding(nn.Module):
     def forward(self, q, k, v):
         #breakpoint()
         d_k, d_v, n_head = self.d_k, self.d_v, self.n_head
-        sz_b, len_q, _ = q.size() # For q, k and v: [256, 100, 400] in pretrain, [25, 100, 2048] in train # TODO: find some way to make the model accomodate the different size of features in pretrain vs train. [256,100,400] is kind of like a batch_size=256 stack of size 400 features. Perhaps an extra linear layer could reduce the 2048 to 400? nn.Linear(2048, 400) could do this.
+        sz_b, len_q, _ = q.size() # For q, k and v: [256, 100, 2048] in pretrain, [25, 100, 2048] in train # TODO: find some way to make the model accomodate the different size of features in pretrain vs train. [256,100,2048] is kind of like a batch_size=256 stack of size 2048 features. Perhaps an extra linear layer could reduce the 2048 to 2048? nn.Linear(2048, 2048) could do this.
         sz_b, len_k, _ = k.size() 
         sz_b, len_v, _ = v.size()
         # print(q.size())

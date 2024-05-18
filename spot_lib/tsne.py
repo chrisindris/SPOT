@@ -81,8 +81,8 @@ def viusalize(features1,gt,count,modes):
     # print(np.shape(np.array(cmap(new_gt[0]))))
     
     # ax.scatter(tsne[0, 0],tsne[0, 1], np.array(cmap(new_gt[0])).reshape(1,4) ,alpha=0.5)
-    ax.scatter(tx[0:400],ty[0:400], c = colors[0] ,alpha=0.5, marker = 'o', label = "foreground")
-    ax.scatter(tx[401:],ty[401:], c = colors[1] ,alpha=0.5, marker = 'o', label = "background")
+    ax.scatter(tx[0:2048],ty[0:2048], c = colors[0] ,alpha=0.5, marker = 'o', label = "foreground")
+    ax.scatter(tx[2049:],ty[2049:], c = colors[1] ,alpha=0.5, marker = 'o', label = "background")
     
     # indices = 
     # current_tx = np.take(tx,indices)

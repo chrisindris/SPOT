@@ -21,11 +21,11 @@ dataset:
 
 model:
   embedding_head: 4
-  feat_dim: 400
+  feat_dim: 2048
   temporal_scale: 100
 
 pretraining:
-  warmup_epoch: 30 # Default 30
+  warmup_epoch: 0 # Default 30
 
 training:
   batch_size: 25 # 100, 50, 25 make it run, but 100 crashes (CUDA out of memory on 80GB A100), 1 seems to work for training but not pretraining 

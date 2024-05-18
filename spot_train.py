@@ -284,19 +284,19 @@ def pretrain(data_loader, model, optimizer):
             input_data_tdrop_big = F.dropout(input_data_big.cuda(),0.1)
             input_data_tdrop_small = F.dropout(input_data_small.cuda(),0.1)
             #print(torch.stack([input_data.cuda(),input_data_tdrop],dim=0).shape)
-            input_data_aug = torch.stack([input_data.cuda(),input_data_tdrop],dim=0).view(-1,400,100) # with an without dropout is being stacked together; I suspect this is for the different branches that need one or the other. [25+25, 2048, 100] -> [256, 400, 100] (same temporal scale, feature vector size goes from 2048 to 400)
+            input_data_aug = torch.stack([input_data.cuda(),input_data_tdrop],dim=0).view(-1,2048,100) # with an without dropout is being stacked together; I suspect this is for the different branches that need one or the other. [25+25, 2048, 100] -> [256, 2048, 100] (same temporal scale, feature vector size goes from 2048 to 2048)
             input_data_aug[input_data_aug != input_data_aug] = 0 # seems to be behaving okay
 
 
             #print(input_data_aug.shape)
-            input_data_aug_b = torch.stack([input_data_big.cuda(),input_data_tdrop_big],dim=0).view(-1,400,200)
-            input_data_aug_s = torch.stack([input_data_small.cuda(),input_data_tdrop_small],dim=0).view(-1,400,50)
+            input_data_aug_b = torch.stack([input_data_big.cuda(),input_data_tdrop_big],dim=0).view(-1,2048,200)
+            input_data_aug_s = torch.stack([input_data_small.cuda(),input_data_tdrop_small],dim=0).view(-1,2048,50)
 
             #breakpoint() # let's look at the effect of the TemporalCrop on the size, since I feel like loss and loss_crop being the same is kind of odd.
-            top_br_pred, bottom_br_pred, feat = model(input_data_aug) # the model gives a top branch result, bottom branch result, and outputs its features. [torch.Size([256, 201, 100]), torch.Size([256, 100, 100]), torch.Size([256, 400, 100])]
+            top_br_pred, bottom_br_pred, feat = model(input_data_aug) # the model gives a top branch result, bottom branch result, and outputs its features. [torch.Size([256, 201, 100]), torch.Size([256, 100, 100]), torch.Size([256, 2048, 100])]
             #print(torch.sum(torch.isnan(feat)))
 
-            mod_input_data, top_br_gt, bottom_br_gt, action_gt, label_gt  = TemporalCrop(input_data_aug,top_br_pred) # [torch.Size([256, 400, 100]), torch.Size([256, 100]), torch.Size([256, 100, 100]), torch.Size([256, 201, 100]), torch.Size([256, 200])]
+            mod_input_data, top_br_gt, bottom_br_gt, action_gt, label_gt  = TemporalCrop(input_data_aug,top_br_pred) # [torch.Size([256, 2048, 100]), torch.Size([256, 100]), torch.Size([256, 100, 100]), torch.Size([256, 201, 100]), torch.Size([256, 200])]
             mod_input_data[mod_input_data != mod_input_data] = 0
 
             if not_freeze_class:
@@ -305,7 +305,7 @@ def pretrain(data_loader, model, optimizer):
  
             #print("mod_input_data.shape", mod_input_data.shape)
             #breakpoint()
-            top_br_pred_crop, bottom_br_pred_crop, feat_crop = model(mod_input_data) # [torch.Size([256, 201, 100]), torch.Size([256, 100, 100]), torch.Size([256, 400, 100])]
+            top_br_pred_crop, bottom_br_pred_crop, feat_crop = model(mod_input_data) # [torch.Size([256, 201, 100]), torch.Size([256, 100, 100]), torch.Size([256, 2048, 100])]
             #print([x.shape for x in model(mod_input_data)])
 
             # top_br_pred/top_br_pred_crop and bottom_br_pred/bottom_br_pred_crop remain the same shape (torch.Size([256, 201, 100]), torch.Size([256, 100, 100]) respectively), but do not contain the same elements.
@@ -341,7 +341,7 @@ def pretrain(data_loader, model, optimizer):
 
             # clip order 
 
-            input_data_all = torch.cat([input_data_aug,mod_input_data], 0).view(-1,400,100) # input_data_aug (input_data and the dropout input_data_tdrop) and the TemporalCrop'd mod_input data come together and will be sent through the model. [512, 400, 100]
+            input_data_all = torch.cat([input_data_aug,mod_input_data], 0).view(-1,2048,100) # input_data_aug (input_data and the dropout input_data_tdrop) and the TemporalCrop'd mod_input data come together and will be sent through the model. [512, 2048, 100]
             input_data_all[input_data_all != input_data_all] = 0
             batch_size, C, T = input_data_all.size()
             
@@ -387,7 +387,7 @@ def pretrain(data_loader, model, optimizer):
             optimizer.step()
         if not_freeze_class:    
             print("[Pretraining Epoch {0:03d}] Total-Loss {1:.2f} = T-Loss {2:.2f} + B-Loss {3:.2f} + F-Loss {4:.2f} + C-Loss {5:.2f} + Clip-Loss {6:.2f} (train)".format(
-            ep, tot_loss,loss[1],loss[2], feat_loss, con_loss, loss_clip_order))
+                ep, tot_loss,loss[1],loss[2], feat_loss, con_loss, loss_clip_order)) # FIX: loss_clip_order is not decreasing significantly, but it works in dmodel_400; perhaps I could try this branch using the resize to 400?
         else:
             print("[Pretraining Epoch {0:03d}] Total-Loss {1:.2f} =  F-Loss {2:.2f} + Clip-Loss {3:.2f} (train)".format(
             ep, tot_loss,feat_loss,loss_clip_order))
@@ -476,12 +476,12 @@ def test(data_loader, model, epoch, best_loss):
 
 
 def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
-    # TODO: input data is modified to [256, 100, 400] in pretrain, but it seems to want the [25, 100, 2048] here (modifying it as in pretrain has later parts of train_semi complain about not having the right batch size).
-    # Plan of action: add an additional fc layer to reduce the size of the features, [25, 100, 2048] -> [25, 100, 400]
-    # - Add an extra layer nn.linear(2048, 400) to SPOT.__init__()
+    # TODO: input data is modified to [256, 100, 2048] in pretrain, but it seems to want the [25, 100, 2048] here (modifying it as in pretrain has later parts of train_semi complain about not having the right batch size).
+    # Plan of action: add an additional fc layer to reduce the size of the features, [25, 100, 2048] -> [25, 100, 2048]
+    # - Add an extra layer nn.linear(2048, 2048) to SPOT.__init__()
     # - Give SPOT separate pretrain and train modes, something like SPOT.__init__(self, pretrain=True) followed by super(SPOT, self).__init__() (since parent nn.Module won't use pretrain=True)
     # - model = SPOT() and model = SPOT(pretrain=True) are no longer the same object, so both would need to be initialized as model currently is in __main__() below; however, the pretraining weights are saved and used to initialize for the training, it should be okay to put those weights in the new version of model.
-    # - Speaking of weights, ensure that the new nn.linear(2048, 400) is properly handled when we load the weights; I don't know how much torch will complain if it tries to load weights when it sees a new weight being loaded. Either torch automatically saves the weights even if the function is not used (the new linear layer might be hidden by an if during pretraining, but perhaps it will be detected anyway and just recieve its default weights). Or, if it isn't automatically recognized, perhaps there is a standard torch way to deal with it if/when load_state_dict notices a layer it doesn't have an entry for. If this happens quietly, I can simply use the random initalization of the new layer; I shouldn't even need to check since if torch tried to shove a weight matrix from load_state_dict into my new layer, torch would probably complain about the shape (there are no other instances of nn.Linear(2048, 400) so it's not like another layer's weights would fit'). Last case scenario could be to manually manipulate the checkpoint?   
+    # - Speaking of weights, ensure that the new nn.linear(2048, 2048) is properly handled when we load the weights; I don't know how much torch will complain if it tries to load weights when it sees a new weight being loaded. Either torch automatically saves the weights even if the function is not used (the new linear layer might be hidden by an if during pretraining, but perhaps it will be detected anyway and just recieve its default weights). Or, if it isn't automatically recognized, perhaps there is a standard torch way to deal with it if/when load_state_dict notices a layer it doesn't have an entry for. If this happens quietly, I can simply use the random initalization of the new layer; I shouldn't even need to check since if torch tried to shove a weight matrix from load_state_dict into my new layer, torch would probably complain about the shape (there are no other instances of nn.Linear(2048, 2048) so it's not like another layer's weights would fit'). Last case scenario could be to manually manipulate the checkpoint?   
 
     global global_step
     model.module.classifier[0].weight.requires_grad = True
@@ -496,7 +496,7 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
     consistency_criterion_top = softmax_kl_loss
 
     
-    temporal_perb = TemporalShift_random(400, 64)   
+    temporal_perb = TemporalShift_random(2048, 64)   
     order_clip_criterion = nn.CrossEntropyLoss()
     consistency = False
     clip_order = True
@@ -515,9 +515,7 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
     co = 0
     for n_iter, (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt, input_data_big, input_data_small, f_mask) in enumerate(data_loader):
 
-    
-        input_data = model.module.feature_downsize(input_data.cuda().permute(0,2,1)).permute(0,2,1) # HACK
-
+     
         # forward pass
         co+=1
         ## labeled data 
@@ -570,8 +568,7 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
             input_data_unlabel_small = input_data_unlabel[6].cuda()
             input_data_unlabel = input_data_unlabel[0].cuda()
 
-        ## strong augmentations --
-        input_data_unlabel = model.module.feature_downsize(input_data_unlabel.cuda().permute(0,2,1)).permute(0,2,1)
+        ## strong augmentations -- 
         top_br_pred_unlabel, bottom_br_pred_unlabel, feat_unlabel = model(input_data_unlabel)
 
         dynmaic_thres = False
@@ -735,7 +732,7 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
         else:
             total_loss += loss_total[0].cpu().detach().numpy()
             top_loss += loss_total[1].cpu().detach().numpy()
-            bottom_loss += loss_total[2].cpu().detach().numpy()
+            bottom_loss += loss_total[2].cpu().detach().numpy() # FIX: Bottom loss does not improve significantly from 0.69, can this be improved?
             consistency_loss_all += consistency_loss.cpu().detach().numpy()
             consistency_loss_ema_all += consistency_loss_ema.cpu().detach().numpy()
 
