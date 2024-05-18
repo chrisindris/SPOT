@@ -31,7 +31,7 @@ training:
   batch_size: 25 # 100, 50, 25 make it run, but 100 crashes (CUDA out of memory on 80GB A100), 1 seems to work for training but not pretraining 
   learning_rate: 0.0004
   weight_decay: 0.005
-  max_epoch: 1
+  max_epoch: 25
   checkpoint_path: "/root/models/SPOT/output/"
   random_seed: 1
   step: 10
