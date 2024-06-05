@@ -1,0 +1,31 @@
+./spot_train_eval.sh outfile_main-unlabel_percent_0.8.txt
+Traceback (most recent call last):
+  File "spot_train.py", line 224, in <module>
+    def Motion_MSEloss(output,clip_label,motion_mask=torch.ones(100).cuda()):
+  File "/root/models/venv_SPOT/lib/python3.8/site-packages/torch/cuda/__init__.py", line 216, in _lazy_init
+    torch._C._cuda_init()
+RuntimeError: No CUDA GPUs are available
+
+real	0m3.256s
+user	0m4.260s
+sys	0m12.804s
+Traceback (most recent call last):
+  File "spot_inference.py", line 37, in <module>
+    model = SPOT()
+  File "/root/models/SPOT/spot_model.py", line 176, in __init__
+    self.embedding = SnippetEmbedding(self.n_heads, self.len_feat, self.len_feat, self.len_feat, 0.3)
+  File "/root/models/SPOT/utils/transformer.py", line 79, in __init__
+    self.w_qs = nn.Linear(d_model, n_head * d_k, bias=False).cuda()
+  File "/root/models/venv_SPOT/lib/python3.8/site-packages/torch/nn/modules/module.py", line 688, in cuda
+    return self._apply(lambda t: t.cuda(device))
+  File "/root/models/venv_SPOT/lib/python3.8/site-packages/torch/nn/modules/module.py", line 601, in _apply
+    param_applied = fn(param)
+  File "/root/models/venv_SPOT/lib/python3.8/site-packages/torch/nn/modules/module.py", line 688, in <lambda>
+    return self._apply(lambda t: t.cuda(device))
+  File "/root/models/venv_SPOT/lib/python3.8/site-packages/torch/cuda/__init__.py", line 216, in _lazy_init
+    torch._C._cuda_init()
+RuntimeError: No CUDA GPUs are available
+
+real	0m2.558s
+user	0m4.236s
+sys	0m12.565s
