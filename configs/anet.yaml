@@ -7,7 +7,7 @@ dataset:
     video_anno_path: "./data/activitynet_annotations/anet_anno_action.json"
     num_frame: 16
     output_path: '/root/models/SPOT/output/'
-    unlabel_percent: 0.8
+    unlabel_percent: 0.7
     use_semi: True
     
   testing:
@@ -16,7 +16,7 @@ dataset:
     video_anno_path: "./data/activitynet_annotations/anet_anno_action.json"
     num_frame: 16
     output_path: '/root/models/SPOT/output/'
-    unlabel_percent: 0.8
+    unlabel_percent: 0.7
     use_semi: True
 
 model:
