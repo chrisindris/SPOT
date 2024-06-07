@@ -102,7 +102,7 @@ def top_lr_loss(target,pred):
 
 def get_mem_usage():
     GB = 1024.0 ** 3
-    output = ["device_%d = %.03fGB" % (device, torch.cuda.max_memory_allocated(torch.device('cuda:%d' % device)) / GB) for device in range(num_gpu)]
+    output = ["device_%d = %.03fGB" % (device, torch.cuda.max_memory_allocated(torch.device('cuda:%d' % device)) / GB) for device in [0]] # NOTE GPU This works with an arbitrary CUDA_VISIBLE_DEVICES=X (as long as X is 1 GPU). To make this work with more, change it to range(num_gpu)
     return ' '.join(output)[:-1]
 
 
@@ -166,7 +166,7 @@ def TemporalCrop(input_feat,top_br):
         batch_feat = input_feat[i,:,:]
         # batch_feat 
         batch_feat -= batch_feat.min(1, keepdim=True)[0]
-        batch_feat /= zero_to_nearzero(batch_feat.max(1, keepdim=True)[0]) - batch_feat.min(1, keepdim=True)[0] # NOTE: This can lead to a divide-by-zero nan if batch_feat.max(..) is zero (max value is 0). (see this at n_iter=1, i=9, (batch_feat.max(1, keepdim=True)[0])[148:157, 0])
+        batch_feat /= zero_to_nearzero(batch_feat.max(1, keepdim=True)[0]) - batch_feat.min(1, keepdim=True)[0] 
        
         for p in range(0,2):
             rand_start = np.random.randint(0,94,size=1)[0]
@@ -332,11 +332,9 @@ def pretrain(data_loader, model, optimizer):
                 con_loss = contrast_loss(c_pair_label)
                 con_loss_crop = contrast_loss(c_pair_label_crop)
 
-            #breakpoint() # NOTE: Motion_MSEloss seems to lead to nans later on. 
-            #print(torch.sum(torch.isnan(input_data)), torch.sum(torch.isnan(input_data_aug)))
-            feat_loss = Motion_MSEloss(feat,input_data_aug) # by the second iteration, input_data_aug seems to be going in here containing some nans. I should check above to see how input_data_aug got its nans. We could map them to something sensible, or fix what causes them.
-            #print(torch.sum(torch.isnan(input_data)), torch.sum(torch.isnan(input_data_aug)), feat_loss)
-            feat_loss_crop = Motion_MSEloss(feat,input_data_aug) # would a "input_data_aug_crop" go here? feat_loss_crop is not being changed in the following code, so it will be the same as feat_loss in this setup.
+
+            feat_loss = Motion_MSEloss(feat,input_data_aug)                         
+            feat_loss_crop = Motion_MSEloss(feat,input_data_aug)
             
 
             # clip order 
@@ -374,9 +372,8 @@ def pretrain(data_loader, model, optimizer):
             #final_loss = final_loss[~torch.isnan(final_loss)]
             #final_loss = torch.mean(final_loss)
 
-            final_loss = loss + tot_loss + tot_loss_crop + loss_clip_order
+            final_loss = loss + tot_loss + tot_loss_crop + loss_clip_order # FIX: 'loss' does not appear to decrease ever during pretraining; the other losses seem to work alright though.
 
-            #final_loss = loss #+ loss_clip_order #loss + tot_loss + tot_loss_crop + loss_clip_order # FIX: tot_loss and tot_loss_crop are nan. They are equal to feat_loss and feat_loss_crop.
             print("n_iter {0:2d} : loss ({1:03f}) + tot_loss ({2:03f}) + tot_loss_crop ({3:03f}) + loss_clip_order ({4:03f}) = final_loss = {5:03f}".format(n_iter, loss, tot_loss, tot_loss_crop, loss_clip_order, final_loss))
             #print("loss =", float(loss), "tot_loss", float(tot_loss), "tot_loss_crop", float(tot_loss_crop), "loss_clip_order", float(loss_clip_order), "final_loss", float(final_loss))
             #breakpoint()        
@@ -781,7 +778,7 @@ def test_semi(data_loader, model, epoch, best_loss): # NOTE: if we set this data
     model.eval()
     #breakpoint()
     with torch.no_grad():
-        for n_iter, (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt,input_data_big, input_data_small, _) in enumerate(data_loader): # FIX: len(data_loader) = 0? This is wrong since len([x['subset'] for x in infos.values() if x['subset'] == 'validation']) == 4728, where infos = test_loader.dataset.get_video_info(test_loader.dataset.video_info_path). get_video_anno seems to work as intended. get_video_mask seems to be the issue. 
+        for n_iter, (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt,input_data_big, input_data_small, _) in enumerate(data_loader): 
 
             # forward pass
             top_br_pred, bottom_br_pred, _ = model(input_data.cuda())
@@ -831,7 +828,7 @@ if __name__ == '__main__':
         os.makedirs(output_path)
     model = SPOT()
     # print(model)
-    model = torch.nn.DataParallel(model, device_ids=list(range(num_gpu))).cuda()
+    model = torch.nn.DataParallel(model, device_ids=[0]).cuda() # NOTE GPU: This works with an arbitrary CUDA_VISIBLE_DEVICES=X (as long as X is 1 GPU). To make this work with more, change it to range(num_gpu)
 
     for param in model.parameters():
         # print(param)

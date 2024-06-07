@@ -35,7 +35,7 @@ if __name__ == '__main__':
         os.makedirs(output_path + "/results")
     ### Load Model ###
     model = SPOT()
-    model = torch.nn.DataParallel(model, device_ids=[0]).cuda()
+    model = torch.nn.DataParallel(model, device_ids=[0]).cuda() # NOTE GPU: This works with an arbitrary CUDA_VISIBLE_DEVICES=X (as long as X is 1 GPU). To make this work with more, change it to range(config['training']['num_gpus'])
     ### Load Checkpoint ###
     checkpoint = torch.load(output_path + "/SPOT_best_semi.pth.tar")
     model.load_state_dict(checkpoint['state_dict'])

@@ -50,7 +50,6 @@ class SPOTDataset(data.Dataset):
         video_infos = self.get_video_info(self.video_info_path)
         self.info = video_infos
         video_annos = self.get_video_anno(video_infos, self.video_anno_path)
-        # TODO: the self.subset_mask == {}, leading to the issue of no data.
         """
         Issue: it is looking for a CSV file within self.feature_path, rather than expecting a .npy
         (Pdb) self.getVideoData(0)
@@ -245,8 +244,7 @@ class SPOTDataset(data.Dataset):
         v_label = torch.Tensor()
         b_mask = torch.Tensor(temporary_mask)
 
-
-        # TODO: figure out how all of these things are made        
+        
         return mask_data, classifier_branch,global_mask_branch,mask_top,cas_mask, mask_data_big, mask_data_small, b_mask
 
 
@@ -269,6 +267,7 @@ class SPOTDataset(data.Dataset):
 
 
 class SPOTDatasetUnlabeled(data.Dataset):
+    # NOTE: only used in data_loader_unlabeled
     def __init__(self, subset="train", mode="train"):
         # super().__init__()
         self.temporal_scale = config['model']['temporal_scale']
@@ -493,6 +492,7 @@ class SPOTDatasetUnlabeled(data.Dataset):
 
 
 class SPOTDatasetPretrain(data.Dataset):
+    # NOTE: this class is never used
     def __init__(self, subset="train", mode="train"):
         # super().__init__()
         self.temporal_scale = config['model']['temporal_scale']

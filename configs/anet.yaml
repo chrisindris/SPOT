@@ -6,8 +6,8 @@ dataset:
     video_info_path_unlabeled: "./data/activitynet_annotations/"
     video_anno_path: "./data/activitynet_annotations/anet_anno_action.json"
     num_frame: 16
-    output_path: '/root/models/SPOT/output/'
-    unlabel_percent: 0.7
+    output_path: '/root/models/SPOT/output_2/'
+    unlabel_percent: 0.9
     use_semi: True
     
   testing:
@@ -15,8 +15,8 @@ dataset:
     video_info_path_unlabeled: "./data/activitynet_annotations/"
     video_anno_path: "./data/activitynet_annotations/anet_anno_action.json"
     num_frame: 16
-    output_path: '/root/models/SPOT/output/'
-    unlabel_percent: 0.7
+    output_path: '/root/models/SPOT/output_2/'
+    unlabel_percent: 0.9
     use_semi: True
 
 model:
@@ -32,12 +32,12 @@ training:
   learning_rate: 0.0004
   weight_decay: 0.005
   max_epoch: 25
-  checkpoint_path: "/root/models/SPOT/output/"
+  checkpoint_path: "/root/models/SPOT/output_2/"
   random_seed: 1
   step: 10
   gamma: 0.2
   feature_path: "/data/i5O/ActivityNet1.3/train/"
-  num_gpu: 1
+  num_gpu: 1 # TODO: with the help of SANDBOX_spot_train.py and SANDBOX_spot_train_eval.sh, I will figure out a way to modify the config. Could just be as easy as giving some default value here. Later, I could make it more arbitrary. One easy method might be to visit all of the values (leaves) and make any changes needed.
 
 loss:
   lambda_1: 0.5

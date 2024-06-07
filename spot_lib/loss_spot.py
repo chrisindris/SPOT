@@ -228,9 +228,6 @@ def bottom_branch_loss(gt_action, pred_action):
     loss_pos = coef_1 * torch.log(pred_action + epsilon) * pmask
     loss_neg = coef_0 * torch.log(1.0 - pred_action + epsilon) * nmask
     w_bce_loss = -1 * torch.sum(loss_pos + loss_neg) / num_entries
-    # FIX: pred_action sometimes contains nan; figure out which cases cause this, and why, and fix with https://stackoverflow.com/questions/66456541
-    #print("pred_action:", pred_action)
-    #print("gt_action.shape =", gt_action.shape)
     BCE_loss = F.binary_cross_entropy(pred_action,gt_action,reduce=False)
     pt = torch.exp(-BCE_loss)
     # F_loss = 0.4*loss2 + 0.6*dice(pred_action,gt_action)
