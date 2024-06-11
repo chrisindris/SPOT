@@ -12,6 +12,8 @@ import math
 from configs.dataset_class import activity_dict
 import yaml
 import tqdm
+import sys
+from utils.arguments import handle_args, modify_config
 
 import pdb
 
@@ -19,7 +21,7 @@ import pdb
 
 with open("./configs/anet.yaml", 'r', encoding='utf-8') as f:
         tmp = f.read()
-        config = yaml.load(tmp, Loader=yaml.FullLoader)
+        config = modify_config(yaml.load(tmp, Loader=yaml.FullLoader), *handle_args(sys.argv))
 
 def load_json(file):
     with open(file) as json_file:

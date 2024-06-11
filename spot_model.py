@@ -8,12 +8,13 @@ from utils.transformer import SnippetEmbedding
 import yaml
 import random
 # from performer_pytorch import Performer
-
+import sys
 import pdb
+from utils.arguments import handle_args, modify_config
 
 with open("./configs/anet.yaml", 'r', encoding='utf-8') as f:
         tmp = f.read()
-        config = yaml.load(tmp, Loader=yaml.FullLoader)
+        config = modify_config(yaml.load(tmp, Loader=yaml.FullLoader), *handle_args(sys.argv))
 
 
 class TemporalShift(nn.Module):

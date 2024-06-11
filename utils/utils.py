@@ -3,11 +3,13 @@ import numpy as np
 import cv2
 import os
 import yaml
+import sys
+from utils.arguments import handle_args, modify_config
 
 
 with open("./configs/anet.yaml", 'r', encoding='utf-8') as f:
         tmp = f.read()
-        config = yaml.load(tmp, Loader=yaml.FullLoader)
+        config = modify_config(yaml.load(tmp, Loader=yaml.FullLoader), *handle_args(sys.argv))
 
 path_to_fig = config['testing']['fig_path']
 

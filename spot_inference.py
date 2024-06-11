@@ -20,11 +20,12 @@ import yaml
 from utils.postprocess_utils import multithread_detection , get_infer_dict, load_json
 from joblib import Parallel, delayed
 from spot_lib.tsne import viusalize
-
+import sys
+from utils.arguments import handle_args, modify_config
 
 with open("./configs/anet.yaml", 'r', encoding='utf-8') as f:
         tmp = f.read()
-        config = yaml.load(tmp, Loader=yaml.FullLoader)
+        config = modify_config(yaml.load(tmp, Loader=yaml.FullLoader), *handle_args(sys.argv))
 
 if __name__ == '__main__':
     mode = "semi"  ## "semi", "semi_ema" ,""

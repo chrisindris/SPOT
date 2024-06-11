@@ -1,4 +1,4 @@
-""" Pseudocode for parsing:
+""" Pseudocode for parsing and analyzing the output files, perhaps through visual graphs:
 for example, outfile_main.txt
 
 
