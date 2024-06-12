@@ -1,8 +1,7 @@
 # Usage: ./spot_train_eval.sh <outfile_name.txt> [<config_argument> ...]
 
 # TODO:
-# - specify the GPU to use (presently in the config you can only specify the number)
-# - Permit the specification of modifications to the config (but not by creating a new file)
+# - specify the GPU to use (presently in the config you can only specify the number) 
 # - run a parameter sweep
 # - handle the THUMOS and i-5O datasets
 

@@ -1,4 +1,4 @@
-
+import sys
 import os
 from typing import final
 import torch
@@ -24,6 +24,7 @@ from collections import Counter
 from spot_lib.tsne import viusalize
 # writer = SummaryWriter()
 
+from utils.arguments import handle_args, modify_config
 import pdb
 
 # TODO: num_workers and pretrain() warmup_epoch should be specifiable in the config file.
@@ -36,7 +37,7 @@ acsl_loss = ACSL()
 
 with open("./configs/anet.yaml", 'r', encoding='utf-8') as f:
         tmp = f.read()
-        config = yaml.load(tmp, Loader=yaml.FullLoader)
+        config = modify_config(yaml.load(tmp, Loader=yaml.FullLoader), *handle_args(sys.argv))
 
 output_path=config['dataset']['training']['output_path']
 num_gpu = config['training']['num_gpu']

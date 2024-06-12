@@ -373,7 +373,7 @@ def pretrain(data_loader, model, optimizer):
             #final_loss = final_loss[~torch.isnan(final_loss)]
             #final_loss = torch.mean(final_loss)
 
-            final_loss = loss + tot_loss + tot_loss_crop + loss_clip_order # FIX: 'loss' does not appear to decrease ever during pretraining; the other losses seem to work alright though.
+            final_loss = loss + tot_loss + tot_loss_crop + loss_clip_order # FIX: 'loss' does not appear to decrease ever during pretraining; the other losses seem to work alright though. Is this some kind of loss that doesn't get used during pretraining?
 
             print("n_iter {0:2d} : loss ({1:03f}) + tot_loss ({2:03f}) + tot_loss_crop ({3:03f}) + loss_clip_order ({4:03f}) = final_loss = {5:03f}".format(n_iter, loss, tot_loss, tot_loss_crop, loss_clip_order, final_loss))
             #print("loss =", float(loss), "tot_loss", float(tot_loss), "tot_loss_crop", float(tot_loss_crop), "loss_clip_order", float(loss_clip_order), "final_loss", float(final_loss))
@@ -395,15 +395,19 @@ def pretrain(data_loader, model, optimizer):
              'optimizer': optimizer.state_dict()}
 
         torch.save(state, output_path + "/SPOT_pretrain_checkpoint.pth.tar")
+        torch.save(state, output_path + "/SPOT.pth.tar")
+
         best_loss =  1e10
         if not_freeze_class:
             if loss[0] < best_loss:
                 best_loss = loss[0]
                 torch.save(state, output_path + "/SPOT_pretrain_best.pth.tar")
+                torch.save(state, output_path + "/SPOT.pth.tar")
         else: 
             if loss < best_loss:
                 best_loss = loss
                 torch.save(state, output_path + "/SPOT_pretrain_best.pth.tar")
+                torch.save(state, output_path + "/SPOT.pth.tar")
 
 
 
@@ -750,13 +754,16 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
 
     print(
         blue(
-           "[Epoch {0:03d}] Total-Loss {1:.2f} = T-Loss {2:.2f} + B-Loss {3:.2f} (train)".format(
+            "[Epoch {0:03d}] Total-Loss {1:.2f} = T-Loss {2:.2f} + B-Loss {3:.2f} (train)".format( # FIX: why is b-loss (bottom branch loss) always about 0.67?
             epoch, total_loss/(n_iter+1), 
             top_loss/(n_iter+1), 
             bottom_loss/(n_iter+1)
                 ) 
         )
     )
+    state = {'epoch': epoch + 1,
+             'state_dict': model.state_dict()}
+    torch.save(state, output_path + "/SPOT.pth.tar")
 
 
 
@@ -790,9 +797,11 @@ def test_semi(data_loader, model, epoch, best_loss): # NOTE: if we set this data
     state = {'epoch': epoch + 1,
              'state_dict': model.state_dict()}
     torch.save(state, output_path + "/SPOT_checkpoint_semi.pth.tar")
+    torch.save(state, output_path + "/SPOT.pth.tar")
     if loss[0] < best_loss:
         best_loss = loss[0]
         torch.save(state, output_path + "/SPOT_best_semi.pth.tar")
+        torch.save(state, output_path + "/SPOT.pth.tar")
 
     return best_loss
 
@@ -871,6 +880,34 @@ if __name__ == '__main__':
     end = torch.cuda.Event(enable_timing=True)
     start.record()
     # print(model.)
+
+    # ALTERNATE Pretraining
+    print("ALTERNATE")
+    for i in range(20):
+        print("PRETRAIN", i)
+        if i % 2 == 0:
+            pretrain(train_loader_pretrain,model,optimizer)
+            checkpoint_pre = torch.load(output_path + "/SPOT.pth.tar")
+            model.load_state_dict(checkpoint_pre['state_dict'])
+            optimizer.load_state_dict(checkpoint_pre['optimizer'])
+        else:
+            print("TRAIN SEMI", i)
+            epoch = 3
+            for epoch in range(epoch):
+                with autograd.detect_anomaly():
+                    checkpoint_pre = torch.load(output_path + "/SPOT.pth.tar")
+                    model.load_state_dict(checkpoint_pre['state_dict'])
+                    train_semi(train_loader, train_loader_unlabel, model, optimizer, epoch)
+                    checkpoint_pre = torch.load(output_path + "/SPOT.pth.tar")
+                    model.load_state_dict(checkpoint_pre['state_dict'])
+                    test_semi(test_loader, model, epoch, best_loss)# use semi
+                    scheduler.step()
+
+    end.record()
+    torch.cuda.synchronize()
+    print("DONE ALTERNATE")
+
+
     print("Pretraining Start")
     pretrain(train_loader_pretrain,model,optimizer)
     checkpoint_pre = torch.load(output_path + "/SPOT_pretrain_best.pth.tar")
