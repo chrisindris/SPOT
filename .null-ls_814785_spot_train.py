@@ -257,12 +257,12 @@ def cosine_rampdown(current, rampdown_length):
 
 
 def get_current_consistency_weight(epoch):
-    # Consistency ramp-up from https://arxiv.org/abs/1610.02242
+# Consistency ramp-up from https://arxiv.org/abs/1610.02242
     return consistency * sigmoid_rampup(epoch, consistency_rampup)
 
 
 
-def pretrain(data_loader, model, optimizer):
+def pretrain(data_loader, model, optimizer, pretrain_epoch=0):
 
     not_freeze_class = False
     if not_freeze_class == False:
@@ -273,7 +273,14 @@ def pretrain(data_loader, model, optimizer):
     warmup_epoch = config['pretraining']['warmup_epoch']
     order_clip_criterion = nn.CrossEntropyLoss()
 
-    for ep in range(warmup_epoch): 
+    alternate = True
+    consecutive_pretrain_epochs = 1
+    if alternate:
+        epochs = range(pretrain_epoch, pretrain_epoch + consecutive_pretrain_epochs)
+    else:
+        epochs = range(warmup_epoch)
+  
+    for ep in epochs: 
 
         for n_iter, (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt, input_data_big, input_data_small, _) in enumerate(data_loader):
             # input_data.size = batch_size, dimension of inputted numpy features, base temporal scale
@@ -373,7 +380,7 @@ def pretrain(data_loader, model, optimizer):
             #final_loss = final_loss[~torch.isnan(final_loss)]
             #final_loss = torch.mean(final_loss)
 
-            final_loss = loss + tot_loss + tot_loss_crop + loss_clip_order # FIX: 'loss' does not appear to decrease ever during pretraining; the other losses seem to work alright though.
+            final_loss = loss + tot_loss + tot_loss_crop + loss_clip_order # FIX: 'loss' does not appear to decrease ever during pretraining; the other losses seem to work alright though. Is this some kind of loss that doesn't get used during pretraining?
 
             print("n_iter {0:2d} : loss ({1:03f}) + tot_loss ({2:03f}) + tot_loss_crop ({3:03f}) + loss_clip_order ({4:03f}) = final_loss = {5:03f}".format(n_iter, loss, tot_loss, tot_loss_crop, loss_clip_order, final_loss))
             #print("loss =", float(loss), "tot_loss", float(tot_loss), "tot_loss_crop", float(tot_loss_crop), "loss_clip_order", float(loss_clip_order), "final_loss", float(final_loss))
@@ -395,15 +402,19 @@ def pretrain(data_loader, model, optimizer):
              'optimizer': optimizer.state_dict()}
 
         torch.save(state, output_path + "/SPOT_pretrain_checkpoint.pth.tar")
+        torch.save(state, output_path + "/SPOT.pth.tar")
+
         best_loss =  1e10
         if not_freeze_class:
             if loss[0] < best_loss:
                 best_loss = loss[0]
                 torch.save(state, output_path + "/SPOT_pretrain_best.pth.tar")
+                torch.save(state, output_path + "/SPOT.pth.tar")
         else: 
             if loss < best_loss:
                 best_loss = loss
                 torch.save(state, output_path + "/SPOT_pretrain_best.pth.tar")
+                torch.save(state, output_path + "/SPOT.pth.tar")
 
 
 
@@ -750,13 +761,16 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
 
     print(
         blue(
-           "[Epoch {0:03d}] Total-Loss {1:.2f} = T-Loss {2:.2f} + B-Loss {3:.2f} (train)".format(
+            "[Epoch {0:03d}] Total-Loss {1:.2f} = T-Loss {2:.2f} + B-Loss {3:.2f} (train)".format( # FIX: why is b-loss (bottom branch loss) always about 0.67?
             epoch, total_loss/(n_iter+1), 
             top_loss/(n_iter+1), 
             bottom_loss/(n_iter+1)
                 ) 
         )
     )
+    state = {'epoch': epoch + 1,
+             'state_dict': model.state_dict()}
+    torch.save(state, output_path + "/SPOT.pth.tar")
 
 
 
@@ -790,9 +804,11 @@ def test_semi(data_loader, model, epoch, best_loss): # NOTE: if we set this data
     state = {'epoch': epoch + 1,
              'state_dict': model.state_dict()}
     torch.save(state, output_path + "/SPOT_checkpoint_semi.pth.tar")
+    torch.save(state, output_path + "/SPOT.pth.tar")
     if loss[0] < best_loss:
         best_loss = loss[0]
         torch.save(state, output_path + "/SPOT_best_semi.pth.tar")
+        torch.save(state, output_path + "/SPOT.pth.tar")
 
     return best_loss
 
@@ -871,6 +887,35 @@ if __name__ == '__main__':
     end = torch.cuda.Event(enable_timing=True)
     start.record()
     # print(model.)
+
+    """
+    # ALTERNATE Pretraining
+    print("ALTERNATE")
+    for i in range(20):
+        print("PRETRAIN", i)
+        if i % 2 == 0:
+            pretrain(train_loader_pretrain,model,optimizer)
+            checkpoint_pre = torch.load(output_path + "/SPOT.pth.tar")
+            model.load_state_dict(checkpoint_pre['state_dict'])
+            optimizer.load_state_dict(checkpoint_pre['optimizer'])
+        else:
+            print("TRAIN SEMI", i)
+            epoch = 3
+            for epoch in range(epoch):
+                with autograd.detect_anomaly():
+                    checkpoint_pre = torch.load(output_path + "/SPOT.pth.tar")
+                    model.load_state_dict(checkpoint_pre['state_dict'])
+                    train_semi(train_loader, train_loader_unlabel, model, optimizer, epoch)
+                    checkpoint_pre = torch.load(output_path + "/SPOT.pth.tar")
+                    model.load_state_dict(checkpoint_pre['state_dict'])
+                    test_semi(test_loader, model, epoch, best_loss)# use semi
+                    scheduler.step()
+
+    end.record()
+    torch.cuda.synchronize()
+    print("DONE ALTERNATE")
+
+
     print("Pretraining Start")
     pretrain(train_loader_pretrain,model,optimizer)
     checkpoint_pre = torch.load(output_path + "/SPOT_pretrain_best.pth.tar")
@@ -898,6 +943,57 @@ if __name__ == '__main__':
 
         scheduler.step()
     # writer.flush()
+    """
+
+    alternate=True
+    consecutive_pretrain_epochs = 1
+    consecutive_train_epochs = 1
+    rounds = 3
+
+    pretrain_epoch = 0 
+    train_epoch = 0
+
+    if not alternate:
+        print("Pretraining Start")
+        pretrain(train_loader_pretrain,model,optimizer)
+        checkpoint_pre = torch.load(output_path + "/SPOT_pretrain_best.pth.tar")
+        model.load_state_dict(checkpoint_pre['state_dict'])
+        optimizer.load_state_dict(checkpoint_pre['optimizer'])
+        # top_th,bot_th = getThres(train_loader,model,optimizer)
+        print("Pretraining Finished")
+    for round in range(rounds):
+        if alternate and pretrain_epoch < config['pretraining']['warmup_epoch']:
+            for e in range(consecutive_pretrain_epochs): 
+                pretrain(train_loader_pretrain,model,optimizer, pretrain_epoch)
+                checkpoint_pre = torch.load(output_path + "/SPOT.pth.tar")
+                model.load_state_dict(checkpoint_pre['state_dict'])
+                optimizer.load_state_dict(checkpoint_pre['optimizer'])
+                pretrain_epoch += 1
+
+        if train_epoch < config['training']['max_epoch']:
+            for e in range(consecutive_train_epochs):
+                print("training epoch", str(train_epoch))
+
+                if use_semi:
+                    if unlabel_percent == 0.:
+                        print('use Semi !!! use all label !!!')
+                        train_semi_full(train_loader, model, optimizer, train_epoch)
+                        test_semi(test_loader, model, train_epoch, best_loss)
+                    else:
+                        print('use Semi !!!')
+                        train_semi(train_loader, train_loader_unlabel, model, optimizer, train_epoch)
+                        test_semi(test_loader, model, train_epoch, best_loss)
+                else:
+                    print('use Fewer label !!!')
+                    train(train_loader, model, optimizer, train_epoch)
+                    test(test_loader, model, train_epoch, best_loss)
+
+                train_epoch += 1
+
+
+
+
+
     end.record()
     torch.cuda.synchronize()
 

@@ -257,12 +257,12 @@ def cosine_rampdown(current, rampdown_length):
 
 
 def get_current_consistency_weight(epoch):
-    # Consistency ramp-up from https://arxiv.org/abs/1610.02242
+# Consistency ramp-up from https://arxiv.org/abs/1610.02242
     return consistency * sigmoid_rampup(epoch, consistency_rampup)
 
 
 
-def pretrain(data_loader, model, optimizer):
+def pretrain(data_loader, model, optimizer, pretrain_epoch=0):
 
     not_freeze_class = False
     if not_freeze_class == False:
@@ -273,7 +273,12 @@ def pretrain(data_loader, model, optimizer):
     warmup_epoch = config['pretraining']['warmup_epoch']
     order_clip_criterion = nn.CrossEntropyLoss()
 
-    for ep in range(warmup_epoch): 
+    if config["training"]["alternate"]:
+        epochs = range(pretrain_epoch, pretrain_epoch + config["pretraining"]["consecutive_warmup_epochs"])
+    else:
+        epochs = range(warmup_epoch)
+  
+    for ep in epochs: 
 
         for n_iter, (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt, input_data_big, input_data_small, _) in enumerate(data_loader):
             # input_data.size = batch_size, dimension of inputted numpy features, base temporal scale
@@ -335,7 +340,7 @@ def pretrain(data_loader, model, optimizer):
 
 
             feat_loss = Motion_MSEloss(feat,input_data_aug)                         
-            feat_loss_crop = Motion_MSEloss(feat,input_data_aug)
+            feat_loss_crop = Motion_MSEloss(feat_crop,mod_input_data)
             
 
             # clip order 
@@ -363,10 +368,12 @@ def pretrain(data_loader, model, optimizer):
                 tot_loss = loss + feat_loss + con_loss
                 tot_loss_crop = loss_crop + feat_loss_crop + con_loss_crop
             else:
+                #breakpoint()
                 loss = spot_loss(top_br_gt,top_br_pred,bottom_br_gt,bottom_br_pred, action_gt,label_gt,pretrain=True)
                 loss_crop = spot_loss(top_br_gt,top_br_pred,bottom_br_gt,bottom_br_pred, action_gt,label_gt,pretrain=True)
                 tot_loss = feat_loss
-                tot_loss_crop = feat_loss_crop 
+                tot_loss_crop = feat_loss_crop
+                #print(loss, loss_crop)
 
             # Assumes that at least one of the four is not nan
             #final_loss = torch.stack([loss, tot_loss, tot_loss_crop, loss_clip_order])
@@ -881,8 +888,9 @@ if __name__ == '__main__':
     start.record()
     # print(model.)
 
-    # ALTERNATE Pretraining
-    print("ALTERNATE")
+    """
+    # config["training"]["alternate"] Pretraining
+    print("config["training"]["alternate"]")
     for i in range(20):
         print("PRETRAIN", i)
         if i % 2 == 0:
@@ -905,7 +913,7 @@ if __name__ == '__main__':
 
     end.record()
     torch.cuda.synchronize()
-    print("DONE ALTERNATE")
+    print("DONE config["training"]["alternate"]")
 
 
     print("Pretraining Start")
@@ -935,6 +943,60 @@ if __name__ == '__main__':
 
         scheduler.step()
     # writer.flush()
+    """
+
+    """
+    config["training"]["alternate"]=True
+    config["pretraining"]["consecutive_warmup_epochs"] = 1
+    config["training"]["consecutive_train_epochs"] = 1
+    """
+    rounds = max(config["pretraining"]["warmup_epoch"], config["training"]["max_epoch"]) if config["training"]["alternate"] else config["training"]["max_epoch"]
+
+    pretrain_epoch = 0 
+    train_epoch = 0
+
+    if not config["training"]["alternate"]:
+        print("Pretraining Start")
+        pretrain(train_loader_pretrain,model,optimizer)
+        checkpoint_pre = torch.load(output_path + "/SPOT_pretrain_best.pth.tar")
+        model.load_state_dict(checkpoint_pre['state_dict'])
+        optimizer.load_state_dict(checkpoint_pre['optimizer'])
+        # top_th,bot_th = getThres(train_loader,model,optimizer)
+        print("Pretraining Finished")
+    for round in range(rounds):
+        if config["training"]["alternate"] and pretrain_epoch < config['pretraining']['warmup_epoch']:
+            #for e in range(config["pretraining"]["consecutive_warmup_epochs"]): 
+            print(pretrain_epoch)
+            pretrain(train_loader_pretrain,model,optimizer, pretrain_epoch)
+            checkpoint_pre = torch.load(output_path + "/SPOT.pth.tar")
+            model.load_state_dict(checkpoint_pre['state_dict'])
+            optimizer.load_state_dict(checkpoint_pre['optimizer'])
+            pretrain_epoch += config['pretraining']['consecutive_warmup_epochs']
+
+        if train_epoch < epoch:
+            for e in range(config["training"]["consecutive_train_epochs"]):
+                print("training epoch", str(train_epoch))
+
+                if use_semi:
+                    if unlabel_percent == 0.:
+                        print('use Semi !!! use all label !!!')
+                        train_semi_full(train_loader, model, optimizer, train_epoch)
+                        test_semi(test_loader, model, train_epoch, best_loss)
+                    else:
+                        print('use Semi !!!')
+                        train_semi(train_loader, train_loader_unlabel, model, optimizer, train_epoch)
+                        test_semi(test_loader, model, train_epoch, best_loss)
+                else:
+                    print('use Fewer label !!!')
+                    train(train_loader, model, optimizer, train_epoch)
+                    test(test_loader, model, train_epoch, best_loss)
+
+                train_epoch += 1
+
+
+
+
+
     end.record()
     torch.cuda.synchronize()
 

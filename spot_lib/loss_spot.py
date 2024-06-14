@@ -216,7 +216,7 @@ def top_ce_loss(gt_cls, pred_cls, nm=False):
     return loss
 
 
-def bottom_branch_loss(gt_action, pred_action):
+def bottom_branch_loss(gt_action, pred_action): # gt action and pred action are both shape [256, 100, 100] 
 
     pmask = (gt_action == 1).float()
     nmask = (gt_action == 0).float()
@@ -234,8 +234,13 @@ def bottom_branch_loss(gt_action, pred_action):
     pt = torch.exp(-BCE_loss)
     # F_loss = 0.4*loss2 + 0.6*dice(pred_action,gt_action)
     F_loss = lambda_2*w_bce_loss + (1 - lambda_2)*dice(pred_action,gt_action)
+
+    #breakpoint()
+
+    #print("losses", w_bce_loss, dice(pred_action, gt_action))
     
-    return F_loss
+    return nn.MSELoss()(gt_action, pred_action) #dice(pred_action, gt_action) # F_loss, could try MSE or L1 # HACK, as just using MSELoss seems to improve the results a bit and let the model improve. However, it would be best to get the author's goal function working.
+
 
 def top_branch_loss(gt_cls, pred_cls, mask_gt):
 
