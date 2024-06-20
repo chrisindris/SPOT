@@ -524,8 +524,13 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
     co = 0
     for n_iter, (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt, input_data_big, input_data_small, f_mask) in enumerate(data_loader):
 
+        #print("shapes", input_data.shape, action_gt.shape, label_gt.shape, bottom_br_gt.shape)
     
-        input_data = model.module.feature_downsize(input_data.cuda().permute(0,2,1)).permute(0,2,1) # HACK
+        input_data = model.module.feature_downsize(input_data.cuda().permute(0,2,1)).permute(0,2,1) # HACK # NOTE: could this be confusing the model? I should follow the pretrain() method to see if I can fix.
+
+        #print("shapes", input_data.shape, action_gt.shape, label_gt.shape, bottom_br_gt.shape)
+
+        #action_gt = model.module.feature_downsize(action_gt.cuda().permute(0,2,1)).permute(0,2,1)
 
         # forward pass
         co+=1
@@ -555,7 +560,8 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
 
         top_br_pred, bottom_br_pred, feat = model(input_data.cuda())
                 
-        loss_shift = spot_loss(top_br_gt,top_br_pred,bottom_br_gt,bottom_br_pred, action_gt,label_gt) # supervised loss - weak augmentation 1 (shift)
+        loss_shift = spot_loss(top_br_gt,top_br_pred,bottom_br_gt,bottom_br_pred, action_gt,label_gt) # supervised loss - weak augmentation 1 (shift) # NOTE: loss_shift[2] = loss_label[2] corresponds to the B-Loss which doesn't seem to be moving.
+        #print("loss_shift", [x for x in loss_shift])
 
         loss_feat_label = Motion_MSEloss(feat,input_data.cuda())
         loss_label =  loss_shift
@@ -583,9 +589,9 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
         input_data_unlabel = model.module.feature_downsize(input_data_unlabel.cuda().permute(0,2,1)).permute(0,2,1)
         top_br_pred_unlabel, bottom_br_pred_unlabel, feat_unlabel = model(input_data_unlabel)
 
-        dynmaic_thres = False
+        dynmaic_thres = False # True also seems to work
         thresh_warmup = True
-        if dynmaic_thres:
+        if dynmaic_thres: # NOTE: This code is pretty slow; might want to vectorize those loops!
             pseudo_counter = Counter(selected_label.tolist())
             classwise_acc = torch.zeros((201,)).cuda()
             if max(pseudo_counter.values()) < len(unlabeled_train_iter):  # not all(5w) -1
@@ -662,6 +668,8 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
             loss_total = loss_label[0] + 10*loss_unlabel
         else:
             loss_total = loss_label + loss_unlabel
+            #print("label  ", [x for x in loss_label])
+            #print("unlabel", [x for x in loss_unlabel])
 
         if temporal_re:
             input_recons = F.dropout2d(input_data.permute(0,2,1), 0.2).permute(0,2,1)
@@ -730,7 +738,7 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
             loss_all = loss_total[0] + consistency_loss + loss_feat_unlabel + loss_contrast_label + loss_contrast_unlabel + loss_feat_label
 
         optimizer.zero_grad()
-        loss_all.backward()
+        loss_total[2].backward() # loss_all.backward()
         optimizer.step()
         global_step += 1
         # update_ema_variables(model, model_ema, 0.999, float(global_step/20))   # //5  //25
@@ -888,68 +896,6 @@ if __name__ == '__main__':
     start.record()
     # print(model.)
 
-    """
-    # config["training"]["alternate"] Pretraining
-    print("config["training"]["alternate"]")
-    for i in range(20):
-        print("PRETRAIN", i)
-        if i % 2 == 0:
-            pretrain(train_loader_pretrain,model,optimizer)
-            checkpoint_pre = torch.load(output_path + "/SPOT.pth.tar")
-            model.load_state_dict(checkpoint_pre['state_dict'])
-            optimizer.load_state_dict(checkpoint_pre['optimizer'])
-        else:
-            print("TRAIN SEMI", i)
-            epoch = 3
-            for epoch in range(epoch):
-                with autograd.detect_anomaly():
-                    checkpoint_pre = torch.load(output_path + "/SPOT.pth.tar")
-                    model.load_state_dict(checkpoint_pre['state_dict'])
-                    train_semi(train_loader, train_loader_unlabel, model, optimizer, epoch)
-                    checkpoint_pre = torch.load(output_path + "/SPOT.pth.tar")
-                    model.load_state_dict(checkpoint_pre['state_dict'])
-                    test_semi(test_loader, model, epoch, best_loss)# use semi
-                    scheduler.step()
-
-    end.record()
-    torch.cuda.synchronize()
-    print("DONE config["training"]["alternate"]")
-
-
-    print("Pretraining Start")
-    pretrain(train_loader_pretrain,model,optimizer)
-    checkpoint_pre = torch.load(output_path + "/SPOT_pretrain_best.pth.tar")
-    model.load_state_dict(checkpoint_pre['state_dict'])
-    optimizer.load_state_dict(checkpoint_pre['optimizer'])
-    # # top_th,bot_th = getThres(train_loader,model,optimizer)
-    print("Pretraining Finished")
-    #breakpoint()
-    for epoch in range(epoch):
-      with autograd.detect_anomaly():
-
-        if use_semi:
-            if unlabel_percent == 0.:
-                print('use Semi !!! use all label !!!')
-                train_semi_full(train_loader, model, optimizer, epoch)
-                test_semi(test_loader, model, epoch, best_loss)
-            else:
-                print('use Semi !!!')
-                train_semi(train_loader, train_loader_unlabel, model, optimizer, epoch)
-                test_semi(test_loader, model, epoch, best_loss)
-        else:
-            print('use Fewer label !!!')
-            train(train_loader, model, optimizer, epoch)
-            test(test_loader, model, epoch, best_loss)
-
-        scheduler.step()
-    # writer.flush()
-    """
-
-    """
-    config["training"]["alternate"]=True
-    config["pretraining"]["consecutive_warmup_epochs"] = 1
-    config["training"]["consecutive_train_epochs"] = 1
-    """
     rounds = max(config["pretraining"]["warmup_epoch"], config["training"]["max_epoch"]) if config["training"]["alternate"] else config["training"]["max_epoch"]
 
     pretrain_epoch = 0 

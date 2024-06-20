@@ -216,7 +216,7 @@ def top_ce_loss(gt_cls, pred_cls, nm=False):
     return loss
 
 
-def bottom_branch_loss(gt_action, pred_action): # gt action and pred action are both shape [256, 100, 100] 
+def bottom_branch_loss(gt_action, pred_action, f_loss=False): # gt action and pred action are both shape [256, 100, 100] 
 
     pmask = (gt_action == 1).float()
     nmask = (gt_action == 0).float()
@@ -238,8 +238,15 @@ def bottom_branch_loss(gt_action, pred_action): # gt action and pred action are 
     #breakpoint()
 
     #print("losses", w_bce_loss, dice(pred_action, gt_action))
+
+    if f_loss:
+        #print("F_loss")
+        return F_loss
+    else:
+        #print("MSELoss")
+        return nn.MSELoss()(gt_action, pred_action)
     
-    return nn.MSELoss()(gt_action, pred_action) #dice(pred_action, gt_action) # F_loss, could try MSE or L1 # HACK, as just using MSELoss seems to improve the results a bit and let the model improve. However, it would be best to get the author's goal function working.
+    #return F_loss #nn.MSELoss()(gt_action, pred_action) #dice(pred_action, gt_action) # F_loss, could try MSE or L1 # HACK, as just using MSELoss seems to improve the results a bit and let the model improve. However, it would be best to get the author's goal function working.
 
 
 def top_branch_loss(gt_cls, pred_cls, mask_gt):
@@ -255,7 +262,7 @@ def spot_loss(gt_cls, pred_cls ,gt_action , pred_action, mask_gt , label_gt, pre
         return bottom_loss
     else:
         top_loss = top_branch_loss(gt_cls, pred_cls, mask_gt)
-        bottom_loss = bottom_branch_loss(gt_action.cuda(), pred_action) 
+        bottom_loss = bottom_branch_loss(gt_action.cuda(), pred_action, f_loss=True) 
         tot_loss = top_loss + bottom_loss
         return tot_loss, top_loss, bottom_loss
 
