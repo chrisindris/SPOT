@@ -738,7 +738,8 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
             loss_all = loss_total[0] + consistency_loss + loss_feat_unlabel + loss_contrast_label + loss_contrast_unlabel + loss_feat_label
 
         optimizer.zero_grad()
-        loss_total[2].backward() # loss_all.backward()
+        weighed_loss = 0.1 * loss_total[1] + 0.9 * loss_total[2]
+        weighed_loss.backward() # loss_all.backward()
         optimizer.step()
         global_step += 1
         # update_ema_variables(model, model_ema, 0.999, float(global_step/20))   # //5  //25

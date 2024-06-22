@@ -1,0 +1,196 @@
+./spot_train_eval.sh latest_trial-training_bloss_new-optimizer-noalternate.txt dataset.training.output_path=./output_2/ dataset.testing.output_path=./output_2/ training.checkpoint_path=./output_2/ pretraining.warmup_epoch=0
+{'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True}}, 'model': {'embedding_head': 4, 'feat_dim': 400, 'temporal_scale': 100}, 'pretraining': {'warmup_epoch': 0, 'consecutive_warmup_epochs': 10}, 'training': {'batch_size': 25, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 20, 'consecutive_train_epochs': 20, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
+
+Total Number of Learnable Paramters (in M) :  6.67706
+No of Gpus using to Train :  1 
+ Saving all Checkpoints in path : ./output_2/
+Loading train Video Information ...
+  0% 0/9649 [00:00<?, ?it/s]  7% 721/9649 [00:00<00:01, 7207.70it/s] 15% 1442/9649 [00:00<00:01, 6818.69it/s] 22% 2126/9649 [00:00<00:01, 6346.21it/s] 29% 2764/9649 [00:00<00:01, 6096.15it/s] 35% 3376/9649 [00:00<00:01, 5970.65it/s] 41% 3975/9649 [00:00<00:00, 5933.16it/s] 47% 4569/9649 [00:00<00:00, 5925.03it/s] 53% 5162/9649 [00:00<00:00, 5883.59it/s] 60% 5758/9649 [00:00<00:00, 5905.30it/s] 66% 6349/9649 [00:01<00:00, 5797.40it/s] 72% 6930/9649 [00:01<00:00, 5530.57it/s] 78% 7486/9649 [00:01<00:00, 5053.12it/s] 83% 8000/9649 [00:01<00:00, 5045.12it/s] 88% 8510/9649 [00:01<00:00, 5030.56it/s] 93% 9017/9649 [00:01<00:00, 5032.20it/s] 99% 9523/9649 [00:01<00:00, 5023.98it/s]100% 9649/9649 [00:01<00:00, 5549.23it/s]
+Loading train Video Information ...
+  0% 0/9649 [00:00<?, ?it/s] 30% 2877/9649 [00:00<00:00, 28760.02it/s] 60% 5754/9649 [00:00<00:00, 25675.26it/s] 86% 8344/9649 [00:00<00:00, 23871.95it/s]100% 9649/9649 [00:00<00:00, 25024.97it/s]
+Loading unlabel Video Information ...
+  0% 0/8683 [00:00<?, ?it/s]  7% 631/8683 [00:00<00:01, 6308.67it/s] 15% 1262/8683 [00:00<00:01, 5979.10it/s] 21% 1862/8683 [00:00<00:01, 5838.72it/s] 28% 2447/8683 [00:00<00:01, 5651.48it/s] 35% 3013/8683 [00:00<00:01, 5375.41it/s] 41% 3553/8683 [00:00<00:00, 5170.06it/s] 47% 4072/8683 [00:00<00:00, 4993.73it/s] 53% 4573/8683 [00:00<00:00, 4830.42it/s] 58% 5057/8683 [00:00<00:00, 4680.29it/s] 64% 5526/8683 [00:01<00:00, 4547.05it/s] 69% 5982/8683 [00:01<00:00, 4337.21it/s] 74% 6417/8683 [00:01<00:00, 4258.68it/s] 79% 6844/8683 [00:01<00:00, 3790.51it/s] 83% 7243/8683 [00:01<00:00, 3840.60it/s] 88% 7634/8683 [00:01<00:00, 3851.88it/s] 92% 8024/8683 [00:01<00:00, 3848.76it/s] 97% 8412/8683 [00:01<00:00, 3832.02it/s]100% 8683/8683 [00:01<00:00, 4462.96it/s]
+Loading validation Video Information ...
+  0% 0/4728 [00:00<?, ?it/s] 10% 488/4728 [00:00<00:00, 4868.46it/s] 21% 992/4728 [00:00<00:00, 4968.38it/s] 31% 1489/4728 [00:00<00:00, 4346.38it/s] 41% 1950/4728 [00:00<00:00, 4439.68it/s] 51% 2400/4728 [00:00<00:00, 4325.36it/s] 60% 2837/4728 [00:00<00:00, 4310.38it/s] 69% 3271/4728 [00:00<00:00, 4257.74it/s] 78% 3699/4728 [00:00<00:00, 4148.04it/s] 87% 4116/4728 [00:00<00:00, 4086.11it/s] 96% 4526/4728 [00:01<00:00, 4010.70it/s]100% 4728/4728 [00:01<00:00, 4207.81it/s]training epoch 0
+use Semi !!!
+
+[Iteration 000] Total-Loss 3.35 = T-Loss 2.63 + B-Loss 0.72 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.89 = T-Loss 2.21 + B-Loss 0.69 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.86 = T-Loss 2.18 + B-Loss 0.68 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.88 = T-Loss 2.20 + B-Loss 0.68 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 000] Total-Loss 2.88 = T-Loss 2.20 + B-Loss 0.68 (train)[0m
+/root/models/venv_SPOT/lib/python3.8/site-packages/torch/nn/_reduction.py:42: UserWarning: size_average and reduce args will be deprecated, please use reduction='none' instead.
+  warnings.warn(warning.format(ret))
+[Epoch 000] Total-Loss 2.83 = T-Loss 2.18 + B-Loss 0.66  (val)
+training epoch 1
+use Semi !!!
+[Iteration 000] Total-Loss 2.43 = T-Loss 1.73 + B-Loss 0.70 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.59 = T-Loss 1.92 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.68 = T-Loss 2.01 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.76 = T-Loss 2.09 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 001] Total-Loss 2.76 = T-Loss 2.09 + B-Loss 0.67 (train)[0m
+[Epoch 001] Total-Loss 2.83 = T-Loss 2.18 + B-Loss 0.66  (val)
+training epoch 2
+use Semi !!!
+[Iteration 000] Total-Loss 2.42 = T-Loss 1.73 + B-Loss 0.70 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.59 = T-Loss 1.92 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.68 = T-Loss 2.01 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.76 = T-Loss 2.09 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 002] Total-Loss 2.76 = T-Loss 2.09 + B-Loss 0.67 (train)[0m
+[Epoch 002] Total-Loss 2.83 = T-Loss 2.18 + B-Loss 0.66  (val)
+training epoch 3
+use Semi !!!
+[Iteration 000] Total-Loss 2.42 = T-Loss 1.72 + B-Loss 0.70 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.59 = T-Loss 1.92 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.68 = T-Loss 2.01 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.76 = T-Loss 2.08 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 003] Total-Loss 2.76 = T-Loss 2.08 + B-Loss 0.67 (train)[0m
+[Epoch 003] Total-Loss 2.83 = T-Loss 2.18 + B-Loss 0.66  (val)
+training epoch 4
+use Semi !!!
+[Iteration 000] Total-Loss 2.42 = T-Loss 1.72 + B-Loss 0.70 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.59 = T-Loss 1.92 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.68 = T-Loss 2.01 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.76 = T-Loss 2.08 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 004] Total-Loss 2.76 = T-Loss 2.08 + B-Loss 0.67 (train)[0m
+[Epoch 004] Total-Loss 2.83 = T-Loss 2.18 + B-Loss 0.66  (val)
+training epoch 5
+use Semi !!!
+[Iteration 000] Total-Loss 2.42 = T-Loss 1.72 + B-Loss 0.70 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.59 = T-Loss 1.91 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.68 = T-Loss 2.01 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.76 = T-Loss 2.08 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 005] Total-Loss 2.76 = T-Loss 2.08 + B-Loss 0.67 (train)[0m
+[Epoch 005] Total-Loss 2.83 = T-Loss 2.18 + B-Loss 0.66  (val)
+training epoch 6
+use Semi !!!
+[Iteration 000] Total-Loss 2.42 = T-Loss 1.72 + B-Loss 0.70 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.59 = T-Loss 1.92 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.68 = T-Loss 2.01 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.76 = T-Loss 2.09 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 006] Total-Loss 2.76 = T-Loss 2.09 + B-Loss 0.67 (train)[0m
+[Epoch 006] Total-Loss 2.83 = T-Loss 2.18 + B-Loss 0.66  (val)
+training epoch 7
+use Semi !!!
+[Iteration 000] Total-Loss 2.43 = T-Loss 1.73 + B-Loss 0.70 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.59 = T-Loss 1.91 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.68 = T-Loss 2.01 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.76 = T-Loss 2.08 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 007] Total-Loss 2.76 = T-Loss 2.08 + B-Loss 0.67 (train)[0m
+[Epoch 007] Total-Loss 2.83 = T-Loss 2.18 + B-Loss 0.66  (val)
+training epoch 8
+use Semi !!!
+[Iteration 000] Total-Loss 2.42 = T-Loss 1.72 + B-Loss 0.70 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.59 = T-Loss 1.91 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.68 = T-Loss 2.01 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.76 = T-Loss 2.09 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 008] Total-Loss 2.76 = T-Loss 2.09 + B-Loss 0.67 (train)[0m
+[Epoch 008] Total-Loss 2.83 = T-Loss 2.18 + B-Loss 0.66  (val)
+training epoch 9
+use Semi !!!
+[Iteration 000] Total-Loss 2.42 = T-Loss 1.72 + B-Loss 0.70 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.59 = T-Loss 1.92 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.68 = T-Loss 2.01 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.76 = T-Loss 2.09 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 009] Total-Loss 2.76 = T-Loss 2.09 + B-Loss 0.67 (train)[0m
+[Epoch 009] Total-Loss 2.83 = T-Loss 2.18 + B-Loss 0.66  (val)
+training epoch 10
+use Semi !!!
+[Iteration 000] Total-Loss 2.42 = T-Loss 1.72 + B-Loss 0.70 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.59 = T-Loss 1.92 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.68 = T-Loss 2.01 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.76 = T-Loss 2.08 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 010] Total-Loss 2.76 = T-Loss 2.08 + B-Loss 0.67 (train)[0m
+[Epoch 010] Total-Loss 2.83 = T-Loss 2.18 + B-Loss 0.66  (val)
+training epoch 11
+use Semi !!!
+[Iteration 000] Total-Loss 2.42 = T-Loss 1.73 + B-Loss 0.70 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.59 = T-Loss 1.92 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.68 = T-Loss 2.01 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.76 = T-Loss 2.09 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 011] Total-Loss 2.76 = T-Loss 2.09 + B-Loss 0.67 (train)[0m
+[Epoch 011] Total-Loss 2.83 = T-Loss 2.18 + B-Loss 0.66  (val)
+training epoch 12
+use Semi !!!
+[Iteration 000] Total-Loss 2.42 = T-Loss 1.72 + B-Loss 0.70 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.59 = T-Loss 1.91 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.68 = T-Loss 2.01 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.76 = T-Loss 2.08 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 012] Total-Loss 2.76 = T-Loss 2.08 + B-Loss 0.67 (train)[0m
+[Epoch 012] Total-Loss 2.83 = T-Loss 2.18 + B-Loss 0.66  (val)
+training epoch 13
+use Semi !!!
+[Iteration 000] Total-Loss 2.42 = T-Loss 1.72 + B-Loss 0.70 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.59 = T-Loss 1.92 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.68 = T-Loss 2.01 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.76 = T-Loss 2.09 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 013] Total-Loss 2.76 = T-Loss 2.09 + B-Loss 0.67 (train)[0m
+[Epoch 013] Total-Loss 2.83 = T-Loss 2.18 + B-Loss 0.66  (val)
+training epoch 14
+use Semi !!!
+[Iteration 000] Total-Loss 2.42 = T-Loss 1.73 + B-Loss 0.70 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.59 = T-Loss 1.92 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.68 = T-Loss 2.01 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.76 = T-Loss 2.09 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 014] Total-Loss 2.76 = T-Loss 2.09 + B-Loss 0.67 (train)[0m
+[Epoch 014] Total-Loss 2.83 = T-Loss 2.18 + B-Loss 0.66  (val)
+training epoch 15
+use Semi !!!
+[Iteration 000] Total-Loss 2.42 = T-Loss 1.72 + B-Loss 0.70 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.59 = T-Loss 1.92 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.68 = T-Loss 2.01 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.76 = T-Loss 2.09 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 015] Total-Loss 2.76 = T-Loss 2.09 + B-Loss 0.67 (train)[0m
+[Epoch 015] Total-Loss 2.83 = T-Loss 2.18 + B-Loss 0.66  (val)
+training epoch 16
+use Semi !!!
+[Iteration 000] Total-Loss 2.42 = T-Loss 1.73 + B-Loss 0.70 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.59 = T-Loss 1.91 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.68 = T-Loss 2.01 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.76 = T-Loss 2.08 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 016] Total-Loss 2.76 = T-Loss 2.08 + B-Loss 0.67 (train)[0m
+[Epoch 016] Total-Loss 2.83 = T-Loss 2.18 + B-Loss 0.66  (val)
+training epoch 17
+use Semi !!!
+[Iteration 000] Total-Loss 2.42 = T-Loss 1.73 + B-Loss 0.70 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.59 = T-Loss 1.92 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.68 = T-Loss 2.01 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.76 = T-Loss 2.09 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 017] Total-Loss 2.76 = T-Loss 2.09 + B-Loss 0.67 (train)[0m
+[Epoch 017] Total-Loss 2.83 = T-Loss 2.18 + B-Loss 0.66  (val)
+training epoch 18
+use Semi !!!
+[Iteration 000] Total-Loss 2.42 = T-Loss 1.72 + B-Loss 0.70 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.59 = T-Loss 1.92 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.68 = T-Loss 2.01 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.76 = T-Loss 2.09 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 018] Total-Loss 2.76 = T-Loss 2.09 + B-Loss 0.67 (train)[0m
+[Epoch 018] Total-Loss 2.83 = T-Loss 2.18 + B-Loss 0.66  (val)
+training epoch 19
+use Semi !!!
+[Iteration 000] Total-Loss 2.42 = T-Loss 1.72 + B-Loss 0.70 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.59 = T-Loss 1.91 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.68 = T-Loss 2.01 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.76 = T-Loss 2.08 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 019] Total-Loss 2.76 = T-Loss 2.08 + B-Loss 0.67 (train)[0m
+[Epoch 019] Total-Loss 2.83 = T-Loss 2.18 + B-Loss 0.66  (val)
+Total Time taken for Running 20 epoch is :403.52421875 secs
+
+real	7m13.391s
+user	10m54.885s
+sys	6m44.447s
+Loading validation Video Information ...
+  0% 0/4728 [00:00<?, ?it/s] 20% 948/4728 [00:00<00:00, 9475.06it/s] 40% 1896/4728 [00:00<00:00, 8580.84it/s] 58% 2760/4728 [00:00<00:00, 8141.01it/s] 76% 3578/4728 [00:00<00:00, 7328.42it/s] 91% 4321/4728 [00:00<00:00, 6920.39it/s]100% 4728/4728 [00:00<00:00, 7299.57it/s]Inference start
+
+Inference finished
+Start Post-Processing
+End Post-Processing
+
+real	3m34.271s
+user	6m47.117s
+sys	1m10.521s
+Detection: average-mAP 25.400 mAP@0.50 42.809 mAP@0.55 38.553 mAP@0.60 35.005 mAP@0.65 31.523 mAP@0.70 27.769 mAP@0.75 24.446 mAP@0.80 20.405 mAP@0.85 15.854 mAP@0.90 11.296 mAP@0.95 6.342
+
+real	0m24.427s
+user	5m56.989s
+sys	0m45.409s
