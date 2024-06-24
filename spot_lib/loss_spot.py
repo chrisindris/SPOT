@@ -7,6 +7,8 @@ import yaml
 import sys
 from utils.arguments import handle_args, modify_config
 
+import pdb
+
 with open("./configs/anet.yaml", 'r', encoding='utf-8') as f:
         tmp = f.read()
         config = modify_config(yaml.load(tmp, Loader=yaml.FullLoader), *handle_args(sys.argv))
@@ -250,8 +252,8 @@ def bottom_branch_loss(gt_action, pred_action, f_loss=False): # gt action and pr
 
 
 def top_branch_loss(gt_cls, pred_cls, mask_gt):
-
-    loss = lambda_1*top_ce_loss(gt_cls.cuda(), pred_cls) 
+    #breakpoint()
+    loss = nn.NLLLoss()(nn.LogSoftmax(dim=1)(pred_cls), gt_cls.to(0)) #nn.MSELoss()(gt_cls, pred_cls) # lambda_1*top_ce_loss(gt_cls.cuda(), pred_cls) 
     return loss
 
 def spot_loss(gt_cls, pred_cls ,gt_action , pred_action, mask_gt , label_gt, pretrain=False):

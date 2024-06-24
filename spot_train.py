@@ -390,6 +390,7 @@ def pretrain(data_loader, model, optimizer, pretrain_epoch=0):
             optimizer.zero_grad()
             final_loss.backward()
             optimizer.step()
+            #scheduler.step()
         if not_freeze_class:    
             print("[Pretraining Epoch {0:03d}] Total-Loss {1:.2f} = T-Loss {2:.2f} + B-Loss {3:.2f} + F-Loss {4:.2f} + C-Loss {5:.2f} + Clip-Loss {6:.2f} (train)".format(
             ep, tot_loss,loss[1],loss[2], feat_loss, con_loss, loss_clip_order))
@@ -738,8 +739,10 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
             loss_all = loss_total[0] + consistency_loss + loss_feat_unlabel + loss_contrast_label + loss_contrast_unlabel + loss_feat_label
 
         optimizer.zero_grad()
-        loss_total[2].backward() # loss_all.backward()
+        weighed_loss = 0.1 * loss_total[1] + 0.9 * loss_total[2]
+        weighed_loss.backward() # loss_all.backward()
         optimizer.step()
+        #scheduler.step() # use the LR scheduler
         global_step += 1
         # update_ema_variables(model, model_ema, 0.999, float(global_step/20))   # //5  //25
 
@@ -766,6 +769,7 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
             consistency_loss_ema_all/(n_iter+1)
                 )
             )
+    scheduler.step()
 
     print(
         blue(
@@ -866,6 +870,8 @@ if __name__ == '__main__':
     print(" Saving all Checkpoints in path : "+ output_path )
     optimizer = optim.Adam(model.parameters(), lr=learning_rate,
                            weight_decay=decay)
+    #scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_train, gamma=gamma_train) # seems to not have an effect?
+    scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=gamma_train)
     
     train_loader = torch.utils.data.DataLoader(spot_dataset.SPOTDataset(subset="train"),
                                                batch_size=num_batch, shuffle=False,
@@ -887,8 +893,7 @@ if __name__ == '__main__':
     test_loader = torch.utils.data.DataLoader(spot_dataset.SPOTDataset(subset="validation"),
                                               batch_size=num_batch, shuffle=False,
                                               num_workers=2, pin_memory=False, drop_last=True)
-
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_train, gamma=gamma_train)
+ 
     best_loss = 1e10
 
     start = torch.cuda.Event(enable_timing=True)
@@ -915,7 +920,7 @@ if __name__ == '__main__':
             print(pretrain_epoch)
             pretrain(train_loader_pretrain,model,optimizer, pretrain_epoch)
             checkpoint_pre = torch.load(output_path + "/SPOT.pth.tar")
-            model.load_state_dict(checkpoint_pre['state_dict'])
+            model.load_state_dict(checkpoint_pre['state_dict']) # NOTE: Should this loading of /SPOT.pth.tar happen for training (as well as pretraining)?
             optimizer.load_state_dict(checkpoint_pre['optimizer'])
             pretrain_epoch += config['pretraining']['consecutive_warmup_epochs']
 

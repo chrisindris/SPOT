@@ -1333,4 +1333,5 @@ End Post-Processing
 Detection: average-mAP 31.087 mAP@0.50 47.856 mAP@0.55 44.776 mAP@0.60 41.383 mAP@0.65 38.324 mAP@0.70 35.101 mAP@0.75 30.806 mAP@0.80 26.425 mAP@0.85 21.877 mAP@0.90 16.123 mAP@0.95 8.197
 (venv_SPOT) root@6c970ba04703:~/models/SPOT#
 
-# Using F_loss rather than MSELoss for training (MSELoss for pretraining) raised average-mAP by 5% and mAP@0.50 by 4% versus latest_trial.txt 
+# Using F_loss rather than MSELoss for training (MSELoss for pretraining) raised average-mAP by 5% and mAP@0.50 by 4% versus latest_trial.txt
+# Interestingly, note that this result was attained by only using total_loss[2], not even training total_loss[1] at all.

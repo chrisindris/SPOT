@@ -5,7 +5,7 @@
 # - run a parameter sweep
 # - handle the THUMOS and i-5O datasets
 
-export CUDA_VISIBLE_DEVICES=1
+export CUDA_VISIBLE_DEVICES=0
 
 echo "$0" "$@" | tee "output/experiments/${1}" # record the command used to run this script.
 

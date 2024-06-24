@@ -33,12 +33,12 @@ training:
   learning_rate: 0.0004
   weight_decay: 0.005
   alternate: True
-  max_epoch: 40 # 40 works well
+  max_epoch: 32 # 40 works well
   consecutive_train_epochs: 3 # 3 works well
   checkpoint_path: "/root/models/SPOT/output/"
   random_seed: 1
   step: 10
-  gamma: 0.2
+  gamma: 0.9
   feature_path: "/data/i5O/ActivityNet1.3/train/"
   num_gpu: 1 
 
