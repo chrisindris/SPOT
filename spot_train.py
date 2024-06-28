@@ -35,7 +35,7 @@ contrast_loss = SniCoLoss()
 
 acsl_loss = ACSL()
 
-with open("./configs/anet.yaml", 'r', encoding='utf-8') as f:
+with open(sys.argv[1], 'r', encoding='utf-8') as f:
         tmp = f.read()
         config = modify_config(yaml.load(tmp, Loader=yaml.FullLoader), *handle_args(sys.argv))
 

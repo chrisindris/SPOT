@@ -1,0 +1,82 @@
+./spot_train_eval.sh 1 TRIAL.txt ./configs/anet.yaml dataset.training.output_path=./output/ dataset.testing.output_path=./output/ training.checkpoint_path=./output/
+{'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output/', 'unlabel_percent': 0.7, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output/', 'unlabel_percent': 0.7, 'use_semi': True}}, 'model': {'embedding_head': 4, 'feat_dim': 400, 'temporal_scale': 100}, 'pretraining': {'warmup_epoch': 30, 'consecutive_warmup_epochs': 3}, 'training': {'batch_size': 25, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 40, 'consecutive_train_epochs': 3, 'checkpoint_path': './output/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
+
+Total Number of Learnable Paramters (in M) :  6.67706
+No of Gpus using to Train :  1 
+ Saving all Checkpoints in path : ./output/
+Loading train Video Information ...
+  0% 0/9649 [00:00<?, ?it/s]  6% 550/9649 [00:00<00:01, 5496.00it/s] 11% 1100/9649 [00:00<00:01, 5402.27it/s] 17% 1641/9649 [00:00<00:01, 5390.24it/s] 23% 2181/9649 [00:00<00:01, 5360.76it/s] 28% 2728/9649 [00:00<00:01, 5399.56it/s] 34% 3269/9649 [00:00<00:01, 5352.48it/s] 39% 3805/9649 [00:00<00:01, 4929.22it/s] 45% 4304/9649 [00:00<00:01, 4727.23it/s] 50% 4782/9649 [00:00<00:01, 4614.17it/s] 54% 5247/9649 [00:01<00:00, 4507.40it/s] 59% 5700/9649 [00:01<00:00, 4453.75it/s] 64% 6147/9649 [00:01<00:00, 4407.75it/s] 68% 6589/9649 [00:01<00:00, 4349.20it/s] 73% 7025/9649 [00:01<00:00, 4306.41it/s] 77% 7456/9649 [00:01<00:00, 4286.41it/s] 82% 7885/9649 [00:01<00:00, 4270.87it/s] 86% 8313/9649 [00:01<00:00, 4215.25it/s] 91% 8735/9649 [00:01<00:00, 4197.25it/s] 95% 9155/9649 [00:01<00:00, 4173.18it/s] 99% 9573/9649 [00:02<00:00, 4126.31it/s]100% 9649/9649 [00:02<00:00, 4549.54it/s]
+Loading train Video Information ...
+  0% 0/9649 [00:00<?, ?it/s] 12% 1147/9649 [00:00<00:00, 11465.66it/s] 24% 2319/9649 [00:00<00:00, 11607.38it/s] 36% 3480/9649 [00:00<00:00, 11192.53it/s] 48% 4601/9649 [00:00<00:00, 11076.58it/s] 59% 5710/9649 [00:00<00:00, 11064.50it/s] 71% 6832/9649 [00:00<00:00, 11112.88it/s] 82% 7947/9649 [00:00<00:00, 11124.53it/s] 94% 9060/9649 [00:00<00:00, 11014.09it/s]100% 9649/9649 [00:00<00:00, 11099.26it/s]
+Loading unlabel Video Information ...
+  0% 0/6764 [00:00<?, ?it/s] 11% 769/6764 [00:00<00:00, 7682.11it/s] 23% 1538/6764 [00:00<00:00, 7361.24it/s] 34% 2276/6764 [00:00<00:00, 6978.46it/s] 44% 2976/6764 [00:00<00:00, 6716.93it/s] 54% 3650/6764 [00:00<00:00, 6399.99it/s] 63% 4293/6764 [00:00<00:00, 6111.66it/s] 73% 4907/6764 [00:00<00:00, 4507.14it/s] 80% 5424/6764 [00:00<00:00, 4664.71it/s] 88% 5933/6764 [00:01<00:00, 4722.86it/s] 95% 6436/6764 [00:01<00:00, 4695.40it/s]100% 6764/6764 [00:01<00:00, 5344.52it/s]
+Loading validation Video Information ...
+  0% 0/4728 [00:00<?, ?it/s] 11% 506/4728 [00:00<00:00, 5050.78it/s] 21% 1012/4728 [00:00<00:00, 5038.59it/s] 32% 1516/4728 [00:00<00:00, 4928.40it/s] 43% 2010/4728 [00:00<00:00, 4855.89it/s] 53% 2496/4728 [00:00<00:00, 4670.73it/s] 63% 2965/4728 [00:00<00:00, 4601.43it/s] 72% 3426/4728 [00:00<00:00, 4491.44it/s] 82% 3876/4728 [00:00<00:00, 4381.62it/s] 91% 4315/4728 [00:00<00:00, 4303.18it/s]100% 4728/4728 [00:01<00:00, 4499.65it/s]0
+
+/root/models/venv_SPOT/lib/python3.8/site-packages/torch/nn/_reduction.py:42: UserWarning: size_average and reduce args will be deprecated, please use reduction='none' instead.
+  warnings.warn(warning.format(ret))
+n_iter  0 : loss (0.252456) + tot_loss (0.992881) + tot_loss_crop (0.930530) + loss_clip_order (0.761037) = final_loss = 2.936905
+n_iter  1 : loss (0.241682) + tot_loss (0.987376) + tot_loss_crop (0.931628) + loss_clip_order (0.693177) = final_loss = 2.853864
+n_iter  2 : loss (0.231091) + tot_loss (0.984015) + tot_loss_crop (0.930600) + loss_clip_order (0.693148) = final_loss = 2.838854
+n_iter  3 : loss (0.221790) + tot_loss (0.992041) + tot_loss_crop (0.929379) + loss_clip_order (0.693148) = final_loss = 2.836358
+n_iter  4 : loss (0.214700) + tot_loss (1.003876) + tot_loss_crop (0.929939) + loss_clip_order (0.693136) = final_loss = 2.841651
+n_iter  5 : loss (0.203122) + tot_loss (1.000340) + tot_loss_crop (0.921768) + loss_clip_order (0.693148) = final_loss = 2.818377
+n_iter  6 : loss (0.194821) + tot_loss (0.972531) + tot_loss_crop (0.910996) + loss_clip_order (0.693148) = final_loss = 2.771496
+n_iter  7 : loss (0.192017) + tot_loss (0.968140) + tot_loss_crop (0.905571) + loss_clip_order (0.693148) = final_loss = 2.758875
+n_iter  8 : loss (0.189125) + tot_loss (0.966873) + tot_loss_crop (0.898709) + loss_clip_order (0.693160) = final_loss = 2.747867
+n_iter  9 : loss (0.176767) + tot_loss (0.964149) + tot_loss_crop (0.892314) + loss_clip_order (0.693109) = final_loss = 2.726339
+n_iter 10 : loss (0.172998) + tot_loss (0.934373) + tot_loss_crop (0.884188) + loss_clip_order (0.693611) = final_loss = 2.685170
+n_iter 11 : loss (0.175013) + tot_loss (0.928179) + tot_loss_crop (0.877809) + loss_clip_order (0.693104) = final_loss = 2.674105
+n_iter 12 : loss (0.179000) + tot_loss (0.923086) + tot_loss_crop (0.869584) + loss_clip_order (0.693347) = final_loss = 2.665016
+n_iter 13 : loss (0.178548) + tot_loss (0.903710) + tot_loss_crop (0.864420) + loss_clip_order (0.692968) = final_loss = 2.639645
+n_iter 14 : loss (0.174406) + tot_loss (0.891218) + tot_loss_crop (0.859111) + loss_clip_order (0.693010) = final_loss = 2.617745
+n_iter 15 : loss (0.186171) + tot_loss (0.880715) + tot_loss_crop (0.853496) + loss_clip_order (0.694217) = final_loss = 2.614599
+n_iter 16 : loss (0.182682) + tot_loss (0.867604) + tot_loss_crop (0.848602) + loss_clip_order (0.695113) = final_loss = 2.594000
+n_iter 17 : loss (0.180233) + tot_loss (0.864286) + tot_loss_crop (0.851695) + loss_clip_order (0.694020) = final_loss = 2.590234
+n_iter 18 : loss (0.178197) + tot_loss (0.868004) + tot_loss_crop (0.851655) + loss_clip_order (0.699146) = final_loss = 2.597002
+n_iter 19 : loss (0.172118) + tot_loss (0.870465) + tot_loss_crop (0.852098) + loss_clip_order (0.694568) = final_loss = 2.589249
+n_iter 20 : loss (0.162264) + tot_loss (0.864762) + tot_loss_crop (0.853552) + loss_clip_order (0.696307) = final_loss = 2.576886
+n_iter 21 : loss (0.159933) + tot_loss (0.871095) + tot_loss_crop (0.856061) + loss_clip_order (0.693556) = final_loss = 2.580645
+n_iter 22 : loss (0.170325) + tot_loss (0.858119) + tot_loss_crop (0.846932) + loss_clip_order (0.694014) = final_loss = 2.569390
+n_iter 23 : loss (0.168246) + tot_loss (0.893071) + tot_loss_crop (0.852340) + loss_clip_order (0.695856) = final_loss = 2.609513
+n_iter 24 : loss (0.165730) + tot_loss (0.856994) + tot_loss_crop (0.845861) + loss_clip_order (0.694744) = final_loss = 2.563329
+n_iter 25 : loss (0.172474) + tot_loss (0.876410) + tot_loss_crop (0.841182) + loss_clip_order (0.694289) = final_loss = 2.584356
+n_iter 26 : loss (0.164236) + tot_loss (0.841340) + tot_loss_crop (0.847080) + loss_clip_order (0.695141) = final_loss = 2.547799
+n_iter 27 : loss (0.157369) + tot_loss (0.847677) + tot_loss_crop (0.847596) + loss_clip_order (0.693261) = final_loss = 2.545902
+n_iter 28 : loss (0.164608) + tot_loss (0.846052) + tot_loss_crop (0.841953) + loss_clip_order (0.692977) = final_loss = 2.545590
+n_iter 29 : loss (0.166714) + tot_loss (0.849229) + tot_loss_crop (0.839672) + loss_clip_order (0.693334) = final_loss = 2.548949
+n_iter 30 : loss (0.163231) + tot_loss (0.846740) + tot_loss_crop (0.841988) + loss_clip_order (0.692246) = final_loss = 2.544205
+n_iter 31 : loss (0.169172) + tot_loss (0.844609) + tot_loss_crop (0.839724) + loss_clip_order (0.693185) = final_loss = 2.546690
+n_iter 32 : loss (0.175741) + tot_loss (0.847624) + tot_loss_crop (0.835117) + loss_clip_order (0.694168) = final_loss = 2.552651
+n_iter 33 : loss (0.170578) + tot_loss (0.836245) + tot_loss_crop (0.835219) + loss_clip_order (0.691399) = final_loss = 2.533441
+n_iter 34 : loss (0.174393) + tot_loss (0.827370) + tot_loss_crop (0.828916) + loss_clip_order (0.691106) = final_loss = 2.521785
+n_iter 35 : loss (0.172917) + tot_loss (0.837802) + tot_loss_crop (0.835846) + loss_clip_order (0.692944) = final_loss = 2.539510
+n_iter 36 : loss (0.169478) + tot_loss (0.821340) + tot_loss_crop (0.829962) + loss_clip_order (0.690997) = final_loss = 2.511777
+n_iter 37 : loss (0.157228) + tot_loss (0.817792) + tot_loss_crop (0.833044) + loss_clip_order (0.692525) = final_loss = 2.500589
+n_iter 38 : loss (0.156384) + tot_loss (0.820928) + tot_loss_crop (0.832980) + loss_clip_order (0.695280) = final_loss = 2.505572
+n_iter 39 : loss (0.163517) + tot_loss (0.839558) + tot_loss_crop (0.834807) + loss_clip_order (0.694393) = final_loss = 2.532275
+n_iter 40 : loss (0.167309) + tot_loss (0.815860) + tot_loss_crop (0.829318) + loss_clip_order (0.691582) = final_loss = 2.504070
+Traceback (most recent call last):
+  File "spot_train.py", line 917, in <module>
+    pretrain(train_loader_pretrain,model,optimizer, pretrain_epoch)
+  File "spot_train.py", line 305, in pretrain
+    mod_input_data, top_br_gt, bottom_br_gt, action_gt, label_gt  = TemporalCrop(input_data_aug,top_br_pred) # [torch.Size([256, 400, 100]), torch.Size([256, 100]), torch.Size([256, 100, 100]), torch.Size([256, 201, 100]), torch.Size([256, 200])]
+  File "spot_train.py", line 191, in TemporalCrop
+    empty_gt[i,fg_action_idx_mode[i],:] = temp_mask_cls
+  File "/root/models/venv_SPOT/lib/python3.8/site-packages/torch/utils/data/_utils/signal_handling.py", line 66, in handler
+    _error_if_any_worker_fails()
+RuntimeError: DataLoader worker (pid 1429111) is killed by signal: Terminated. 
+
+real	1m50.039s
+user	2m9.838s
+sys	0m19.102s
+Terminated
+
+real	0m9.732s
+user	0m9.941s
+sys	0m12.699s
+Terminated
+
+real	0m11.735s
+user	0m12.514s
+sys	0m6.325s

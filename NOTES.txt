@@ -1,0 +1,11 @@
+output/experiments/latest_trial-training_bloss_new.txt
+- The first experiment to get >30 avg mAP and the highest result so far.
+- Curiously, it gets this result despite the fact that it only uses loss_total[2].backward(), ie. the bottom branch.
+- Perhaps this was a (very extreme) way to mitigate overfitting?
+
+output/experiments/latest_trial-training_bloss_new-toploss.txt
+- This one gets a lower score than latest_trial-training_bloss_new.txt, perhaps due to overfitting. However, it is more proper since it uses both losses.
+- This is why I base the successive experiments regarding increasing the percentage of labeled data (see output/experiments/latest_trial-training_bloss_new-toploss-unlabel_percent*) on this one.
+
+TRIAL*
+- These are re-runs of latest_trial-training_bloss_new-toploss-* that I use to make sure that the code is working, as of 27/06/24. Dually, I use them to train the multirun script. 

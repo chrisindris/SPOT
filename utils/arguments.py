@@ -12,7 +12,7 @@ def handle_args(args=sys.argv):
     """
     keys = []
     new_values = []
-    for arg in args[1:]:
+    for arg in filter(lambda x : '=' in x, args[1:]):
         key, value = arg.split('=')
         key = key.split('.')
         keys.append(key)
@@ -49,7 +49,8 @@ def modify_config(config, keys, new_values):
         # type correction
         if isinstance(a, list):
             lst[-1] = [float(i) for i in lst[-1].replace(' ', '')[1:-1].split(',')]
-            pass
+        elif isinstance(a, bool):
+            lst[-1] = bool(['False', 'True'].index(lst[-1]))
         else:
             a = type(a)
             lst[-1] = a(lst[-1])
@@ -62,7 +63,7 @@ def modify_config(config, keys, new_values):
     return config
 
 
-with open("./configs/anet.yaml", 'r', encoding='utf-8') as f:
+with open(sys.argv[1], 'r', encoding='utf-8') as f:
         tmp = f.read()
         config = modify_config(yaml.load(tmp, Loader=yaml.FullLoader), *handle_args(sys.argv))
 config = modify_config(config, *handle_args())
