@@ -26,6 +26,7 @@ from utils.arguments import handle_args, modify_config
 with open(sys.argv[1], 'r', encoding='utf-8') as f:
         tmp = f.read()
         config = modify_config(yaml.load(tmp, Loader=yaml.FullLoader), *handle_args(sys.argv))
+print(config)
 
 if __name__ == '__main__':
     mode = "semi"  ## "semi", "semi_ema" ,""
@@ -42,10 +43,11 @@ if __name__ == '__main__':
     model.load_state_dict(checkpoint['state_dict'])
     model.eval()
     ### Load Dataloader ###
-    test_loader = torch.utils.data.DataLoader(spot_dataset.SPOTDataset(subset="validation", mode='inference'),
+    test_loader = torch.utils.data.DataLoader(spot_dataset.SPOTDataset(subset='validation', mode='inference'), # to get validation set: subset='validation', mode='inference'
                                               batch_size=1, shuffle=False,
                                               num_workers=8, pin_memory=True, drop_last=False)
 
+    print("len(test_loader),", len(test_loader))
 
     # im_path = os.path.join(im_fig_path,"SOLO_PIC")
     

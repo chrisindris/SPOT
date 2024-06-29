@@ -1,0 +1,1004 @@
+./spot_train_eval.sh 0 latest_trial-training_bloss_new-toploss-unlabel_percent_0.0-max_epoch_30.txt ./configs/anet.yaml dataset.training.unlabel_percent=0.0 dataset.testing.unlabel_percent=0.0 pretraining.warmup_epoch=3 training.max_epoch=4 dataset.training.output_path=./output/ dataset.training.output_path=./output/ training.checkpoint_path=./output/
+{'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output/', 'unlabel_percent': 0.0, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': '/root/models/SPOT/output/', 'unlabel_percent': 0.0, 'use_semi': True}}, 'model': {'embedding_head': 4, 'feat_dim': 400, 'temporal_scale': 100}, 'pretraining': {'warmup_epoch': 3, 'consecutive_warmup_epochs': 3}, 'training': {'batch_size': 25, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 4, 'consecutive_train_epochs': 3, 'checkpoint_path': './output/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
+
+Total Number of Learnable Paramters (in M) :  6.67706
+No of Gpus using to Train :  1 
+ Saving all Checkpoints in path : ./output/
+Loading train Video Information ...
+  0% 0/9649 [00:00<?, ?it/s]  5% 457/9649 [00:00<00:02, 4566.09it/s]  9% 914/9649 [00:00<00:02, 3719.93it/s] 13% 1296/9649 [00:00<00:02, 3496.86it/s] 17% 1651/9649 [00:00<00:02, 3387.75it/s] 21% 1993/9649 [00:00<00:02, 3309.88it/s] 24% 2326/9649 [00:00<00:02, 3248.26it/s] 27% 2652/9649 [00:00<00:02, 3008.57it/s] 31% 2956/9649 [00:00<00:02, 3010.55it/s] 34% 3261/9649 [00:01<00:02, 3019.20it/s] 37% 3569/9649 [00:01<00:02, 3036.17it/s] 40% 3874/9649 [00:01<00:01, 3023.70it/s] 43% 4177/9649 [00:01<00:01, 3009.98it/s] 46% 4479/9649 [00:01<00:01, 2988.61it/s] 50% 4779/9649 [00:01<00:01, 2970.65it/s] 53% 5077/9649 [00:01<00:01, 2936.05it/s] 56% 5371/9649 [00:01<00:01, 2909.83it/s] 59% 5663/9649 [00:01<00:01, 2862.35it/s] 62% 5950/9649 [00:01<00:01, 2863.80it/s] 65% 6237/9649 [00:02<00:01, 2820.43it/s] 68% 6520/9649 [00:02<00:01, 2776.71it/s] 70% 6798/9649 [00:02<00:01, 2727.00it/s] 73% 7071/9649 [00:02<00:00, 2718.76it/s] 76% 7343/9649 [00:02<00:00, 2714.98it/s] 79% 7615/9649 [00:02<00:00, 2681.17it/s] 82% 7884/9649 [00:02<00:00, 2655.01it/s] 84% 8150/9649 [00:02<00:00, 2584.69it/s] 87% 8409/9649 [00:02<00:00, 2434.52it/s] 90% 8661/9649 [00:02<00:00, 2456.56it/s] 93% 8968/9649 [00:03<00:00, 2631.52it/s] 96% 9273/9649 [00:03<00:00, 2750.88it/s] 99% 9566/9649 [00:03<00:00, 2801.62it/s]100% 9649/9649 [00:03<00:00, 2904.11it/s]
+Loading train Video Information ...
+  0% 0/9649 [00:00<?, ?it/s]  6% 562/9649 [00:00<00:01, 5619.43it/s] 12% 1124/9649 [00:00<00:01, 5384.42it/s] 17% 1664/9649 [00:00<00:01, 5266.23it/s] 23% 2192/9649 [00:00<00:01, 5155.73it/s] 28% 2708/9649 [00:00<00:01, 5043.70it/s] 33% 3213/9649 [00:00<00:01, 4849.53it/s] 38% 3699/9649 [00:00<00:01, 4750.66it/s] 43% 4175/9649 [00:00<00:01, 4645.18it/s] 48% 4640/9649 [00:00<00:01, 4518.05it/s] 53% 5093/9649 [00:01<00:01, 4308.39it/s] 57% 5526/9649 [00:01<00:00, 4173.46it/s] 62% 5945/9649 [00:01<00:00, 4118.85it/s] 66% 6358/9649 [00:01<00:00, 4033.69it/s] 70% 6762/9649 [00:01<00:00, 3934.56it/s] 74% 7156/9649 [00:01<00:00, 3886.65it/s] 78% 7545/9649 [00:01<00:00, 3810.98it/s] 82% 7927/9649 [00:01<00:00, 3726.59it/s] 86% 8300/9649 [00:01<00:00, 3653.33it/s] 90% 8666/9649 [00:02<00:00, 3581.03it/s] 94% 9025/9649 [00:02<00:00, 3501.75it/s] 97% 9376/9649 [00:02<00:00, 3450.53it/s]100% 9649/9649 [00:02<00:00, 4114.23it/s]
+Loading validation Video Information ...
+  0% 0/4728 [00:00<?, ?it/s] 11% 510/4728 [00:00<00:00, 5098.87it/s] 22% 1020/4728 [00:00<00:00, 4941.56it/s] 32% 1515/4728 [00:00<00:00, 4791.19it/s] 42% 1995/4728 [00:00<00:00, 4572.85it/s] 52% 2454/4728 [00:00<00:00, 4161.27it/s] 61% 2876/4728 [00:00<00:00, 4009.55it/s] 69% 3281/4728 [00:00<00:00, 3898.87it/s] 78% 3673/4728 [00:00<00:00, 3762.42it/s] 86% 4051/4728 [00:00<00:00, 3686.40it/s] 94% 4421/4728 [00:01<00:00, 3581.36it/s]100% 4728/4728 [00:01<00:00, 3928.05it/s]0
+
+n_iter  0 : loss (0.252194) + tot_loss (0.978030) + tot_loss_crop (0.927331) + loss_clip_order (0.749160) = final_loss = 2.906715
+n_iter  1 : loss (0.241877) + tot_loss (0.998646) + tot_loss_crop (0.935741) + loss_clip_order (0.693083) = final_loss = 2.869347
+n_iter  2 : loss (0.231418) + tot_loss (0.991689) + tot_loss_crop (0.933465) + loss_clip_order (0.693148) = final_loss = 2.849720
+n_iter  3 : loss (0.222372) + tot_loss (0.995678) + tot_loss_crop (0.930082) + loss_clip_order (0.693148) = final_loss = 2.841280
+n_iter  4 : loss (0.215052) + tot_loss (1.000200) + tot_loss_crop (0.929754) + loss_clip_order (0.693162) = final_loss = 2.838168
+n_iter  5 : loss (0.203094) + tot_loss (0.981804) + tot_loss_crop (0.919797) + loss_clip_order (0.693148) = final_loss = 2.797843
+n_iter  6 : loss (0.194241) + tot_loss (0.984985) + tot_loss_crop (0.916122) + loss_clip_order (0.693148) = final_loss = 2.788496
+n_iter  7 : loss (0.191988) + tot_loss (0.973194) + tot_loss_crop (0.910239) + loss_clip_order (0.693148) = final_loss = 2.768568
+n_iter  8 : loss (0.187190) + tot_loss (0.971434) + tot_loss_crop (0.904891) + loss_clip_order (0.693147) = final_loss = 2.756662
+n_iter  9 : loss (0.175536) + tot_loss (0.971881) + tot_loss_crop (0.896383) + loss_clip_order (0.693178) = final_loss = 2.736978
+n_iter 10 : loss (0.171690) + tot_loss (0.936447) + tot_loss_crop (0.886179) + loss_clip_order (0.693081) = final_loss = 2.687397
+n_iter 11 : loss (0.172730) + tot_loss (0.925830) + tot_loss_crop (0.880926) + loss_clip_order (0.693270) = final_loss = 2.672755
+n_iter 12 : loss (0.176851) + tot_loss (0.936025) + tot_loss_crop (0.872408) + loss_clip_order (0.692825) = final_loss = 2.678108
+n_iter 13 : loss (0.175612) + tot_loss (0.909293) + tot_loss_crop (0.867967) + loss_clip_order (0.693108) = final_loss = 2.645979
+n_iter 14 : loss (0.169257) + tot_loss (0.912738) + tot_loss_crop (0.865537) + loss_clip_order (0.694191) = final_loss = 2.641723
+n_iter 15 : loss (0.182755) + tot_loss (0.892662) + tot_loss_crop (0.856834) + loss_clip_order (0.693782) = final_loss = 2.626032
+n_iter 16 : loss (0.179451) + tot_loss (0.901341) + tot_loss_crop (0.854633) + loss_clip_order (0.694126) = final_loss = 2.629550
+n_iter 17 : loss (0.183007) + tot_loss (0.891032) + tot_loss_crop (0.853523) + loss_clip_order (0.693939) = final_loss = 2.621502
+n_iter 18 : loss (0.180390) + tot_loss (0.859002) + tot_loss_crop (0.848823) + loss_clip_order (0.692206) = final_loss = 2.580421
+n_iter 19 : loss (0.177243) + tot_loss (0.893648) + tot_loss_crop (0.850227) + loss_clip_order (0.696395) = final_loss = 2.617513
+n_iter 20 : loss (0.166055) + tot_loss (0.875656) + tot_loss_crop (0.853742) + loss_clip_order (0.696583) = final_loss = 2.592036
+n_iter 21 : loss (0.163164) + tot_loss (0.871996) + tot_loss_crop (0.854966) + loss_clip_order (0.692662) = final_loss = 2.582788
+n_iter 22 : loss (0.169924) + tot_loss (0.853958) + tot_loss_crop (0.845491) + loss_clip_order (0.694770) = final_loss = 2.564143
+n_iter 23 : loss (0.167761) + tot_loss (0.888062) + tot_loss_crop (0.851574) + loss_clip_order (0.694823) = final_loss = 2.602220
+n_iter 24 : loss (0.164177) + tot_loss (0.879707) + tot_loss_crop (0.846836) + loss_clip_order (0.695267) = final_loss = 2.585988
+n_iter 25 : loss (0.170356) + tot_loss (0.870460) + tot_loss_crop (0.842033) + loss_clip_order (0.690923) = final_loss = 2.573773
+n_iter 26 : loss (0.164865) + tot_loss (0.868637) + tot_loss_crop (0.848970) + loss_clip_order (0.692922) = final_loss = 2.575393
+n_iter 27 : loss (0.157570) + tot_loss (0.840335) + tot_loss_crop (0.845730) + loss_clip_order (0.693283) = final_loss = 2.536918
+n_iter 28 : loss (0.163863) + tot_loss (0.866397) + tot_loss_crop (0.844670) + loss_clip_order (0.691835) = final_loss = 2.566766
+n_iter 29 : loss (0.167237) + tot_loss (0.851186) + tot_loss_crop (0.839378) + loss_clip_order (0.692900) = final_loss = 2.550701
+n_iter 30 : loss (0.164035) + tot_loss (0.847273) + tot_loss_crop (0.841977) + loss_clip_order (0.691227) = final_loss = 2.544513
+n_iter 31 : loss (0.166398) + tot_loss (0.847533) + tot_loss_crop (0.841456) + loss_clip_order (0.693411) = final_loss = 2.548798
+n_iter 32 : loss (0.175272) + tot_loss (0.841681) + tot_loss_crop (0.833069) + loss_clip_order (0.693776) = final_loss = 2.543797
+n_iter 33 : loss (0.169629) + tot_loss (0.831335) + tot_loss_crop (0.836633) + loss_clip_order (0.692209) = final_loss = 2.529806
+n_iter 34 : loss (0.172999) + tot_loss (0.848701) + tot_loss_crop (0.832730) + loss_clip_order (0.692340) = final_loss = 2.546770
+n_iter 35 : loss (0.173052) + tot_loss (0.843753) + tot_loss_crop (0.834929) + loss_clip_order (0.691618) = final_loss = 2.543352
+n_iter 36 : loss (0.171026) + tot_loss (0.828777) + tot_loss_crop (0.831339) + loss_clip_order (0.693432) = final_loss = 2.524575
+n_iter 37 : loss (0.162807) + tot_loss (0.839529) + tot_loss_crop (0.836828) + loss_clip_order (0.692492) = final_loss = 2.531656
+n_iter 38 : loss (0.157419) + tot_loss (0.821128) + tot_loss_crop (0.833112) + loss_clip_order (0.692005) = final_loss = 2.503664
+n_iter 39 : loss (0.163750) + tot_loss (0.821180) + tot_loss_crop (0.832785) + loss_clip_order (0.691860) = final_loss = 2.509575
+n_iter 40 : loss (0.168934) + tot_loss (0.813453) + tot_loss_crop (0.830186) + loss_clip_order (0.690632) = final_loss = 2.503206
+n_iter 41 : loss (0.167451) + tot_loss (0.835901) + tot_loss_crop (0.830948) + loss_clip_order (0.691543) = final_loss = 2.525843
+n_iter 42 : loss (0.170862) + tot_loss (0.825096) + tot_loss_crop (0.825364) + loss_clip_order (0.687545) = final_loss = 2.508868
+n_iter 43 : loss (0.170750) + tot_loss (0.826690) + tot_loss_crop (0.828746) + loss_clip_order (0.690794) = final_loss = 2.516980
+n_iter 44 : loss (0.176720) + tot_loss (0.815007) + tot_loss_crop (0.821136) + loss_clip_order (0.683375) = final_loss = 2.496238
+n_iter 45 : loss (0.182129) + tot_loss (0.812199) + tot_loss_crop (0.820186) + loss_clip_order (0.668536) = final_loss = 2.483051
+n_iter 46 : loss (0.196540) + tot_loss (0.823205) + tot_loss_crop (0.826686) + loss_clip_order (0.696295) = final_loss = 2.542726
+n_iter 47 : loss (0.170082) + tot_loss (0.818063) + tot_loss_crop (0.824848) + loss_clip_order (0.689119) = final_loss = 2.502112
+n_iter 48 : loss (0.164032) + tot_loss (0.830654) + tot_loss_crop (0.834350) + loss_clip_order (0.691955) = final_loss = 2.520992
+n_iter 49 : loss (0.174868) + tot_loss (0.841426) + tot_loss_crop (0.833608) + loss_clip_order (0.691963) = final_loss = 2.541865
+n_iter 50 : loss (0.189405) + tot_loss (0.843158) + tot_loss_crop (0.830466) + loss_clip_order (0.692686) = final_loss = 2.555716
+n_iter 51 : loss (0.174490) + tot_loss (0.854588) + tot_loss_crop (0.835499) + loss_clip_order (0.692235) = final_loss = 2.556814
+n_iter 52 : loss (0.176857) + tot_loss (0.834182) + tot_loss_crop (0.828922) + loss_clip_order (0.693020) = final_loss = 2.532982
+n_iter 53 : loss (0.161344) + tot_loss (0.836618) + tot_loss_crop (0.831329) + loss_clip_order (0.693219) = final_loss = 2.522510
+n_iter 54 : loss (0.152522) + tot_loss (0.831752) + tot_loss_crop (0.833067) + loss_clip_order (0.693278) = final_loss = 2.510619
+n_iter 55 : loss (0.162265) + tot_loss (0.830962) + tot_loss_crop (0.828226) + loss_clip_order (0.691170) = final_loss = 2.512624
+n_iter 56 : loss (0.167475) + tot_loss (0.813174) + tot_loss_crop (0.820580) + loss_clip_order (0.689410) = final_loss = 2.490638
+n_iter 57 : loss (0.172569) + tot_loss (0.794721) + tot_loss_crop (0.820209) + loss_clip_order (0.688722) = final_loss = 2.476221
+n_iter 58 : loss (0.173106) + tot_loss (0.797158) + tot_loss_crop (0.814319) + loss_clip_order (0.691140) = final_loss = 2.475724
+n_iter 59 : loss (0.175214) + tot_loss (0.797815) + tot_loss_crop (0.811261) + loss_clip_order (0.682322) = final_loss = 2.466613
+n_iter 60 : loss (0.166920) + tot_loss (0.810514) + tot_loss_crop (0.814583) + loss_clip_order (0.678772) = final_loss = 2.470788
+n_iter 61 : loss (0.173247) + tot_loss (0.785234) + tot_loss_crop (0.809122) + loss_clip_order (0.668981) = final_loss = 2.436584
+n_iter 62 : loss (0.176147) + tot_loss (0.824266) + tot_loss_crop (0.810106) + loss_clip_order (0.675850) = final_loss = 2.486369
+n_iter 63 : loss (0.169883) + tot_loss (0.812017) + tot_loss_crop (0.814828) + loss_clip_order (0.638757) = final_loss = 2.435484
+n_iter 64 : loss (0.172991) + tot_loss (0.782222) + tot_loss_crop (0.811514) + loss_clip_order (0.650526) = final_loss = 2.417253
+n_iter 65 : loss (0.163064) + tot_loss (0.783735) + tot_loss_crop (0.812338) + loss_clip_order (0.611506) = final_loss = 2.370643
+n_iter 66 : loss (0.168613) + tot_loss (0.796865) + tot_loss_crop (0.808349) + loss_clip_order (0.626195) = final_loss = 2.400022
+n_iter 67 : loss (0.176448) + tot_loss (0.799993) + tot_loss_crop (0.801930) + loss_clip_order (0.622101) = final_loss = 2.400472
+n_iter 68 : loss (0.172190) + tot_loss (0.788101) + tot_loss_crop (0.811123) + loss_clip_order (0.550073) = final_loss = 2.321487
+n_iter 69 : loss (0.184933) + tot_loss (0.790937) + tot_loss_crop (0.807324) + loss_clip_order (0.608372) = final_loss = 2.391565
+n_iter 70 : loss (0.170131) + tot_loss (0.787950) + tot_loss_crop (0.802977) + loss_clip_order (0.603684) = final_loss = 2.364743
+n_iter 71 : loss (0.166486) + tot_loss (0.784105) + tot_loss_crop (0.800014) + loss_clip_order (0.645753) = final_loss = 2.396358
+n_iter 72 : loss (0.166094) + tot_loss (0.791061) + tot_loss_crop (0.798185) + loss_clip_order (0.657153) = final_loss = 2.412493
+n_iter 73 : loss (0.163083) + tot_loss (0.786717) + tot_loss_crop (0.799469) + loss_clip_order (0.658236) = final_loss = 2.407505
+n_iter 74 : loss (0.169352) + tot_loss (0.780054) + tot_loss_crop (0.794685) + loss_clip_order (0.646609) = final_loss = 2.390700
+n_iter 75 : loss (0.160270) + tot_loss (0.789809) + tot_loss_crop (0.799855) + loss_clip_order (0.642769) = final_loss = 2.392703
+n_iter 76 : loss (0.164666) + tot_loss (0.766985) + tot_loss_crop (0.795901) + loss_clip_order (0.605324) = final_loss = 2.332875
+n_iter 77 : loss (0.180393) + tot_loss (0.779681) + tot_loss_crop (0.790738) + loss_clip_order (0.577436) = final_loss = 2.328248
+n_iter 78 : loss (0.185175) + tot_loss (0.773561) + tot_loss_crop (0.795741) + loss_clip_order (0.547077) = final_loss = 2.301555
+n_iter 79 : loss (0.186226) + tot_loss (0.785784) + tot_loss_crop (0.797556) + loss_clip_order (0.564445) = final_loss = 2.334011
+n_iter 80 : loss (0.168158) + tot_loss (0.761637) + tot_loss_crop (0.793842) + loss_clip_order (0.507772) = final_loss = 2.231410
+n_iter 81 : loss (0.175402) + tot_loss (0.781076) + tot_loss_crop (0.785319) + loss_clip_order (0.542944) = final_loss = 2.284743
+n_iter 82 : loss (0.164439) + tot_loss (0.783262) + tot_loss_crop (0.790839) + loss_clip_order (0.523635) = final_loss = 2.262176
+n_iter 83 : loss (0.153331) + tot_loss (0.784033) + tot_loss_crop (0.797687) + loss_clip_order (0.491902) = final_loss = 2.226953
+n_iter 84 : loss (0.173101) + tot_loss (0.776838) + tot_loss_crop (0.787564) + loss_clip_order (0.505314) = final_loss = 2.242816
+n_iter 85 : loss (0.157220) + tot_loss (0.772194) + tot_loss_crop (0.793622) + loss_clip_order (0.507737) = final_loss = 2.230772
+n_iter 86 : loss (0.164331) + tot_loss (0.764752) + tot_loss_crop (0.789597) + loss_clip_order (0.475050) = final_loss = 2.193730
+n_iter 87 : loss (0.169283) + tot_loss (0.777222) + tot_loss_crop (0.783314) + loss_clip_order (0.488717) = final_loss = 2.218536
+n_iter 88 : loss (0.164823) + tot_loss (0.771625) + tot_loss_crop (0.784290) + loss_clip_order (0.465711) = final_loss = 2.186449
+n_iter 89 : loss (0.163824) + tot_loss (0.767241) + tot_loss_crop (0.789781) + loss_clip_order (0.430568) = final_loss = 2.151414
+n_iter 90 : loss (0.179048) + tot_loss (0.775438) + tot_loss_crop (0.780936) + loss_clip_order (0.428490) = final_loss = 2.163912
+n_iter 91 : loss (0.163286) + tot_loss (0.757038) + tot_loss_crop (0.786965) + loss_clip_order (0.449610) = final_loss = 2.156899
+n_iter 92 : loss (0.160369) + tot_loss (0.761610) + tot_loss_crop (0.787241) + loss_clip_order (0.420266) = final_loss = 2.129486
+n_iter 93 : loss (0.167108) + tot_loss (0.750694) + tot_loss_crop (0.777043) + loss_clip_order (0.441311) = final_loss = 2.136156
+n_iter 94 : loss (0.173064) + tot_loss (0.750199) + tot_loss_crop (0.772941) + loss_clip_order (0.439605) = final_loss = 2.135809
+n_iter 95 : loss (0.158504) + tot_loss (0.763752) + tot_loss_crop (0.777328) + loss_clip_order (0.438382) = final_loss = 2.137966
+n_iter 96 : loss (0.160246) + tot_loss (0.761774) + tot_loss_crop (0.778325) + loss_clip_order (0.435614) = final_loss = 2.135959
+n_iter 97 : loss (0.152015) + tot_loss (0.757965) + tot_loss_crop (0.779525) + loss_clip_order (0.411348) = final_loss = 2.100852
+n_iter 98 : loss (0.170049) + tot_loss (0.759329) + tot_loss_crop (0.778096) + loss_clip_order (0.397296) = final_loss = 2.104770
+n_iter 99 : loss (0.162265) + tot_loss (0.746200) + tot_loss_crop (0.776104) + loss_clip_order (0.398233) = final_loss = 2.082802
+n_iter 100 : loss (0.162842) + tot_loss (0.746563) + tot_loss_crop (0.775548) + loss_clip_order (0.403886) = final_loss = 2.088838
+n_iter 101 : loss (0.168688) + tot_loss (0.753285) + tot_loss_crop (0.773971) + loss_clip_order (0.397624) = final_loss = 2.093567
+n_iter 102 : loss (0.168576) + tot_loss (0.737440) + tot_loss_crop (0.769297) + loss_clip_order (0.392787) = final_loss = 2.068101
+n_iter 103 : loss (0.160885) + tot_loss (0.755876) + tot_loss_crop (0.773750) + loss_clip_order (0.380874) = final_loss = 2.071385
+n_iter 104 : loss (0.170336) + tot_loss (0.751923) + tot_loss_crop (0.770176) + loss_clip_order (0.385152) = final_loss = 2.077587
+n_iter 105 : loss (0.158018) + tot_loss (0.747411) + tot_loss_crop (0.770190) + loss_clip_order (0.390035) = final_loss = 2.065655
+n_iter 106 : loss (0.157555) + tot_loss (0.737676) + tot_loss_crop (0.772223) + loss_clip_order (0.379600) = final_loss = 2.047054
+n_iter 107 : loss (0.170448) + tot_loss (0.746912) + tot_loss_crop (0.767887) + loss_clip_order (0.370431) = final_loss = 2.055679
+n_iter 108 : loss (0.155652) + tot_loss (0.748401) + tot_loss_crop (0.769400) + loss_clip_order (0.372292) = final_loss = 2.045745
+n_iter 109 : loss (0.160944) + tot_loss (0.746162) + tot_loss_crop (0.767308) + loss_clip_order (0.366526) = final_loss = 2.040940
+n_iter 110 : loss (0.161606) + tot_loss (0.722857) + tot_loss_crop (0.767355) + loss_clip_order (0.395188) = final_loss = 2.047006
+n_iter 111 : loss (0.164124) + tot_loss (0.749408) + tot_loss_crop (0.765840) + loss_clip_order (0.365340) = final_loss = 2.044712
+n_iter 112 : loss (0.160818) + tot_loss (0.740852) + tot_loss_crop (0.765123) + loss_clip_order (0.358065) = final_loss = 2.024858
+n_iter 113 : loss (0.173395) + tot_loss (0.734142) + tot_loss_crop (0.752554) + loss_clip_order (0.380670) = final_loss = 2.040762
+n_iter 114 : loss (0.151664) + tot_loss (0.753832) + tot_loss_crop (0.767712) + loss_clip_order (0.375036) = final_loss = 2.048244
+n_iter 115 : loss (0.171782) + tot_loss (0.738360) + tot_loss_crop (0.756673) + loss_clip_order (0.374786) = final_loss = 2.041600
+n_iter 116 : loss (0.158914) + tot_loss (0.735454) + tot_loss_crop (0.762817) + loss_clip_order (0.359266) = final_loss = 2.016451
+n_iter 117 : loss (0.163591) + tot_loss (0.742306) + tot_loss_crop (0.761816) + loss_clip_order (0.366319) = final_loss = 2.034032
+n_iter 118 : loss (0.170839) + tot_loss (0.734425) + tot_loss_crop (0.756305) + loss_clip_order (0.376030) = final_loss = 2.037598
+n_iter 119 : loss (0.162767) + tot_loss (0.728522) + tot_loss_crop (0.760655) + loss_clip_order (0.351666) = final_loss = 2.003610
+n_iter 120 : loss (0.174508) + tot_loss (0.725580) + tot_loss_crop (0.748777) + loss_clip_order (0.360082) = final_loss = 2.008947
+n_iter 121 : loss (0.161335) + tot_loss (0.723768) + tot_loss_crop (0.755199) + loss_clip_order (0.361561) = final_loss = 2.001863
+n_iter 122 : loss (0.172434) + tot_loss (0.749815) + tot_loss_crop (0.752015) + loss_clip_order (0.366868) = final_loss = 2.041132
+n_iter 123 : loss (0.168720) + tot_loss (0.733465) + tot_loss_crop (0.750718) + loss_clip_order (0.355636) = final_loss = 2.008539
+n_iter 124 : loss (0.164017) + tot_loss (0.737324) + tot_loss_crop (0.755126) + loss_clip_order (0.351505) = final_loss = 2.007972
+n_iter 125 : loss (0.166760) + tot_loss (0.733432) + tot_loss_crop (0.753769) + loss_clip_order (0.351647) = final_loss = 2.005609
+n_iter 126 : loss (0.162674) + tot_loss (0.734210) + tot_loss_crop (0.753852) + loss_clip_order (0.350405) = final_loss = 2.001141
+n_iter 127 : loss (0.166703) + tot_loss (0.732850) + tot_loss_crop (0.752911) + loss_clip_order (0.353671) = final_loss = 2.006135
+n_iter 128 : loss (0.155684) + tot_loss (0.724621) + tot_loss_crop (0.757370) + loss_clip_order (0.354336) = final_loss = 1.992012
+n_iter 129 : loss (0.153474) + tot_loss (0.715095) + tot_loss_crop (0.757250) + loss_clip_order (0.346601) = final_loss = 1.972420
+n_iter 130 : loss (0.151393) + tot_loss (0.732359) + tot_loss_crop (0.753931) + loss_clip_order (0.344559) = final_loss = 1.982242
+n_iter 131 : loss (0.161883) + tot_loss (0.721389) + tot_loss_crop (0.748370) + loss_clip_order (0.354989) = final_loss = 1.986631
+n_iter 132 : loss (0.161661) + tot_loss (0.716206) + tot_loss_crop (0.745571) + loss_clip_order (0.352915) = final_loss = 1.976352
+n_iter 133 : loss (0.155050) + tot_loss (0.714825) + tot_loss_crop (0.749034) + loss_clip_order (0.348139) = final_loss = 1.967048
+n_iter 134 : loss (0.166764) + tot_loss (0.727495) + tot_loss_crop (0.742030) + loss_clip_order (0.353988) = final_loss = 1.990277
+n_iter 135 : loss (0.171612) + tot_loss (0.725807) + tot_loss_crop (0.739188) + loss_clip_order (0.348162) = final_loss = 1.984769
+n_iter 136 : loss (0.169424) + tot_loss (0.711473) + tot_loss_crop (0.737943) + loss_clip_order (0.350485) = final_loss = 1.969325
+n_iter 137 : loss (0.163766) + tot_loss (0.714673) + tot_loss_crop (0.742045) + loss_clip_order (0.343785) = final_loss = 1.964268
+n_iter 138 : loss (0.151809) + tot_loss (0.724357) + tot_loss_crop (0.751446) + loss_clip_order (0.343286) = final_loss = 1.970898
+n_iter 139 : loss (0.167566) + tot_loss (0.715612) + tot_loss_crop (0.741823) + loss_clip_order (0.345501) = final_loss = 1.970502
+n_iter 140 : loss (0.171036) + tot_loss (0.710528) + tot_loss_crop (0.735856) + loss_clip_order (0.340295) = final_loss = 1.957716
+n_iter 141 : loss (0.159033) + tot_loss (0.731411) + tot_loss_crop (0.743940) + loss_clip_order (0.349830) = final_loss = 1.984214
+n_iter 142 : loss (0.164231) + tot_loss (0.712211) + tot_loss_crop (0.737084) + loss_clip_order (0.338030) = final_loss = 1.951556
+n_iter 143 : loss (0.167478) + tot_loss (0.716907) + tot_loss_crop (0.733382) + loss_clip_order (0.341962) = final_loss = 1.959729
+n_iter 144 : loss (0.167478) + tot_loss (0.715353) + tot_loss_crop (0.730589) + loss_clip_order (0.342946) = final_loss = 1.956366
+n_iter 145 : loss (0.160992) + tot_loss (0.713803) + tot_loss_crop (0.734409) + loss_clip_order (0.332382) = final_loss = 1.941586
+n_iter 146 : loss (0.172334) + tot_loss (0.721134) + tot_loss_crop (0.732587) + loss_clip_order (0.362926) = final_loss = 1.988981
+n_iter 147 : loss (0.152083) + tot_loss (0.701545) + tot_loss_crop (0.738274) + loss_clip_order (0.348477) = final_loss = 1.940379
+n_iter 148 : loss (0.147636) + tot_loss (0.721455) + tot_loss_crop (0.734643) + loss_clip_order (0.352052) = final_loss = 1.955787
+n_iter 149 : loss (0.165897) + tot_loss (0.709309) + tot_loss_crop (0.725128) + loss_clip_order (0.366055) = final_loss = 1.966389
+n_iter 150 : loss (0.158954) + tot_loss (0.725880) + tot_loss_crop (0.730683) + loss_clip_order (0.352379) = final_loss = 1.967896
+n_iter 151 : loss (0.158471) + tot_loss (0.708410) + tot_loss_crop (0.729346) + loss_clip_order (0.344652) = final_loss = 1.940879
+n_iter 152 : loss (0.165888) + tot_loss (0.707593) + tot_loss_crop (0.729820) + loss_clip_order (0.334220) = final_loss = 1.937521
+n_iter 153 : loss (0.157552) + tot_loss (0.703447) + tot_loss_crop (0.731320) + loss_clip_order (0.341065) = final_loss = 1.933383
+n_iter 154 : loss (0.161332) + tot_loss (0.703587) + tot_loss_crop (0.731582) + loss_clip_order (0.342699) = final_loss = 1.939200
+n_iter 155 : loss (0.163174) + tot_loss (0.704498) + tot_loss_crop (0.726374) + loss_clip_order (0.388044) = final_loss = 1.982089
+n_iter 156 : loss (0.169905) + tot_loss (0.690839) + tot_loss_crop (0.719627) + loss_clip_order (0.372661) = final_loss = 1.953032
+n_iter 157 : loss (0.161300) + tot_loss (0.715617) + tot_loss_crop (0.722785) + loss_clip_order (0.360442) = final_loss = 1.960144
+n_iter 158 : loss (0.164372) + tot_loss (0.704649) + tot_loss_crop (0.718597) + loss_clip_order (0.372539) = final_loss = 1.960156
+n_iter 159 : loss (0.169635) + tot_loss (0.724595) + tot_loss_crop (0.715992) + loss_clip_order (0.362141) = final_loss = 1.972363
+n_iter 160 : loss (0.159816) + tot_loss (0.695736) + tot_loss_crop (0.720899) + loss_clip_order (0.345125) = final_loss = 1.921576
+n_iter 161 : loss (0.158921) + tot_loss (0.695033) + tot_loss_crop (0.718067) + loss_clip_order (0.338113) = final_loss = 1.910134
+n_iter 162 : loss (0.168877) + tot_loss (0.701944) + tot_loss_crop (0.719628) + loss_clip_order (0.335827) = final_loss = 1.926276
+n_iter 163 : loss (0.162537) + tot_loss (0.694942) + tot_loss_crop (0.717226) + loss_clip_order (0.428483) = final_loss = 2.003188
+n_iter 164 : loss (0.170942) + tot_loss (0.689246) + tot_loss_crop (0.710720) + loss_clip_order (0.339723) = final_loss = 1.910632
+n_iter 165 : loss (0.164861) + tot_loss (0.704729) + tot_loss_crop (0.712189) + loss_clip_order (0.329188) = final_loss = 1.910967
+n_iter 166 : loss (0.164787) + tot_loss (0.697038) + tot_loss_crop (0.713074) + loss_clip_order (0.356711) = final_loss = 1.931609
+n_iter 167 : loss (0.152576) + tot_loss (0.699763) + tot_loss_crop (0.713395) + loss_clip_order (0.349653) = final_loss = 1.915388
+n_iter 168 : loss (0.162085) + tot_loss (0.705155) + tot_loss_crop (0.709308) + loss_clip_order (0.346903) = final_loss = 1.923451
+n_iter 169 : loss (0.166748) + tot_loss (0.701146) + tot_loss_crop (0.708144) + loss_clip_order (0.356792) = final_loss = 1.932830
+n_iter 170 : loss (0.158909) + tot_loss (0.683209) + tot_loss_crop (0.712044) + loss_clip_order (0.342852) = final_loss = 1.897014
+n_iter 171 : loss (0.159940) + tot_loss (0.680875) + tot_loss_crop (0.709601) + loss_clip_order (0.332301) = final_loss = 1.882716
+n_iter 172 : loss (0.168634) + tot_loss (0.678744) + tot_loss_crop (0.703684) + loss_clip_order (0.336898) = final_loss = 1.887961
+n_iter 173 : loss (0.153579) + tot_loss (0.681394) + tot_loss_crop (0.711561) + loss_clip_order (0.327915) = final_loss = 1.874448
+n_iter 174 : loss (0.156421) + tot_loss (0.681533) + tot_loss_crop (0.711269) + loss_clip_order (0.363190) = final_loss = 1.912413
+n_iter 175 : loss (0.157003) + tot_loss (0.672294) + tot_loss_crop (0.704880) + loss_clip_order (0.339106) = final_loss = 1.873283
+n_iter 176 : loss (0.160956) + tot_loss (0.680404) + tot_loss_crop (0.701581) + loss_clip_order (0.336879) = final_loss = 1.879821
+n_iter 177 : loss (0.163288) + tot_loss (0.693004) + tot_loss_crop (0.702528) + loss_clip_order (0.344383) = final_loss = 1.903203
+n_iter 178 : loss (0.160436) + tot_loss (0.690612) + tot_loss_crop (0.704058) + loss_clip_order (0.324260) = final_loss = 1.879366
+n_iter 179 : loss (0.162782) + tot_loss (0.687306) + tot_loss_crop (0.700377) + loss_clip_order (0.336482) = final_loss = 1.886947
+n_iter 180 : loss (0.158026) + tot_loss (0.677848) + tot_loss_crop (0.701687) + loss_clip_order (0.329252) = final_loss = 1.866813
+n_iter 181 : loss (0.163113) + tot_loss (0.695961) + tot_loss_crop (0.701717) + loss_clip_order (0.354680) = final_loss = 1.915470
+n_iter 182 : loss (0.165352) + tot_loss (0.676665) + tot_loss_crop (0.694340) + loss_clip_order (0.361451) = final_loss = 1.897808
+n_iter 183 : loss (0.164690) + tot_loss (0.683861) + tot_loss_crop (0.694317) + loss_clip_order (0.340345) = final_loss = 1.883213
+n_iter 184 : loss (0.155231) + tot_loss (0.689919) + tot_loss_crop (0.695609) + loss_clip_order (0.344355) = final_loss = 1.885115
+n_iter 185 : loss (0.154131) + tot_loss (0.672501) + tot_loss_crop (0.696194) + loss_clip_order (0.346239) = final_loss = 1.869065
+n_iter 186 : loss (0.164218) + tot_loss (0.683549) + tot_loss_crop (0.690570) + loss_clip_order (0.340744) = final_loss = 1.879081
+n_iter 187 : loss (0.160712) + tot_loss (0.687934) + tot_loss_crop (0.691804) + loss_clip_order (0.330694) = final_loss = 1.871144
+n_iter 188 : loss (0.157100) + tot_loss (0.676773) + tot_loss_crop (0.694265) + loss_clip_order (0.331079) = final_loss = 1.859218
+n_iter 189 : loss (0.168022) + tot_loss (0.686490) + tot_loss_crop (0.690816) + loss_clip_order (0.335489) = final_loss = 1.880818
+n_iter 190 : loss (0.160857) + tot_loss (0.691616) + tot_loss_crop (0.692637) + loss_clip_order (0.322621) = final_loss = 1.867731
+n_iter 191 : loss (0.157921) + tot_loss (0.674881) + tot_loss_crop (0.693664) + loss_clip_order (0.353804) = final_loss = 1.880270
+n_iter 192 : loss (0.165178) + tot_loss (0.669566) + tot_loss_crop (0.679950) + loss_clip_order (0.331706) = final_loss = 1.846400
+n_iter 193 : loss (0.152293) + tot_loss (0.667152) + tot_loss_crop (0.686548) + loss_clip_order (0.331376) = final_loss = 1.837369
+n_iter 194 : loss (0.154427) + tot_loss (0.675379) + tot_loss_crop (0.684011) + loss_clip_order (0.339693) = final_loss = 1.853510
+n_iter 195 : loss (0.155795) + tot_loss (0.659524) + tot_loss_crop (0.681446) + loss_clip_order (0.343415) = final_loss = 1.840180
+n_iter 196 : loss (0.171537) + tot_loss (0.664570) + tot_loss_crop (0.677455) + loss_clip_order (0.347207) = final_loss = 1.860769
+n_iter 197 : loss (0.171725) + tot_loss (0.663881) + tot_loss_crop (0.674014) + loss_clip_order (0.322475) = final_loss = 1.832094
+n_iter 198 : loss (0.162915) + tot_loss (0.662139) + tot_loss_crop (0.676592) + loss_clip_order (0.321644) = final_loss = 1.823291
+n_iter 199 : loss (0.164234) + tot_loss (0.676147) + tot_loss_crop (0.685372) + loss_clip_order (0.371128) = final_loss = 1.896882
+n_iter 200 : loss (0.162645) + tot_loss (0.672830) + tot_loss_crop (0.677235) + loss_clip_order (0.319147) = final_loss = 1.831856
+n_iter 201 : loss (0.169240) + tot_loss (0.670986) + tot_loss_crop (0.672494) + loss_clip_order (0.322315) = final_loss = 1.835035
+n_iter 202 : loss (0.169904) + tot_loss (0.679456) + tot_loss_crop (0.673204) + loss_clip_order (0.334140) = final_loss = 1.856703
+n_iter 203 : loss (0.162273) + tot_loss (0.665161) + tot_loss_crop (0.669478) + loss_clip_order (0.330772) = final_loss = 1.827685
+n_iter 204 : loss (0.162517) + tot_loss (0.673171) + tot_loss_crop (0.673840) + loss_clip_order (0.331444) = final_loss = 1.840971
+n_iter 205 : loss (0.162253) + tot_loss (0.669217) + tot_loss_crop (0.674705) + loss_clip_order (0.340715) = final_loss = 1.846890
+n_iter 206 : loss (0.166877) + tot_loss (0.665799) + tot_loss_crop (0.668003) + loss_clip_order (0.326925) = final_loss = 1.827603
+n_iter 207 : loss (0.156130) + tot_loss (0.646674) + tot_loss_crop (0.672052) + loss_clip_order (0.346218) = final_loss = 1.821074
+n_iter 208 : loss (0.162746) + tot_loss (0.653381) + tot_loss_crop (0.669738) + loss_clip_order (0.327405) = final_loss = 1.813270
+n_iter 209 : loss (0.153883) + tot_loss (0.668796) + tot_loss_crop (0.673983) + loss_clip_order (0.327673) = final_loss = 1.824335
+n_iter 210 : loss (0.163889) + tot_loss (0.678828) + tot_loss_crop (0.670011) + loss_clip_order (0.332231) = final_loss = 1.844959
+n_iter 211 : loss (0.159424) + tot_loss (0.656627) + tot_loss_crop (0.665712) + loss_clip_order (0.328044) = final_loss = 1.809808
+n_iter 212 : loss (0.156891) + tot_loss (0.662843) + tot_loss_crop (0.664877) + loss_clip_order (0.318340) = final_loss = 1.802952
+n_iter 213 : loss (0.149902) + tot_loss (0.680287) + tot_loss_crop (0.667015) + loss_clip_order (0.321743) = final_loss = 1.818946
+n_iter 214 : loss (0.158892) + tot_loss (0.660344) + tot_loss_crop (0.662847) + loss_clip_order (0.321113) = final_loss = 1.803195
+n_iter 215 : loss (0.159064) + tot_loss (0.660919) + tot_loss_crop (0.658397) + loss_clip_order (0.331185) = final_loss = 1.809566
+n_iter 216 : loss (0.155259) + tot_loss (0.667594) + tot_loss_crop (0.664649) + loss_clip_order (0.314649) = final_loss = 1.802151
+n_iter 217 : loss (0.163155) + tot_loss (0.659594) + tot_loss_crop (0.656621) + loss_clip_order (0.333024) = final_loss = 1.812394
+n_iter 218 : loss (0.152397) + tot_loss (0.668283) + tot_loss_crop (0.659461) + loss_clip_order (0.311837) = final_loss = 1.791978
+n_iter 219 : loss (0.160890) + tot_loss (0.659212) + tot_loss_crop (0.653319) + loss_clip_order (0.330730) = final_loss = 1.804152
+n_iter 220 : loss (0.166351) + tot_loss (0.659779) + tot_loss_crop (0.651008) + loss_clip_order (0.327440) = final_loss = 1.804578
+n_iter 221 : loss (0.153045) + tot_loss (0.663048) + tot_loss_crop (0.655624) + loss_clip_order (0.324755) = final_loss = 1.796472
+n_iter 222 : loss (0.159692) + tot_loss (0.656638) + tot_loss_crop (0.652549) + loss_clip_order (0.330221) = final_loss = 1.799100
+n_iter 223 : loss (0.159530) + tot_loss (0.649568) + tot_loss_crop (0.654781) + loss_clip_order (0.329796) = final_loss = 1.793675
+n_iter 224 : loss (0.167806) + tot_loss (0.659194) + tot_loss_crop (0.650160) + loss_clip_order (0.328509) = final_loss = 1.805670
+n_iter 225 : loss (0.173307) + tot_loss (0.657527) + tot_loss_crop (0.649289) + loss_clip_order (0.330275) = final_loss = 1.810397
+n_iter 226 : loss (0.154503) + tot_loss (0.655681) + tot_loss_crop (0.653907) + loss_clip_order (0.321630) = final_loss = 1.785721
+n_iter 227 : loss (0.164051) + tot_loss (0.658624) + tot_loss_crop (0.648439) + loss_clip_order (0.318973) = final_loss = 1.790087
+n_iter 228 : loss (0.177272) + tot_loss (0.648483) + tot_loss_crop (0.642164) + loss_clip_order (0.328881) = final_loss = 1.796799
+n_iter 229 : loss (0.169146) + tot_loss (0.646431) + tot_loss_crop (0.642762) + loss_clip_order (0.318625) = final_loss = 1.776963
+n_iter 230 : loss (0.154106) + tot_loss (0.645322) + tot_loss_crop (0.651937) + loss_clip_order (0.326759) = final_loss = 1.778124
+n_iter 231 : loss (0.159531) + tot_loss (0.651725) + tot_loss_crop (0.641057) + loss_clip_order (0.319691) = final_loss = 1.772004
+n_iter 232 : loss (0.170426) + tot_loss (0.650053) + tot_loss_crop (0.640323) + loss_clip_order (0.328369) = final_loss = 1.789172
+n_iter 233 : loss (0.159525) + tot_loss (0.641342) + tot_loss_crop (0.639206) + loss_clip_order (0.319759) = final_loss = 1.759832
+n_iter 234 : loss (0.164595) + tot_loss (0.651415) + tot_loss_crop (0.637853) + loss_clip_order (0.308734) = final_loss = 1.762597
+n_iter 235 : loss (0.150319) + tot_loss (0.649255) + tot_loss_crop (0.640719) + loss_clip_order (0.328757) = final_loss = 1.769050
+n_iter 236 : loss (0.160561) + tot_loss (0.642967) + tot_loss_crop (0.639391) + loss_clip_order (0.317627) = final_loss = 1.760546
+n_iter 237 : loss (0.169481) + tot_loss (0.656827) + tot_loss_crop (0.635129) + loss_clip_order (0.313745) = final_loss = 1.775182
+n_iter 238 : loss (0.160822) + tot_loss (0.651264) + tot_loss_crop (0.633191) + loss_clip_order (0.314742) = final_loss = 1.760019
+n_iter 239 : loss (0.163842) + tot_loss (0.644451) + tot_loss_crop (0.634632) + loss_clip_order (0.315109) = final_loss = 1.758033
+n_iter 240 : loss (0.164274) + tot_loss (0.629360) + tot_loss_crop (0.630344) + loss_clip_order (0.322524) = final_loss = 1.746502
+n_iter 241 : loss (0.163887) + tot_loss (0.629324) + tot_loss_crop (0.627172) + loss_clip_order (0.318882) = final_loss = 1.739265
+n_iter 242 : loss (0.161880) + tot_loss (0.637270) + tot_loss_crop (0.631469) + loss_clip_order (0.310505) = final_loss = 1.741125
+n_iter 243 : loss (0.163156) + tot_loss (0.640349) + tot_loss_crop (0.627839) + loss_clip_order (0.324054) = final_loss = 1.755397
+n_iter 244 : loss (0.166178) + tot_loss (0.637374) + tot_loss_crop (0.623225) + loss_clip_order (0.315100) = final_loss = 1.741877
+n_iter 245 : loss (0.171451) + tot_loss (0.633973) + tot_loss_crop (0.623070) + loss_clip_order (0.312855) = final_loss = 1.741349
+n_iter 246 : loss (0.170246) + tot_loss (0.642663) + tot_loss_crop (0.624817) + loss_clip_order (0.333690) = final_loss = 1.771417
+n_iter 247 : loss (0.159925) + tot_loss (0.616508) + tot_loss_crop (0.621080) + loss_clip_order (0.320234) = final_loss = 1.717747
+n_iter 248 : loss (0.158027) + tot_loss (0.640759) + tot_loss_crop (0.623942) + loss_clip_order (0.316612) = final_loss = 1.739340
+n_iter 249 : loss (0.169154) + tot_loss (0.633805) + tot_loss_crop (0.621107) + loss_clip_order (0.315881) = final_loss = 1.739946
+n_iter 250 : loss (0.171365) + tot_loss (0.643275) + tot_loss_crop (0.618341) + loss_clip_order (0.322202) = final_loss = 1.755182
+n_iter 251 : loss (0.163203) + tot_loss (0.627352) + tot_loss_crop (0.616586) + loss_clip_order (0.321285) = final_loss = 1.728426
+n_iter 252 : loss (0.156237) + tot_loss (0.638468) + tot_loss_crop (0.621381) + loss_clip_order (0.316273) = final_loss = 1.732359
+n_iter 253 : loss (0.170377) + tot_loss (0.635340) + tot_loss_crop (0.614437) + loss_clip_order (0.322273) = final_loss = 1.742428
+n_iter 254 : loss (0.168238) + tot_loss (0.638757) + tot_loss_crop (0.614369) + loss_clip_order (0.307721) = final_loss = 1.729084
+n_iter 255 : loss (0.152601) + tot_loss (0.624256) + tot_loss_crop (0.619466) + loss_clip_order (0.312854) = final_loss = 1.709177
+n_iter 256 : loss (0.165748) + tot_loss (0.633515) + tot_loss_crop (0.614316) + loss_clip_order (0.312499) = final_loss = 1.726079
+n_iter 257 : loss (0.151154) + tot_loss (0.623451) + tot_loss_crop (0.616449) + loss_clip_order (0.313870) = final_loss = 1.704924
+n_iter 258 : loss (0.168156) + tot_loss (0.621880) + tot_loss_crop (0.613468) + loss_clip_order (0.314640) = final_loss = 1.718144
+n_iter 259 : loss (0.165254) + tot_loss (0.630514) + tot_loss_crop (0.609892) + loss_clip_order (0.318016) = final_loss = 1.723677
+n_iter 260 : loss (0.168942) + tot_loss (0.625759) + tot_loss_crop (0.606741) + loss_clip_order (0.326660) = final_loss = 1.728102
+n_iter 261 : loss (0.166245) + tot_loss (0.619405) + tot_loss_crop (0.608281) + loss_clip_order (0.318941) = final_loss = 1.712872
+n_iter 262 : loss (0.161451) + tot_loss (0.619092) + tot_loss_crop (0.608174) + loss_clip_order (0.305005) = final_loss = 1.693723
+n_iter 263 : loss (0.161089) + tot_loss (0.625641) + tot_loss_crop (0.608989) + loss_clip_order (0.313357) = final_loss = 1.709075
+n_iter 264 : loss (0.170038) + tot_loss (0.629373) + tot_loss_crop (0.600367) + loss_clip_order (0.318043) = final_loss = 1.717821
+n_iter 265 : loss (0.161823) + tot_loss (0.638264) + tot_loss_crop (0.605429) + loss_clip_order (0.310591) = final_loss = 1.716107
+n_iter 266 : loss (0.167544) + tot_loss (0.614032) + tot_loss_crop (0.601102) + loss_clip_order (0.323128) = final_loss = 1.705807
+n_iter 267 : loss (0.157041) + tot_loss (0.623452) + tot_loss_crop (0.601854) + loss_clip_order (0.304301) = final_loss = 1.686650
+n_iter 268 : loss (0.181209) + tot_loss (0.615570) + tot_loss_crop (0.594558) + loss_clip_order (0.312404) = final_loss = 1.703740
+n_iter 269 : loss (0.166580) + tot_loss (0.616420) + tot_loss_crop (0.600083) + loss_clip_order (0.311022) = final_loss = 1.694104
+n_iter 270 : loss (0.167893) + tot_loss (0.617966) + tot_loss_crop (0.598027) + loss_clip_order (0.308286) = final_loss = 1.692172
+n_iter 271 : loss (0.158405) + tot_loss (0.613921) + tot_loss_crop (0.599135) + loss_clip_order (0.310547) = final_loss = 1.682008
+n_iter 272 : loss (0.155397) + tot_loss (0.607578) + tot_loss_crop (0.599774) + loss_clip_order (0.301643) = final_loss = 1.664392
+n_iter 273 : loss (0.158579) + tot_loss (0.614993) + tot_loss_crop (0.596899) + loss_clip_order (0.308647) = final_loss = 1.679118
+n_iter 274 : loss (0.153682) + tot_loss (0.611775) + tot_loss_crop (0.596038) + loss_clip_order (0.307155) = final_loss = 1.668650
+n_iter 275 : loss (0.160300) + tot_loss (0.617363) + tot_loss_crop (0.592358) + loss_clip_order (0.305671) = final_loss = 1.675692
+n_iter 276 : loss (0.170252) + tot_loss (0.605722) + tot_loss_crop (0.588898) + loss_clip_order (0.310513) = final_loss = 1.675385
+n_iter 277 : loss (0.161082) + tot_loss (0.612388) + tot_loss_crop (0.594184) + loss_clip_order (0.336888) = final_loss = 1.704542
+n_iter 278 : loss (0.173853) + tot_loss (0.602780) + tot_loss_crop (0.586691) + loss_clip_order (0.317143) = final_loss = 1.680467
+n_iter 279 : loss (0.153295) + tot_loss (0.614093) + tot_loss_crop (0.592826) + loss_clip_order (0.321262) = final_loss = 1.681476
+n_iter 280 : loss (0.169026) + tot_loss (0.597976) + tot_loss_crop (0.583521) + loss_clip_order (0.316719) = final_loss = 1.667241
+n_iter 281 : loss (0.167681) + tot_loss (0.601346) + tot_loss_crop (0.583127) + loss_clip_order (0.329209) = final_loss = 1.681363
+n_iter 282 : loss (0.157373) + tot_loss (0.610084) + tot_loss_crop (0.583372) + loss_clip_order (0.312887) = final_loss = 1.663715
+n_iter 283 : loss (0.166837) + tot_loss (0.614678) + tot_loss_crop (0.584399) + loss_clip_order (0.304018) = final_loss = 1.669931
+n_iter 284 : loss (0.167234) + tot_loss (0.612037) + tot_loss_crop (0.584099) + loss_clip_order (0.325587) = final_loss = 1.688957
+n_iter 285 : loss (0.167154) + tot_loss (0.603040) + tot_loss_crop (0.584226) + loss_clip_order (0.317845) = final_loss = 1.672265
+n_iter 286 : loss (0.161456) + tot_loss (0.615975) + tot_loss_crop (0.584492) + loss_clip_order (0.295801) = final_loss = 1.657724
+n_iter 287 : loss (0.166104) + tot_loss (0.609187) + tot_loss_crop (0.580929) + loss_clip_order (0.301631) = final_loss = 1.657851
+n_iter 288 : loss (0.152946) + tot_loss (0.602175) + tot_loss_crop (0.581437) + loss_clip_order (0.302395) = final_loss = 1.638953
+n_iter 289 : loss (0.157810) + tot_loss (0.606586) + tot_loss_crop (0.578937) + loss_clip_order (0.316865) = final_loss = 1.660198
+n_iter 290 : loss (0.169228) + tot_loss (0.603120) + tot_loss_crop (0.577174) + loss_clip_order (0.307107) = final_loss = 1.656630
+n_iter 291 : loss (0.163096) + tot_loss (0.609944) + tot_loss_crop (0.573846) + loss_clip_order (0.318119) = final_loss = 1.665004
+n_iter 292 : loss (0.163223) + tot_loss (0.603548) + tot_loss_crop (0.577161) + loss_clip_order (0.304212) = final_loss = 1.648143
+n_iter 293 : loss (0.159510) + tot_loss (0.603840) + tot_loss_crop (0.578168) + loss_clip_order (0.301397) = final_loss = 1.642915
+n_iter 294 : loss (0.166434) + tot_loss (0.601294) + tot_loss_crop (0.576088) + loss_clip_order (0.324394) = final_loss = 1.668210
+n_iter 295 : loss (0.161622) + tot_loss (0.587446) + tot_loss_crop (0.573406) + loss_clip_order (0.316903) = final_loss = 1.639378
+n_iter 296 : loss (0.159053) + tot_loss (0.602744) + tot_loss_crop (0.573163) + loss_clip_order (0.303614) = final_loss = 1.638573
+n_iter 297 : loss (0.158791) + tot_loss (0.592618) + tot_loss_crop (0.571168) + loss_clip_order (0.313103) = final_loss = 1.635681
+n_iter 298 : loss (0.167748) + tot_loss (0.601741) + tot_loss_crop (0.569633) + loss_clip_order (0.307609) = final_loss = 1.646731
+n_iter 299 : loss (0.154588) + tot_loss (0.608697) + tot_loss_crop (0.571423) + loss_clip_order (0.308797) = final_loss = 1.643505
+n_iter 300 : loss (0.158418) + tot_loss (0.595068) + tot_loss_crop (0.568486) + loss_clip_order (0.311618) = final_loss = 1.633590
+n_iter 301 : loss (0.169937) + tot_loss (0.599996) + tot_loss_crop (0.566051) + loss_clip_order (0.297345) = final_loss = 1.633329
+n_iter 302 : loss (0.169459) + tot_loss (0.581235) + tot_loss_crop (0.564310) + loss_clip_order (0.303073) = final_loss = 1.618076
+n_iter 303 : loss (0.166693) + tot_loss (0.592656) + tot_loss_crop (0.564236) + loss_clip_order (0.301212) = final_loss = 1.624796
+n_iter 304 : loss (0.154963) + tot_loss (0.603788) + tot_loss_crop (0.565393) + loss_clip_order (0.296095) = final_loss = 1.620239
+n_iter 305 : loss (0.155249) + tot_loss (0.584233) + tot_loss_crop (0.564882) + loss_clip_order (0.296174) = final_loss = 1.600537
+n_iter 306 : loss (0.165908) + tot_loss (0.592377) + tot_loss_crop (0.559322) + loss_clip_order (0.299431) = final_loss = 1.617037
+n_iter 307 : loss (0.174053) + tot_loss (0.590149) + tot_loss_crop (0.557813) + loss_clip_order (0.304371) = final_loss = 1.626386
+n_iter 308 : loss (0.155913) + tot_loss (0.585734) + tot_loss_crop (0.561255) + loss_clip_order (0.305990) = final_loss = 1.608892
+n_iter 309 : loss (0.154173) + tot_loss (0.577603) + tot_loss_crop (0.559040) + loss_clip_order (0.297633) = final_loss = 1.588449
+n_iter 310 : loss (0.158837) + tot_loss (0.585418) + tot_loss_crop (0.562181) + loss_clip_order (0.303539) = final_loss = 1.609975
+n_iter 311 : loss (0.159840) + tot_loss (0.580191) + tot_loss_crop (0.558160) + loss_clip_order (0.310099) = final_loss = 1.608291
+n_iter 312 : loss (0.154779) + tot_loss (0.578910) + tot_loss_crop (0.558748) + loss_clip_order (0.305868) = final_loss = 1.598306
+n_iter 313 : loss (0.165273) + tot_loss (0.593874) + tot_loss_crop (0.553943) + loss_clip_order (0.297156) = final_loss = 1.610247
+[Pretraining Epoch 000] Total-Loss 0.59 =  F-Loss 0.59 + Clip-Loss 0.30 (train)
+/root/models/venv_SPOT/lib/python3.8/site-packages/torch/nn/_reduction.py:42: UserWarning: size_average and reduce args will be deprecated, please use reduction='none' instead.
+  warnings.warn(warning.format(ret))
+n_iter  0 : loss (0.166858) + tot_loss (0.575797) + tot_loss_crop (0.550268) + loss_clip_order (0.296708) = final_loss = 1.589631
+n_iter  1 : loss (0.154393) + tot_loss (0.587845) + tot_loss_crop (0.555535) + loss_clip_order (0.312295) = final_loss = 1.610068
+n_iter  2 : loss (0.161770) + tot_loss (0.575374) + tot_loss_crop (0.550701) + loss_clip_order (0.308769) = final_loss = 1.596614
+n_iter  3 : loss (0.168129) + tot_loss (0.577235) + tot_loss_crop (0.547968) + loss_clip_order (0.304862) = final_loss = 1.598194
+n_iter  4 : loss (0.168124) + tot_loss (0.581707) + tot_loss_crop (0.549624) + loss_clip_order (0.309035) = final_loss = 1.608491
+n_iter  5 : loss (0.154543) + tot_loss (0.570770) + tot_loss_crop (0.547562) + loss_clip_order (0.298623) = final_loss = 1.571498
+n_iter  6 : loss (0.171837) + tot_loss (0.575375) + tot_loss_crop (0.548818) + loss_clip_order (0.334923) = final_loss = 1.630953
+n_iter  7 : loss (0.157997) + tot_loss (0.571389) + tot_loss_crop (0.547014) + loss_clip_order (0.297424) = final_loss = 1.573824
+n_iter  8 : loss (0.161599) + tot_loss (0.570863) + tot_loss_crop (0.547436) + loss_clip_order (0.291412) = final_loss = 1.571311
+n_iter  9 : loss (0.165254) + tot_loss (0.583559) + tot_loss_crop (0.547583) + loss_clip_order (0.310981) = final_loss = 1.607377
+n_iter 10 : loss (0.150107) + tot_loss (0.560882) + tot_loss_crop (0.545710) + loss_clip_order (0.296580) = final_loss = 1.553279
+n_iter 11 : loss (0.150777) + tot_loss (0.562245) + tot_loss_crop (0.546381) + loss_clip_order (0.300982) = final_loss = 1.560385
+n_iter 12 : loss (0.154578) + tot_loss (0.579259) + tot_loss_crop (0.544631) + loss_clip_order (0.304831) = final_loss = 1.583300
+n_iter 13 : loss (0.162694) + tot_loss (0.569065) + tot_loss_crop (0.540112) + loss_clip_order (0.295328) = final_loss = 1.567200
+n_iter 14 : loss (0.155733) + tot_loss (0.578480) + tot_loss_crop (0.544132) + loss_clip_order (0.303051) = final_loss = 1.581396
+n_iter 15 : loss (0.154662) + tot_loss (0.571228) + tot_loss_crop (0.543924) + loss_clip_order (0.307938) = final_loss = 1.577752
+n_iter 16 : loss (0.153208) + tot_loss (0.582846) + tot_loss_crop (0.541964) + loss_clip_order (0.291195) = final_loss = 1.569212
+n_iter 17 : loss (0.166044) + tot_loss (0.577341) + tot_loss_crop (0.537236) + loss_clip_order (0.300809) = final_loss = 1.581430
+n_iter 18 : loss (0.161592) + tot_loss (0.558249) + tot_loss_crop (0.537145) + loss_clip_order (0.299953) = final_loss = 1.556939
+n_iter 19 : loss (0.170355) + tot_loss (0.580899) + tot_loss_crop (0.535384) + loss_clip_order (0.297876) = final_loss = 1.584513
+n_iter 20 : loss (0.179046) + tot_loss (0.566187) + tot_loss_crop (0.531720) + loss_clip_order (0.302255) = final_loss = 1.579207
+n_iter 21 : loss (0.164197) + tot_loss (0.561094) + tot_loss_crop (0.533737) + loss_clip_order (0.313384) = final_loss = 1.572413
+n_iter 22 : loss (0.156257) + tot_loss (0.550032) + tot_loss_crop (0.536520) + loss_clip_order (0.293915) = final_loss = 1.536723
+n_iter 23 : loss (0.159997) + tot_loss (0.573660) + tot_loss_crop (0.535767) + loss_clip_order (0.301359) = final_loss = 1.570784
+n_iter 24 : loss (0.153492) + tot_loss (0.570094) + tot_loss_crop (0.535023) + loss_clip_order (0.304087) = final_loss = 1.562696
+n_iter 25 : loss (0.163725) + tot_loss (0.567228) + tot_loss_crop (0.530503) + loss_clip_order (0.307398) = final_loss = 1.568854
+n_iter 26 : loss (0.151198) + tot_loss (0.570305) + tot_loss_crop (0.533481) + loss_clip_order (0.298066) = final_loss = 1.553050
+n_iter 27 : loss (0.162613) + tot_loss (0.551285) + tot_loss_crop (0.527108) + loss_clip_order (0.294567) = final_loss = 1.535573
+n_iter 28 : loss (0.172933) + tot_loss (0.569103) + tot_loss_crop (0.527265) + loss_clip_order (0.291794) = final_loss = 1.561094
+n_iter 29 : loss (0.159034) + tot_loss (0.555927) + tot_loss_crop (0.528968) + loss_clip_order (0.298586) = final_loss = 1.542515
+n_iter 30 : loss (0.162649) + tot_loss (0.557239) + tot_loss_crop (0.526617) + loss_clip_order (0.302338) = final_loss = 1.548844
+n_iter 31 : loss (0.159543) + tot_loss (0.556225) + tot_loss_crop (0.527030) + loss_clip_order (0.302414) = final_loss = 1.545212
+n_iter 32 : loss (0.159146) + tot_loss (0.555841) + tot_loss_crop (0.524092) + loss_clip_order (0.299669) = final_loss = 1.538747
+n_iter 33 : loss (0.172249) + tot_loss (0.551212) + tot_loss_crop (0.521603) + loss_clip_order (0.306134) = final_loss = 1.551197
+n_iter 34 : loss (0.171193) + tot_loss (0.563479) + tot_loss_crop (0.521212) + loss_clip_order (0.310063) = final_loss = 1.565947
+n_iter 35 : loss (0.161288) + tot_loss (0.558949) + tot_loss_crop (0.521899) + loss_clip_order (0.295683) = final_loss = 1.537819
+n_iter 36 : loss (0.170273) + tot_loss (0.549446) + tot_loss_crop (0.518646) + loss_clip_order (0.297547) = final_loss = 1.535912
+n_iter 37 : loss (0.155810) + tot_loss (0.555045) + tot_loss_crop (0.522484) + loss_clip_order (0.293858) = final_loss = 1.527198
+n_iter 38 : loss (0.167286) + tot_loss (0.542178) + tot_loss_crop (0.519798) + loss_clip_order (0.296879) = final_loss = 1.526141
+n_iter 39 : loss (0.161044) + tot_loss (0.540864) + tot_loss_crop (0.520788) + loss_clip_order (0.318421) = final_loss = 1.541117
+n_iter 40 : loss (0.169551) + tot_loss (0.537448) + tot_loss_crop (0.515413) + loss_clip_order (0.295513) = final_loss = 1.517926
+n_iter 41 : loss (0.159225) + tot_loss (0.556086) + tot_loss_crop (0.519645) + loss_clip_order (0.291950) = final_loss = 1.526906
+n_iter 42 : loss (0.168552) + tot_loss (0.553742) + tot_loss_crop (0.516324) + loss_clip_order (0.313845) = final_loss = 1.552464
+n_iter 43 : loss (0.164969) + tot_loss (0.553546) + tot_loss_crop (0.514791) + loss_clip_order (0.295384) = final_loss = 1.528691
+n_iter 44 : loss (0.156674) + tot_loss (0.543795) + tot_loss_crop (0.513386) + loss_clip_order (0.295865) = final_loss = 1.509720
+n_iter 45 : loss (0.157964) + tot_loss (0.541697) + tot_loss_crop (0.513188) + loss_clip_order (0.287243) = final_loss = 1.500092
+n_iter 46 : loss (0.175270) + tot_loss (0.548288) + tot_loss_crop (0.511455) + loss_clip_order (0.292481) = final_loss = 1.527494
+n_iter 47 : loss (0.164632) + tot_loss (0.537509) + tot_loss_crop (0.513492) + loss_clip_order (0.285098) = final_loss = 1.500731
+n_iter 48 : loss (0.160772) + tot_loss (0.539705) + tot_loss_crop (0.516961) + loss_clip_order (0.307763) = final_loss = 1.525201
+n_iter 49 : loss (0.157114) + tot_loss (0.541030) + tot_loss_crop (0.512637) + loss_clip_order (0.303339) = final_loss = 1.514120
+n_iter 50 : loss (0.153472) + tot_loss (0.539308) + tot_loss_crop (0.510627) + loss_clip_order (0.286423) = final_loss = 1.489830
+n_iter 51 : loss (0.146281) + tot_loss (0.550375) + tot_loss_crop (0.509863) + loss_clip_order (0.293304) = final_loss = 1.499822
+n_iter 52 : loss (0.157839) + tot_loss (0.536031) + tot_loss_crop (0.509877) + loss_clip_order (0.297497) = final_loss = 1.501245
+n_iter 53 : loss (0.159911) + tot_loss (0.540946) + tot_loss_crop (0.505059) + loss_clip_order (0.295493) = final_loss = 1.501409
+n_iter 54 : loss (0.163797) + tot_loss (0.540334) + tot_loss_crop (0.506800) + loss_clip_order (0.303207) = final_loss = 1.514138
+n_iter 55 : loss (0.157437) + tot_loss (0.542472) + tot_loss_crop (0.507357) + loss_clip_order (0.295592) = final_loss = 1.502859
+n_iter 56 : loss (0.160827) + tot_loss (0.530934) + tot_loss_crop (0.504783) + loss_clip_order (0.300422) = final_loss = 1.496966
+n_iter 57 : loss (0.161405) + tot_loss (0.519958) + tot_loss_crop (0.501957) + loss_clip_order (0.293926) = final_loss = 1.477246
+n_iter 58 : loss (0.165346) + tot_loss (0.522604) + tot_loss_crop (0.502852) + loss_clip_order (0.294967) = final_loss = 1.485768
+n_iter 59 : loss (0.170626) + tot_loss (0.528015) + tot_loss_crop (0.501804) + loss_clip_order (0.293556) = final_loss = 1.494002
+n_iter 60 : loss (0.154200) + tot_loss (0.540502) + tot_loss_crop (0.501636) + loss_clip_order (0.286843) = final_loss = 1.483180
+n_iter 61 : loss (0.165778) + tot_loss (0.521604) + tot_loss_crop (0.498658) + loss_clip_order (0.290489) = final_loss = 1.476530
+n_iter 62 : loss (0.155904) + tot_loss (0.549665) + tot_loss_crop (0.501854) + loss_clip_order (0.285570) = final_loss = 1.492993
+n_iter 63 : loss (0.165947) + tot_loss (0.538334) + tot_loss_crop (0.500228) + loss_clip_order (0.286084) = final_loss = 1.490594
+n_iter 64 : loss (0.158566) + tot_loss (0.514364) + tot_loss_crop (0.496014) + loss_clip_order (0.289502) = final_loss = 1.458447
+n_iter 65 : loss (0.158496) + tot_loss (0.514463) + tot_loss_crop (0.496105) + loss_clip_order (0.308155) = final_loss = 1.477220
+n_iter 66 : loss (0.167881) + tot_loss (0.522838) + tot_loss_crop (0.495892) + loss_clip_order (0.291986) = final_loss = 1.478597
+n_iter 67 : loss (0.154762) + tot_loss (0.527084) + tot_loss_crop (0.496979) + loss_clip_order (0.284842) = final_loss = 1.463667
+n_iter 68 : loss (0.154840) + tot_loss (0.519565) + tot_loss_crop (0.498459) + loss_clip_order (0.292095) = final_loss = 1.464959
+n_iter 69 : loss (0.155890) + tot_loss (0.522605) + tot_loss_crop (0.494308) + loss_clip_order (0.291351) = final_loss = 1.464154
+n_iter 70 : loss (0.154852) + tot_loss (0.522511) + tot_loss_crop (0.493753) + loss_clip_order (0.300866) = final_loss = 1.471982
+n_iter 71 : loss (0.166485) + tot_loss (0.517300) + tot_loss_crop (0.490291) + loss_clip_order (0.279590) = final_loss = 1.453666
+n_iter 72 : loss (0.149996) + tot_loss (0.521072) + tot_loss_crop (0.490270) + loss_clip_order (0.284358) = final_loss = 1.445696
+n_iter 73 : loss (0.159991) + tot_loss (0.519423) + tot_loss_crop (0.488911) + loss_clip_order (0.312343) = final_loss = 1.480667
+n_iter 74 : loss (0.166132) + tot_loss (0.514396) + tot_loss_crop (0.487214) + loss_clip_order (0.292502) = final_loss = 1.460244
+n_iter 75 : loss (0.173412) + tot_loss (0.526449) + tot_loss_crop (0.487496) + loss_clip_order (0.280904) = final_loss = 1.468260
+n_iter 76 : loss (0.168223) + tot_loss (0.509528) + tot_loss_crop (0.486931) + loss_clip_order (0.286532) = final_loss = 1.451214
+n_iter 77 : loss (0.168594) + tot_loss (0.520763) + tot_loss_crop (0.484876) + loss_clip_order (0.281491) = final_loss = 1.455723
+n_iter 78 : loss (0.162748) + tot_loss (0.513517) + tot_loss_crop (0.489933) + loss_clip_order (0.318679) = final_loss = 1.484877
+n_iter 79 : loss (0.162580) + tot_loss (0.523717) + tot_loss_crop (0.488348) + loss_clip_order (0.290079) = final_loss = 1.464724
+n_iter 80 : loss (0.159972) + tot_loss (0.507667) + tot_loss_crop (0.482412) + loss_clip_order (0.281874) = final_loss = 1.431925
+n_iter 81 : loss (0.159069) + tot_loss (0.518505) + tot_loss_crop (0.483390) + loss_clip_order (0.287634) = final_loss = 1.448598
+n_iter 82 : loss (0.150972) + tot_loss (0.518128) + tot_loss_crop (0.484302) + loss_clip_order (0.290688) = final_loss = 1.444090
+n_iter 83 : loss (0.161185) + tot_loss (0.521492) + tot_loss_crop (0.482095) + loss_clip_order (0.298247) = final_loss = 1.463020
+n_iter 84 : loss (0.174607) + tot_loss (0.514397) + tot_loss_crop (0.479499) + loss_clip_order (0.286006) = final_loss = 1.454508
+n_iter 85 : loss (0.163119) + tot_loss (0.511435) + tot_loss_crop (0.481006) + loss_clip_order (0.290521) = final_loss = 1.446082
+n_iter 86 : loss (0.174946) + tot_loss (0.508121) + tot_loss_crop (0.476733) + loss_clip_order (0.285747) = final_loss = 1.445547
+n_iter 87 : loss (0.159658) + tot_loss (0.517808) + tot_loss_crop (0.480982) + loss_clip_order (0.288965) = final_loss = 1.447413
+n_iter 88 : loss (0.162554) + tot_loss (0.514120) + tot_loss_crop (0.480228) + loss_clip_order (0.279736) = final_loss = 1.436638
+n_iter 89 : loss (0.159576) + tot_loss (0.510133) + tot_loss_crop (0.476925) + loss_clip_order (0.283490) = final_loss = 1.430124
+n_iter 90 : loss (0.160041) + tot_loss (0.518665) + tot_loss_crop (0.477116) + loss_clip_order (0.282918) = final_loss = 1.438739
+n_iter 91 : loss (0.158485) + tot_loss (0.504128) + tot_loss_crop (0.475741) + loss_clip_order (0.283612) = final_loss = 1.421965
+n_iter 92 : loss (0.160585) + tot_loss (0.507423) + tot_loss_crop (0.474819) + loss_clip_order (0.284020) = final_loss = 1.426847
+n_iter 93 : loss (0.164670) + tot_loss (0.497804) + tot_loss_crop (0.473800) + loss_clip_order (0.293498) = final_loss = 1.429772
+n_iter 94 : loss (0.172385) + tot_loss (0.497774) + tot_loss_crop (0.470250) + loss_clip_order (0.286938) = final_loss = 1.427346
+n_iter 95 : loss (0.153983) + tot_loss (0.507938) + tot_loss_crop (0.475390) + loss_clip_order (0.285945) = final_loss = 1.423255
+n_iter 96 : loss (0.163109) + tot_loss (0.506461) + tot_loss_crop (0.472600) + loss_clip_order (0.286496) = final_loss = 1.428666
+n_iter 97 : loss (0.164813) + tot_loss (0.503209) + tot_loss_crop (0.469176) + loss_clip_order (0.284965) = final_loss = 1.422163
+n_iter 98 : loss (0.166881) + tot_loss (0.505767) + tot_loss_crop (0.470378) + loss_clip_order (0.278355) = final_loss = 1.421380
+n_iter 99 : loss (0.166977) + tot_loss (0.494117) + tot_loss_crop (0.467911) + loss_clip_order (0.276688) = final_loss = 1.405694
+n_iter 100 : loss (0.158876) + tot_loss (0.495236) + tot_loss_crop (0.469462) + loss_clip_order (0.285318) = final_loss = 1.408893
+n_iter 101 : loss (0.154880) + tot_loss (0.499640) + tot_loss_crop (0.471396) + loss_clip_order (0.287842) = final_loss = 1.413758
+n_iter 102 : loss (0.151834) + tot_loss (0.489737) + tot_loss_crop (0.468059) + loss_clip_order (0.301799) = final_loss = 1.411428
+n_iter 103 : loss (0.159392) + tot_loss (0.503532) + tot_loss_crop (0.466114) + loss_clip_order (0.281085) = final_loss = 1.410123
+n_iter 104 : loss (0.156731) + tot_loss (0.500380) + tot_loss_crop (0.469963) + loss_clip_order (0.280676) = final_loss = 1.407751
+n_iter 105 : loss (0.162916) + tot_loss (0.497686) + tot_loss_crop (0.463752) + loss_clip_order (0.292964) = final_loss = 1.417319
+n_iter 106 : loss (0.161062) + tot_loss (0.488119) + tot_loss_crop (0.463669) + loss_clip_order (0.289040) = final_loss = 1.401889
+n_iter 107 : loss (0.152998) + tot_loss (0.494179) + tot_loss_crop (0.465108) + loss_clip_order (0.275865) = final_loss = 1.388150
+n_iter 108 : loss (0.174055) + tot_loss (0.496451) + tot_loss_crop (0.461965) + loss_clip_order (0.281385) = final_loss = 1.413856
+n_iter 109 : loss (0.160454) + tot_loss (0.495411) + tot_loss_crop (0.462974) + loss_clip_order (0.275705) = final_loss = 1.394544
+n_iter 110 : loss (0.159808) + tot_loss (0.475377) + tot_loss_crop (0.460863) + loss_clip_order (0.300339) = final_loss = 1.396386
+n_iter 111 : loss (0.161810) + tot_loss (0.494610) + tot_loss_crop (0.461613) + loss_clip_order (0.272755) = final_loss = 1.390788
+n_iter 112 : loss (0.163246) + tot_loss (0.491879) + tot_loss_crop (0.458691) + loss_clip_order (0.275033) = final_loss = 1.388849
+n_iter 113 : loss (0.162482) + tot_loss (0.484698) + tot_loss_crop (0.456269) + loss_clip_order (0.286608) = final_loss = 1.390057
+n_iter 114 : loss (0.159744) + tot_loss (0.500444) + tot_loss_crop (0.458792) + loss_clip_order (0.285036) = final_loss = 1.404016
+n_iter 115 : loss (0.162583) + tot_loss (0.489098) + tot_loss_crop (0.456756) + loss_clip_order (0.283466) = final_loss = 1.391903
+n_iter 116 : loss (0.162543) + tot_loss (0.485724) + tot_loss_crop (0.454428) + loss_clip_order (0.282778) = final_loss = 1.385473
+n_iter 117 : loss (0.167890) + tot_loss (0.489950) + tot_loss_crop (0.456639) + loss_clip_order (0.280287) = final_loss = 1.394766
+n_iter 118 : loss (0.157592) + tot_loss (0.483490) + tot_loss_crop (0.454454) + loss_clip_order (0.287289) = final_loss = 1.382824
+n_iter 119 : loss (0.160353) + tot_loss (0.480254) + tot_loss_crop (0.454821) + loss_clip_order (0.272271) = final_loss = 1.367698
+n_iter 120 : loss (0.158693) + tot_loss (0.478659) + tot_loss_crop (0.451609) + loss_clip_order (0.276387) = final_loss = 1.365348
+n_iter 121 : loss (0.152912) + tot_loss (0.476659) + tot_loss_crop (0.450736) + loss_clip_order (0.285644) = final_loss = 1.365950
+n_iter 122 : loss (0.173540) + tot_loss (0.495949) + tot_loss_crop (0.451909) + loss_clip_order (0.291993) = final_loss = 1.413391
+n_iter 123 : loss (0.162085) + tot_loss (0.483120) + tot_loss_crop (0.450250) + loss_clip_order (0.277905) = final_loss = 1.373360
+n_iter 124 : loss (0.160562) + tot_loss (0.486037) + tot_loss_crop (0.450985) + loss_clip_order (0.274826) = final_loss = 1.372409
+n_iter 125 : loss (0.160063) + tot_loss (0.482280) + tot_loss_crop (0.449456) + loss_clip_order (0.283879) = final_loss = 1.375679
+n_iter 126 : loss (0.150217) + tot_loss (0.481746) + tot_loss_crop (0.450065) + loss_clip_order (0.284616) = final_loss = 1.366644
+n_iter 127 : loss (0.158289) + tot_loss (0.483308) + tot_loss_crop (0.449568) + loss_clip_order (0.276308) = final_loss = 1.367473
+n_iter 128 : loss (0.165120) + tot_loss (0.475774) + tot_loss_crop (0.446671) + loss_clip_order (0.291072) = final_loss = 1.378637
+n_iter 129 : loss (0.158982) + tot_loss (0.469006) + tot_loss_crop (0.447066) + loss_clip_order (0.287118) = final_loss = 1.362173
+n_iter 130 : loss (0.163669) + tot_loss (0.479217) + tot_loss_crop (0.445048) + loss_clip_order (0.276606) = final_loss = 1.364541
+n_iter 131 : loss (0.162358) + tot_loss (0.470610) + tot_loss_crop (0.443264) + loss_clip_order (0.309370) = final_loss = 1.385602
+n_iter 132 : loss (0.159391) + tot_loss (0.469259) + tot_loss_crop (0.443889) + loss_clip_order (0.271952) = final_loss = 1.344491
+n_iter 133 : loss (0.158221) + tot_loss (0.467913) + tot_loss_crop (0.441723) + loss_clip_order (0.283595) = final_loss = 1.351452
+n_iter 134 : loss (0.161872) + tot_loss (0.477356) + tot_loss_crop (0.442647) + loss_clip_order (0.286682) = final_loss = 1.368557
+n_iter 135 : loss (0.153404) + tot_loss (0.477339) + tot_loss_crop (0.442110) + loss_clip_order (0.283477) = final_loss = 1.356330
+n_iter 136 : loss (0.163623) + tot_loss (0.464050) + tot_loss_crop (0.441158) + loss_clip_order (0.282001) = final_loss = 1.350831
+n_iter 137 : loss (0.164859) + tot_loss (0.467929) + tot_loss_crop (0.438674) + loss_clip_order (0.275203) = final_loss = 1.346665
+n_iter 138 : loss (0.160196) + tot_loss (0.473961) + tot_loss_crop (0.441584) + loss_clip_order (0.294818) = final_loss = 1.370559
+n_iter 139 : loss (0.169513) + tot_loss (0.468141) + tot_loss_crop (0.438453) + loss_clip_order (0.273684) = final_loss = 1.349792
+n_iter 140 : loss (0.150780) + tot_loss (0.464669) + tot_loss_crop (0.440159) + loss_clip_order (0.263855) = final_loss = 1.319463
+n_iter 141 : loss (0.162167) + tot_loss (0.481468) + tot_loss_crop (0.438299) + loss_clip_order (0.280677) = final_loss = 1.362610
+n_iter 142 : loss (0.157093) + tot_loss (0.465737) + tot_loss_crop (0.437149) + loss_clip_order (0.280548) = final_loss = 1.340527
+n_iter 143 : loss (0.158321) + tot_loss (0.469995) + tot_loss_crop (0.436701) + loss_clip_order (0.273116) = final_loss = 1.338132
+n_iter 144 : loss (0.156551) + tot_loss (0.468842) + tot_loss_crop (0.436717) + loss_clip_order (0.275042) = final_loss = 1.337152
+n_iter 145 : loss (0.157615) + tot_loss (0.465112) + tot_loss_crop (0.438477) + loss_clip_order (0.263092) = final_loss = 1.324296
+n_iter 146 : loss (0.163258) + tot_loss (0.468695) + tot_loss_crop (0.437318) + loss_clip_order (0.285200) = final_loss = 1.354471
+n_iter 147 : loss (0.156871) + tot_loss (0.453993) + tot_loss_crop (0.434345) + loss_clip_order (0.283567) = final_loss = 1.328776
+n_iter 148 : loss (0.154214) + tot_loss (0.469428) + tot_loss_crop (0.433951) + loss_clip_order (0.278865) = final_loss = 1.336458
+n_iter 149 : loss (0.153667) + tot_loss (0.460103) + tot_loss_crop (0.431304) + loss_clip_order (0.279833) = final_loss = 1.324908
+n_iter 150 : loss (0.155293) + tot_loss (0.472653) + tot_loss_crop (0.433815) + loss_clip_order (0.291270) = final_loss = 1.353030
+n_iter 151 : loss (0.155335) + tot_loss (0.461572) + tot_loss_crop (0.430319) + loss_clip_order (0.291087) = final_loss = 1.338313
+n_iter 152 : loss (0.166737) + tot_loss (0.462578) + tot_loss_crop (0.430741) + loss_clip_order (0.282425) = final_loss = 1.342481
+n_iter 153 : loss (0.158983) + tot_loss (0.457494) + tot_loss_crop (0.429723) + loss_clip_order (0.270876) = final_loss = 1.317076
+n_iter 154 : loss (0.162638) + tot_loss (0.458155) + tot_loss_crop (0.428608) + loss_clip_order (0.266920) = final_loss = 1.316321
+n_iter 155 : loss (0.165569) + tot_loss (0.457027) + tot_loss_crop (0.430337) + loss_clip_order (0.349430) = final_loss = 1.402362
+n_iter 156 : loss (0.153421) + tot_loss (0.444467) + tot_loss_crop (0.427459) + loss_clip_order (0.314785) = final_loss = 1.340132
+n_iter 157 : loss (0.162557) + tot_loss (0.463404) + tot_loss_crop (0.426024) + loss_clip_order (0.285441) = final_loss = 1.337426
+n_iter 158 : loss (0.149434) + tot_loss (0.457859) + tot_loss_crop (0.425203) + loss_clip_order (0.287692) = final_loss = 1.320189
+n_iter 159 : loss (0.169786) + tot_loss (0.474632) + tot_loss_crop (0.427036) + loss_clip_order (0.309116) = final_loss = 1.380570
+n_iter 160 : loss (0.152723) + tot_loss (0.454936) + tot_loss_crop (0.424190) + loss_clip_order (0.302692) = final_loss = 1.334541
+n_iter 161 : loss (0.155762) + tot_loss (0.455169) + tot_loss_crop (0.424578) + loss_clip_order (0.283512) = final_loss = 1.319020
+n_iter 162 : loss (0.162049) + tot_loss (0.459387) + tot_loss_crop (0.424617) + loss_clip_order (0.271223) = final_loss = 1.317276
+n_iter 163 : loss (0.161341) + tot_loss (0.452051) + tot_loss_crop (0.424734) + loss_clip_order (0.304736) = final_loss = 1.342862
+n_iter 164 : loss (0.166463) + tot_loss (0.445907) + tot_loss_crop (0.425317) + loss_clip_order (0.289478) = final_loss = 1.327165
+n_iter 165 : loss (0.154859) + tot_loss (0.454012) + tot_loss_crop (0.424907) + loss_clip_order (0.265031) = final_loss = 1.298809
+n_iter 166 : loss (0.167025) + tot_loss (0.448882) + tot_loss_crop (0.423578) + loss_clip_order (0.269627) = final_loss = 1.309111
+n_iter 167 : loss (0.164930) + tot_loss (0.452619) + tot_loss_crop (0.419050) + loss_clip_order (0.268434) = final_loss = 1.305033
+n_iter 168 : loss (0.160525) + tot_loss (0.457642) + tot_loss_crop (0.422116) + loss_clip_order (0.273729) = final_loss = 1.314013
+n_iter 169 : loss (0.172374) + tot_loss (0.457964) + tot_loss_crop (0.419383) + loss_clip_order (0.291886) = final_loss = 1.341607
+n_iter 170 : loss (0.166402) + tot_loss (0.443622) + tot_loss_crop (0.419514) + loss_clip_order (0.283617) = final_loss = 1.313155
+n_iter 171 : loss (0.148017) + tot_loss (0.440979) + tot_loss_crop (0.417776) + loss_clip_order (0.277697) = final_loss = 1.284468
+n_iter 172 : loss (0.153942) + tot_loss (0.440709) + tot_loss_crop (0.416422) + loss_clip_order (0.271342) = final_loss = 1.282415
+n_iter 173 : loss (0.154331) + tot_loss (0.439463) + tot_loss_crop (0.416811) + loss_clip_order (0.261698) = final_loss = 1.272304
+n_iter 174 : loss (0.172746) + tot_loss (0.439216) + tot_loss_crop (0.414340) + loss_clip_order (0.302938) = final_loss = 1.329240
+n_iter 175 : loss (0.159295) + tot_loss (0.431200) + tot_loss_crop (0.415927) + loss_clip_order (0.278959) = final_loss = 1.285382
+n_iter 176 : loss (0.170917) + tot_loss (0.436795) + tot_loss_crop (0.412663) + loss_clip_order (0.267809) = final_loss = 1.288184
+n_iter 177 : loss (0.163148) + tot_loss (0.445087) + tot_loss_crop (0.412942) + loss_clip_order (0.278680) = final_loss = 1.299857
+n_iter 178 : loss (0.154983) + tot_loss (0.445938) + tot_loss_crop (0.413548) + loss_clip_order (0.260501) = final_loss = 1.274969
+n_iter 179 : loss (0.157079) + tot_loss (0.441545) + tot_loss_crop (0.411128) + loss_clip_order (0.271141) = final_loss = 1.280892
+n_iter 180 : loss (0.158670) + tot_loss (0.434968) + tot_loss_crop (0.409910) + loss_clip_order (0.278885) = final_loss = 1.282432
+n_iter 181 : loss (0.160318) + tot_loss (0.450786) + tot_loss_crop (0.411916) + loss_clip_order (0.272399) = final_loss = 1.295420
+n_iter 182 : loss (0.153401) + tot_loss (0.436448) + tot_loss_crop (0.408660) + loss_clip_order (0.276583) = final_loss = 1.275092
+n_iter 183 : loss (0.163218) + tot_loss (0.439107) + tot_loss_crop (0.406369) + loss_clip_order (0.270615) = final_loss = 1.279310
+n_iter 184 : loss (0.168043) + tot_loss (0.442877) + tot_loss_crop (0.407022) + loss_clip_order (0.267665) = final_loss = 1.285607
+n_iter 185 : loss (0.155504) + tot_loss (0.427522) + tot_loss_crop (0.406012) + loss_clip_order (0.265400) = final_loss = 1.254439
+n_iter 186 : loss (0.164605) + tot_loss (0.436396) + tot_loss_crop (0.406439) + loss_clip_order (0.271983) = final_loss = 1.279423
+n_iter 187 : loss (0.168916) + tot_loss (0.442632) + tot_loss_crop (0.406028) + loss_clip_order (0.266285) = final_loss = 1.283861
+n_iter 188 : loss (0.156369) + tot_loss (0.433705) + tot_loss_crop (0.405525) + loss_clip_order (0.263267) = final_loss = 1.258866
+n_iter 189 : loss (0.163843) + tot_loss (0.441778) + tot_loss_crop (0.405316) + loss_clip_order (0.265475) = final_loss = 1.276412
+n_iter 190 : loss (0.162209) + tot_loss (0.446038) + tot_loss_crop (0.405089) + loss_clip_order (0.261888) = final_loss = 1.275223
+n_iter 191 : loss (0.158743) + tot_loss (0.431031) + tot_loss_crop (0.405503) + loss_clip_order (0.273467) = final_loss = 1.268743
+n_iter 192 : loss (0.167578) + tot_loss (0.425312) + tot_loss_crop (0.401364) + loss_clip_order (0.266584) = final_loss = 1.260837
+n_iter 193 : loss (0.161508) + tot_loss (0.424076) + tot_loss_crop (0.399496) + loss_clip_order (0.265355) = final_loss = 1.250435
+n_iter 194 : loss (0.153922) + tot_loss (0.428217) + tot_loss_crop (0.399718) + loss_clip_order (0.263400) = final_loss = 1.245256
+n_iter 195 : loss (0.159943) + tot_loss (0.415575) + tot_loss_crop (0.398646) + loss_clip_order (0.264323) = final_loss = 1.238487
+n_iter 196 : loss (0.153889) + tot_loss (0.418604) + tot_loss_crop (0.400703) + loss_clip_order (0.273822) = final_loss = 1.247019
+n_iter 197 : loss (0.167894) + tot_loss (0.421101) + tot_loss_crop (0.395186) + loss_clip_order (0.263512) = final_loss = 1.247693
+n_iter 198 : loss (0.150843) + tot_loss (0.422484) + tot_loss_crop (0.396991) + loss_clip_order (0.261228) = final_loss = 1.231545
+n_iter 199 : loss (0.157911) + tot_loss (0.432252) + tot_loss_crop (0.399216) + loss_clip_order (0.267425) = final_loss = 1.256803
+n_iter 200 : loss (0.162729) + tot_loss (0.428549) + tot_loss_crop (0.397209) + loss_clip_order (0.262006) = final_loss = 1.250492
+n_iter 201 : loss (0.177090) + tot_loss (0.425532) + tot_loss_crop (0.394146) + loss_clip_order (0.264653) = final_loss = 1.261421
+n_iter 202 : loss (0.165886) + tot_loss (0.430939) + tot_loss_crop (0.397284) + loss_clip_order (0.270918) = final_loss = 1.265027
+n_iter 203 : loss (0.171403) + tot_loss (0.419243) + tot_loss_crop (0.392428) + loss_clip_order (0.266293) = final_loss = 1.249366
+n_iter 204 : loss (0.161839) + tot_loss (0.425696) + tot_loss_crop (0.392268) + loss_clip_order (0.267695) = final_loss = 1.247497
+n_iter 205 : loss (0.147835) + tot_loss (0.423064) + tot_loss_crop (0.393882) + loss_clip_order (0.269783) = final_loss = 1.234565
+n_iter 206 : loss (0.166242) + tot_loss (0.422524) + tot_loss_crop (0.392476) + loss_clip_order (0.270222) = final_loss = 1.251464
+n_iter 207 : loss (0.168315) + tot_loss (0.406535) + tot_loss_crop (0.390307) + loss_clip_order (0.292197) = final_loss = 1.257354
+n_iter 208 : loss (0.163802) + tot_loss (0.412598) + tot_loss_crop (0.389142) + loss_clip_order (0.271677) = final_loss = 1.237219
+n_iter 209 : loss (0.154284) + tot_loss (0.424055) + tot_loss_crop (0.391732) + loss_clip_order (0.265215) = final_loss = 1.235287
+n_iter 210 : loss (0.161544) + tot_loss (0.431875) + tot_loss_crop (0.393766) + loss_clip_order (0.281444) = final_loss = 1.268629
+n_iter 211 : loss (0.154339) + tot_loss (0.414139) + tot_loss_crop (0.390948) + loss_clip_order (0.263226) = final_loss = 1.222652
+n_iter 212 : loss (0.157218) + tot_loss (0.417539) + tot_loss_crop (0.387846) + loss_clip_order (0.255145) = final_loss = 1.217748
+n_iter 213 : loss (0.162593) + tot_loss (0.432880) + tot_loss_crop (0.388713) + loss_clip_order (0.261598) = final_loss = 1.245784
+n_iter 214 : loss (0.168428) + tot_loss (0.415570) + tot_loss_crop (0.386336) + loss_clip_order (0.274020) = final_loss = 1.244354
+n_iter 215 : loss (0.157244) + tot_loss (0.416106) + tot_loss_crop (0.385168) + loss_clip_order (0.268871) = final_loss = 1.227389
+n_iter 216 : loss (0.159056) + tot_loss (0.420903) + tot_loss_crop (0.388289) + loss_clip_order (0.254562) = final_loss = 1.222811
+n_iter 217 : loss (0.161037) + tot_loss (0.415879) + tot_loss_crop (0.386623) + loss_clip_order (0.279259) = final_loss = 1.242798
+n_iter 218 : loss (0.168424) + tot_loss (0.422616) + tot_loss_crop (0.385203) + loss_clip_order (0.253005) = final_loss = 1.229248
+n_iter 219 : loss (0.151501) + tot_loss (0.415534) + tot_loss_crop (0.383695) + loss_clip_order (0.262486) = final_loss = 1.213216
+n_iter 220 : loss (0.171253) + tot_loss (0.415569) + tot_loss_crop (0.382029) + loss_clip_order (0.276071) = final_loss = 1.244921
+n_iter 221 : loss (0.153960) + tot_loss (0.417762) + tot_loss_crop (0.384537) + loss_clip_order (0.254982) = final_loss = 1.211242
+n_iter 222 : loss (0.145552) + tot_loss (0.413173) + tot_loss_crop (0.383170) + loss_clip_order (0.261272) = final_loss = 1.203167
+n_iter 223 : loss (0.172390) + tot_loss (0.407322) + tot_loss_crop (0.379430) + loss_clip_order (0.273438) = final_loss = 1.232580
+n_iter 224 : loss (0.151560) + tot_loss (0.414970) + tot_loss_crop (0.382374) + loss_clip_order (0.272749) = final_loss = 1.221653
+n_iter 225 : loss (0.150420) + tot_loss (0.413242) + tot_loss_crop (0.381643) + loss_clip_order (0.264729) = final_loss = 1.210033
+n_iter 226 : loss (0.159072) + tot_loss (0.411742) + tot_loss_crop (0.380067) + loss_clip_order (0.265626) = final_loss = 1.216507
+n_iter 227 : loss (0.173448) + tot_loss (0.413532) + tot_loss_crop (0.377514) + loss_clip_order (0.268348) = final_loss = 1.232842
+n_iter 228 : loss (0.163748) + tot_loss (0.404961) + tot_loss_crop (0.377818) + loss_clip_order (0.259847) = final_loss = 1.206374
+n_iter 229 : loss (0.162655) + tot_loss (0.404201) + tot_loss_crop (0.377156) + loss_clip_order (0.262507) = final_loss = 1.206519
+n_iter 230 : loss (0.163758) + tot_loss (0.403477) + tot_loss_crop (0.377008) + loss_clip_order (0.279506) = final_loss = 1.223748
+n_iter 231 : loss (0.163550) + tot_loss (0.407216) + tot_loss_crop (0.374663) + loss_clip_order (0.262424) = final_loss = 1.207853
+n_iter 232 : loss (0.159670) + tot_loss (0.407170) + tot_loss_crop (0.376337) + loss_clip_order (0.263191) = final_loss = 1.206368
+n_iter 233 : loss (0.167456) + tot_loss (0.400156) + tot_loss_crop (0.373139) + loss_clip_order (0.258828) = final_loss = 1.199579
+n_iter 234 : loss (0.166339) + tot_loss (0.408723) + tot_loss_crop (0.374935) + loss_clip_order (0.258083) = final_loss = 1.208080
+n_iter 235 : loss (0.162484) + tot_loss (0.406613) + tot_loss_crop (0.373915) + loss_clip_order (0.275126) = final_loss = 1.218138
+n_iter 236 : loss (0.152336) + tot_loss (0.400014) + tot_loss_crop (0.374448) + loss_clip_order (0.262990) = final_loss = 1.189787
+n_iter 237 : loss (0.167038) + tot_loss (0.411641) + tot_loss_crop (0.373186) + loss_clip_order (0.250253) = final_loss = 1.202119
+n_iter 238 : loss (0.158412) + tot_loss (0.407667) + tot_loss_crop (0.372918) + loss_clip_order (0.257551) = final_loss = 1.196548
+n_iter 239 : loss (0.165989) + tot_loss (0.401023) + tot_loss_crop (0.369793) + loss_clip_order (0.258013) = final_loss = 1.194818
+n_iter 240 : loss (0.160994) + tot_loss (0.388999) + tot_loss_crop (0.367609) + loss_clip_order (0.276958) = final_loss = 1.194560
+n_iter 241 : loss (0.152844) + tot_loss (0.388319) + tot_loss_crop (0.369078) + loss_clip_order (0.261278) = final_loss = 1.171520
+n_iter 242 : loss (0.162296) + tot_loss (0.394277) + tot_loss_crop (0.369610) + loss_clip_order (0.261796) = final_loss = 1.187979
+n_iter 243 : loss (0.154593) + tot_loss (0.399164) + tot_loss_crop (0.368282) + loss_clip_order (0.260890) = final_loss = 1.182929
+n_iter 244 : loss (0.163028) + tot_loss (0.396439) + tot_loss_crop (0.364427) + loss_clip_order (0.253617) = final_loss = 1.177511
+n_iter 245 : loss (0.171685) + tot_loss (0.392917) + tot_loss_crop (0.364583) + loss_clip_order (0.259513) = final_loss = 1.188697
+n_iter 246 : loss (0.155189) + tot_loss (0.400944) + tot_loss_crop (0.368488) + loss_clip_order (0.265873) = final_loss = 1.190493
+n_iter 247 : loss (0.166551) + tot_loss (0.379205) + tot_loss_crop (0.361115) + loss_clip_order (0.259815) = final_loss = 1.166685
+n_iter 248 : loss (0.156516) + tot_loss (0.396870) + tot_loss_crop (0.364231) + loss_clip_order (0.264257) = final_loss = 1.181874
+n_iter 249 : loss (0.158358) + tot_loss (0.391683) + tot_loss_crop (0.363847) + loss_clip_order (0.267533) = final_loss = 1.181421
+n_iter 250 : loss (0.166267) + tot_loss (0.398299) + tot_loss_crop (0.364505) + loss_clip_order (0.257969) = final_loss = 1.187039
+n_iter 251 : loss (0.174025) + tot_loss (0.387009) + tot_loss_crop (0.360299) + loss_clip_order (0.268304) = final_loss = 1.189637
+n_iter 252 : loss (0.153949) + tot_loss (0.395616) + tot_loss_crop (0.363289) + loss_clip_order (0.271866) = final_loss = 1.184720
+n_iter 253 : loss (0.169969) + tot_loss (0.393363) + tot_loss_crop (0.359838) + loss_clip_order (0.263078) = final_loss = 1.186247
+n_iter 254 : loss (0.160222) + tot_loss (0.397564) + tot_loss_crop (0.362782) + loss_clip_order (0.259540) = final_loss = 1.180108
+n_iter 255 : loss (0.169036) + tot_loss (0.384410) + tot_loss_crop (0.360142) + loss_clip_order (0.262678) = final_loss = 1.176267
+n_iter 256 : loss (0.158962) + tot_loss (0.393679) + tot_loss_crop (0.359284) + loss_clip_order (0.263583) = final_loss = 1.175508
+n_iter 257 : loss (0.170275) + tot_loss (0.382763) + tot_loss_crop (0.357084) + loss_clip_order (0.254241) = final_loss = 1.164363
+n_iter 258 : loss (0.168669) + tot_loss (0.379222) + tot_loss_crop (0.357219) + loss_clip_order (0.255789) = final_loss = 1.160899
+n_iter 259 : loss (0.171438) + tot_loss (0.386415) + tot_loss_crop (0.357702) + loss_clip_order (0.259817) = final_loss = 1.175372
+n_iter 260 : loss (0.160292) + tot_loss (0.387066) + tot_loss_crop (0.359374) + loss_clip_order (0.277246) = final_loss = 1.183977
+n_iter 261 : loss (0.166325) + tot_loss (0.381340) + tot_loss_crop (0.355030) + loss_clip_order (0.259240) = final_loss = 1.161934
+n_iter 262 : loss (0.153550) + tot_loss (0.381256) + tot_loss_crop (0.356600) + loss_clip_order (0.258435) = final_loss = 1.149841
+n_iter 263 : loss (0.171011) + tot_loss (0.384336) + tot_loss_crop (0.353687) + loss_clip_order (0.262169) = final_loss = 1.171203
+n_iter 264 : loss (0.168599) + tot_loss (0.388217) + tot_loss_crop (0.356053) + loss_clip_order (0.260579) = final_loss = 1.173449
+n_iter 265 : loss (0.162911) + tot_loss (0.392837) + tot_loss_crop (0.355826) + loss_clip_order (0.278929) = final_loss = 1.190504
+n_iter 266 : loss (0.158285) + tot_loss (0.376267) + tot_loss_crop (0.353266) + loss_clip_order (0.257753) = final_loss = 1.145573
+n_iter 267 : loss (0.154061) + tot_loss (0.385040) + tot_loss_crop (0.353260) + loss_clip_order (0.259671) = final_loss = 1.152032
+n_iter 268 : loss (0.160532) + tot_loss (0.378375) + tot_loss_crop (0.352959) + loss_clip_order (0.260609) = final_loss = 1.152475
+n_iter 269 : loss (0.160856) + tot_loss (0.379344) + tot_loss_crop (0.353517) + loss_clip_order (0.255834) = final_loss = 1.149550
+n_iter 270 : loss (0.161583) + tot_loss (0.380438) + tot_loss_crop (0.350868) + loss_clip_order (0.253098) = final_loss = 1.145986
+n_iter 271 : loss (0.161406) + tot_loss (0.376065) + tot_loss_crop (0.351634) + loss_clip_order (0.257172) = final_loss = 1.146277
+n_iter 272 : loss (0.158684) + tot_loss (0.370623) + tot_loss_crop (0.351309) + loss_clip_order (0.259847) = final_loss = 1.140463
+n_iter 273 : loss (0.160025) + tot_loss (0.375760) + tot_loss_crop (0.350504) + loss_clip_order (0.250361) = final_loss = 1.136650
+n_iter 274 : loss (0.155728) + tot_loss (0.373735) + tot_loss_crop (0.348163) + loss_clip_order (0.264317) = final_loss = 1.141943
+n_iter 275 : loss (0.172183) + tot_loss (0.379863) + tot_loss_crop (0.345265) + loss_clip_order (0.271260) = final_loss = 1.168571
+n_iter 276 : loss (0.170196) + tot_loss (0.369974) + tot_loss_crop (0.345073) + loss_clip_order (0.264667) = final_loss = 1.149909
+n_iter 277 : loss (0.158888) + tot_loss (0.375975) + tot_loss_crop (0.346786) + loss_clip_order (0.268357) = final_loss = 1.150006
+n_iter 278 : loss (0.149918) + tot_loss (0.367722) + tot_loss_crop (0.344341) + loss_clip_order (0.258963) = final_loss = 1.120944
+n_iter 279 : loss (0.161335) + tot_loss (0.376194) + tot_loss_crop (0.345925) + loss_clip_order (0.277223) = final_loss = 1.160677
+n_iter 280 : loss (0.146234) + tot_loss (0.363236) + tot_loss_crop (0.344324) + loss_clip_order (0.252517) = final_loss = 1.106311
+n_iter 281 : loss (0.161653) + tot_loss (0.364481) + tot_loss_crop (0.342606) + loss_clip_order (0.246503) = final_loss = 1.115242
+n_iter 282 : loss (0.151480) + tot_loss (0.372263) + tot_loss_crop (0.343919) + loss_clip_order (0.245221) = final_loss = 1.112882
+n_iter 283 : loss (0.154214) + tot_loss (0.379763) + tot_loss_crop (0.345775) + loss_clip_order (0.257906) = final_loss = 1.137657
+n_iter 284 : loss (0.160688) + tot_loss (0.377122) + tot_loss_crop (0.343943) + loss_clip_order (0.256822) = final_loss = 1.138575
+n_iter 285 : loss (0.174753) + tot_loss (0.369052) + tot_loss_crop (0.342480) + loss_clip_order (0.253587) = final_loss = 1.139871
+n_iter 286 : loss (0.168137) + tot_loss (0.379360) + tot_loss_crop (0.342103) + loss_clip_order (0.246845) = final_loss = 1.136445
+n_iter 287 : loss (0.168382) + tot_loss (0.372202) + tot_loss_crop (0.340308) + loss_clip_order (0.248299) = final_loss = 1.129191
+n_iter 288 : loss (0.163180) + tot_loss (0.367486) + tot_loss_crop (0.340427) + loss_clip_order (0.258660) = final_loss = 1.129752
+n_iter 289 : loss (0.155570) + tot_loss (0.370758) + tot_loss_crop (0.342367) + loss_clip_order (0.285406) = final_loss = 1.154100
+n_iter 290 : loss (0.157199) + tot_loss (0.366915) + tot_loss_crop (0.338212) + loss_clip_order (0.260454) = final_loss = 1.122780
+n_iter 291 : loss (0.159380) + tot_loss (0.374400) + tot_loss_crop (0.338012) + loss_clip_order (0.264245) = final_loss = 1.136036
+n_iter 292 : loss (0.163521) + tot_loss (0.368764) + tot_loss_crop (0.336801) + loss_clip_order (0.264263) = final_loss = 1.133349
+n_iter 293 : loss (0.154714) + tot_loss (0.369264) + tot_loss_crop (0.338013) + loss_clip_order (0.246786) = final_loss = 1.108777
+n_iter 294 : loss (0.175144) + tot_loss (0.366271) + tot_loss_crop (0.336399) + loss_clip_order (0.258782) = final_loss = 1.136596
+n_iter 295 : loss (0.168649) + tot_loss (0.355439) + tot_loss_crop (0.335602) + loss_clip_order (0.261355) = final_loss = 1.121044
+n_iter 296 : loss (0.174507) + tot_loss (0.366976) + tot_loss_crop (0.335292) + loss_clip_order (0.255019) = final_loss = 1.131793
+n_iter 297 : loss (0.172755) + tot_loss (0.358681) + tot_loss_crop (0.332577) + loss_clip_order (0.265796) = final_loss = 1.129810
+n_iter 298 : loss (0.166624) + tot_loss (0.366240) + tot_loss_crop (0.335336) + loss_clip_order (0.254509) = final_loss = 1.122709
+n_iter 299 : loss (0.160089) + tot_loss (0.371127) + tot_loss_crop (0.334858) + loss_clip_order (0.256917) = final_loss = 1.122990
+n_iter 300 : loss (0.160289) + tot_loss (0.361130) + tot_loss_crop (0.333990) + loss_clip_order (0.259014) = final_loss = 1.114422
+n_iter 301 : loss (0.163193) + tot_loss (0.366053) + tot_loss_crop (0.333071) + loss_clip_order (0.244227) = final_loss = 1.106544
+n_iter 302 : loss (0.163222) + tot_loss (0.350734) + tot_loss_crop (0.332472) + loss_clip_order (0.251198) = final_loss = 1.097626
+n_iter 303 : loss (0.163439) + tot_loss (0.361030) + tot_loss_crop (0.331212) + loss_clip_order (0.254332) = final_loss = 1.110013
+n_iter 304 : loss (0.148789) + tot_loss (0.369176) + tot_loss_crop (0.333913) + loss_clip_order (0.242798) = final_loss = 1.094676
+n_iter 305 : loss (0.156434) + tot_loss (0.353395) + tot_loss_crop (0.329873) + loss_clip_order (0.243166) = final_loss = 1.082869
+n_iter 306 : loss (0.172579) + tot_loss (0.360405) + tot_loss_crop (0.326763) + loss_clip_order (0.247710) = final_loss = 1.107458
+n_iter 307 : loss (0.158962) + tot_loss (0.358044) + tot_loss_crop (0.330151) + loss_clip_order (0.254089) = final_loss = 1.101245
+n_iter 308 : loss (0.158859) + tot_loss (0.355275) + tot_loss_crop (0.328720) + loss_clip_order (0.252890) = final_loss = 1.095744
+n_iter 309 : loss (0.159149) + tot_loss (0.348095) + tot_loss_crop (0.325003) + loss_clip_order (0.240978) = final_loss = 1.073224
+n_iter 310 : loss (0.147879) + tot_loss (0.354150) + tot_loss_crop (0.328930) + loss_clip_order (0.246948) = final_loss = 1.077906
+n_iter 311 : loss (0.152987) + tot_loss (0.350583) + tot_loss_crop (0.325676) + loss_clip_order (0.253734) = final_loss = 1.082980
+n_iter 312 : loss (0.164674) + tot_loss (0.349479) + tot_loss_crop (0.323288) + loss_clip_order (0.253507) = final_loss = 1.090948
+n_iter 313 : loss (0.157537) + tot_loss (0.363294) + tot_loss_crop (0.326416) + loss_clip_order (0.256604) = final_loss = 1.103851
+[Pretraining Epoch 001] Total-Loss 0.36 =  F-Loss 0.36 + Clip-Loss 0.26 (train)
+n_iter  0 : loss (0.159701) + tot_loss (0.346791) + tot_loss_crop (0.322989) + loss_clip_order (0.246694) = final_loss = 1.076175
+n_iter  1 : loss (0.159174) + tot_loss (0.356775) + tot_loss_crop (0.325751) + loss_clip_order (0.258526) = final_loss = 1.100227
+n_iter  2 : loss (0.166204) + tot_loss (0.347210) + tot_loss_crop (0.322139) + loss_clip_order (0.264673) = final_loss = 1.100226
+n_iter  3 : loss (0.175448) + tot_loss (0.349305) + tot_loss_crop (0.319956) + loss_clip_order (0.259807) = final_loss = 1.104516
+n_iter  4 : loss (0.161950) + tot_loss (0.353985) + tot_loss_crop (0.321935) + loss_clip_order (0.259439) = final_loss = 1.097309
+n_iter  5 : loss (0.157610) + tot_loss (0.343760) + tot_loss_crop (0.320540) + loss_clip_order (0.247615) = final_loss = 1.069525
+n_iter  6 : loss (0.171779) + tot_loss (0.347875) + tot_loss_crop (0.319615) + loss_clip_order (0.273657) = final_loss = 1.112925
+n_iter  7 : loss (0.164587) + tot_loss (0.343408) + tot_loss_crop (0.319257) + loss_clip_order (0.246760) = final_loss = 1.074013
+n_iter  8 : loss (0.155847) + tot_loss (0.342334) + tot_loss_crop (0.317798) + loss_clip_order (0.246250) = final_loss = 1.062228
+n_iter  9 : loss (0.151686) + tot_loss (0.354003) + tot_loss_crop (0.320084) + loss_clip_order (0.256825) = final_loss = 1.082597
+n_iter 10 : loss (0.161876) + tot_loss (0.336449) + tot_loss_crop (0.315573) + loss_clip_order (0.252717) = final_loss = 1.066615
+n_iter 11 : loss (0.173039) + tot_loss (0.336116) + tot_loss_crop (0.314157) + loss_clip_order (0.260820) = final_loss = 1.084133
+n_iter 12 : loss (0.165677) + tot_loss (0.351296) + tot_loss_crop (0.317507) + loss_clip_order (0.247244) = final_loss = 1.081725
+n_iter 13 : loss (0.168098) + tot_loss (0.340801) + tot_loss_crop (0.315045) + loss_clip_order (0.245867) = final_loss = 1.069813
+n_iter 14 : loss (0.161902) + tot_loss (0.352036) + tot_loss_crop (0.316440) + loss_clip_order (0.250930) = final_loss = 1.081308
+n_iter 15 : loss (0.162200) + tot_loss (0.345129) + tot_loss_crop (0.316239) + loss_clip_order (0.257063) = final_loss = 1.080631
+n_iter 16 : loss (0.171897) + tot_loss (0.356167) + tot_loss_crop (0.316016) + loss_clip_order (0.247285) = final_loss = 1.091365
+n_iter 17 : loss (0.157729) + tot_loss (0.351098) + tot_loss_crop (0.314780) + loss_clip_order (0.249403) = final_loss = 1.073009
+n_iter 18 : loss (0.165423) + tot_loss (0.335219) + tot_loss_crop (0.311058) + loss_clip_order (0.248525) = final_loss = 1.060226
+n_iter 19 : loss (0.164681) + tot_loss (0.353778) + tot_loss_crop (0.314751) + loss_clip_order (0.245296) = final_loss = 1.078507
+n_iter 20 : loss (0.163777) + tot_loss (0.340475) + tot_loss_crop (0.312277) + loss_clip_order (0.243923) = final_loss = 1.060452
+n_iter 21 : loss (0.157897) + tot_loss (0.336621) + tot_loss_crop (0.313170) + loss_clip_order (0.266972) = final_loss = 1.074661
+n_iter 22 : loss (0.159626) + tot_loss (0.328605) + tot_loss_crop (0.309487) + loss_clip_order (0.243747) = final_loss = 1.041465
+n_iter 23 : loss (0.166612) + tot_loss (0.348690) + tot_loss_crop (0.312319) + loss_clip_order (0.249039) = final_loss = 1.076659
+n_iter 24 : loss (0.166181) + tot_loss (0.347263) + tot_loss_crop (0.310828) + loss_clip_order (0.271276) = final_loss = 1.095547
+n_iter 25 : loss (0.162783) + tot_loss (0.342393) + tot_loss_crop (0.309261) + loss_clip_order (0.250748) = final_loss = 1.065186
+n_iter 26 : loss (0.163852) + tot_loss (0.344710) + tot_loss_crop (0.308807) + loss_clip_order (0.254393) = final_loss = 1.071762
+n_iter 27 : loss (0.165212) + tot_loss (0.328776) + tot_loss_crop (0.305419) + loss_clip_order (0.241721) = final_loss = 1.041129
+n_iter 28 : loss (0.160397) + tot_loss (0.343735) + tot_loss_crop (0.310438) + loss_clip_order (0.235891) = final_loss = 1.050461
+n_iter 29 : loss (0.168057) + tot_loss (0.333287) + tot_loss_crop (0.308193) + loss_clip_order (0.257513) = final_loss = 1.067050
+n_iter 30 : loss (0.156898) + tot_loss (0.336864) + tot_loss_crop (0.308158) + loss_clip_order (0.244928) = final_loss = 1.046848
+n_iter 31 : loss (0.168995) + tot_loss (0.336719) + tot_loss_crop (0.306776) + loss_clip_order (0.247291) = final_loss = 1.059781
+n_iter 32 : loss (0.152596) + tot_loss (0.336411) + tot_loss_crop (0.304910) + loss_clip_order (0.244845) = final_loss = 1.038762
+n_iter 33 : loss (0.150345) + tot_loss (0.330786) + tot_loss_crop (0.305315) + loss_clip_order (0.253918) = final_loss = 1.040364
+n_iter 34 : loss (0.171176) + tot_loss (0.339836) + tot_loss_crop (0.304739) + loss_clip_order (0.250788) = final_loss = 1.066539
+n_iter 35 : loss (0.162814) + tot_loss (0.334872) + tot_loss_crop (0.304115) + loss_clip_order (0.247785) = final_loss = 1.049586
+n_iter 36 : loss (0.172246) + tot_loss (0.327654) + tot_loss_crop (0.303490) + loss_clip_order (0.265431) = final_loss = 1.068821
+n_iter 37 : loss (0.162849) + tot_loss (0.333885) + tot_loss_crop (0.305593) + loss_clip_order (0.264757) = final_loss = 1.067084
+n_iter 38 : loss (0.162204) + tot_loss (0.323909) + tot_loss_crop (0.302557) + loss_clip_order (0.234351) = final_loss = 1.023022
+n_iter 39 : loss (0.160569) + tot_loss (0.325787) + tot_loss_crop (0.300664) + loss_clip_order (0.249791) = final_loss = 1.036810
+n_iter 40 : loss (0.158003) + tot_loss (0.321483) + tot_loss_crop (0.301063) + loss_clip_order (0.253593) = final_loss = 1.034142
+n_iter 41 : loss (0.160332) + tot_loss (0.335493) + tot_loss_crop (0.300814) + loss_clip_order (0.257585) = final_loss = 1.054224
+n_iter 42 : loss (0.168179) + tot_loss (0.331572) + tot_loss_crop (0.301088) + loss_clip_order (0.257725) = final_loss = 1.058564
+n_iter 43 : loss (0.158628) + tot_loss (0.330041) + tot_loss_crop (0.299967) + loss_clip_order (0.236327) = final_loss = 1.024963
+n_iter 44 : loss (0.154444) + tot_loss (0.321617) + tot_loss_crop (0.299364) + loss_clip_order (0.240943) = final_loss = 1.016368
+n_iter 45 : loss (0.149702) + tot_loss (0.322002) + tot_loss_crop (0.299023) + loss_clip_order (0.248873) = final_loss = 1.019600
+n_iter 46 : loss (0.165926) + tot_loss (0.329636) + tot_loss_crop (0.298222) + loss_clip_order (0.240856) = final_loss = 1.034640
+n_iter 47 : loss (0.168284) + tot_loss (0.321480) + tot_loss_crop (0.296735) + loss_clip_order (0.235881) = final_loss = 1.022381
+n_iter 48 : loss (0.166084) + tot_loss (0.324160) + tot_loss_crop (0.296596) + loss_clip_order (0.247910) = final_loss = 1.034750
+n_iter 49 : loss (0.164899) + tot_loss (0.325087) + tot_loss_crop (0.296055) + loss_clip_order (0.255549) = final_loss = 1.041589
+n_iter 50 : loss (0.170128) + tot_loss (0.321499) + tot_loss_crop (0.293092) + loss_clip_order (0.244942) = final_loss = 1.029660
+n_iter 51 : loss (0.160085) + tot_loss (0.329178) + tot_loss_crop (0.297049) + loss_clip_order (0.231788) = final_loss = 1.018100
+n_iter 52 : loss (0.161528) + tot_loss (0.315744) + tot_loss_crop (0.293861) + loss_clip_order (0.233013) = final_loss = 1.004147
+n_iter 53 : loss (0.171855) + tot_loss (0.320640) + tot_loss_crop (0.293397) + loss_clip_order (0.237775) = final_loss = 1.023667
+n_iter 54 : loss (0.166787) + tot_loss (0.320974) + tot_loss_crop (0.293967) + loss_clip_order (0.312507) = final_loss = 1.094234
+n_iter 55 : loss (0.163220) + tot_loss (0.327209) + tot_loss_crop (0.293893) + loss_clip_order (0.245718) = final_loss = 1.030039
+n_iter 56 : loss (0.159075) + tot_loss (0.321331) + tot_loss_crop (0.291820) + loss_clip_order (0.285870) = final_loss = 1.058096
+n_iter 57 : loss (0.164528) + tot_loss (0.312116) + tot_loss_crop (0.287757) + loss_clip_order (0.299129) = final_loss = 1.063530
+n_iter 58 : loss (0.167085) + tot_loss (0.311915) + tot_loss_crop (0.289979) + loss_clip_order (0.270790) = final_loss = 1.039769
+n_iter 59 : loss (0.151702) + tot_loss (0.315803) + tot_loss_crop (0.291977) + loss_clip_order (0.237092) = final_loss = 0.996573
+n_iter 60 : loss (0.167689) + tot_loss (0.324175) + tot_loss_crop (0.293167) + loss_clip_order (0.254758) = final_loss = 1.039789
+n_iter 61 : loss (0.167426) + tot_loss (0.309000) + tot_loss_crop (0.291601) + loss_clip_order (0.296761) = final_loss = 1.064788
+n_iter 62 : loss (0.156869) + tot_loss (0.333870) + tot_loss_crop (0.295660) + loss_clip_order (0.233723) = final_loss = 1.020123
+n_iter 63 : loss (0.165499) + tot_loss (0.328775) + tot_loss_crop (0.293411) + loss_clip_order (0.240497) = final_loss = 1.028182
+n_iter 64 : loss (0.163637) + tot_loss (0.311988) + tot_loss_crop (0.291451) + loss_clip_order (0.255070) = final_loss = 1.022145
+n_iter 65 : loss (0.165600) + tot_loss (0.315015) + tot_loss_crop (0.291964) + loss_clip_order (0.263348) = final_loss = 1.035927
+n_iter 66 : loss (0.164085) + tot_loss (0.323732) + tot_loss_crop (0.293016) + loss_clip_order (0.251929) = final_loss = 1.032762
+n_iter 67 : loss (0.152157) + tot_loss (0.326586) + tot_loss_crop (0.295396) + loss_clip_order (0.245376) = final_loss = 1.019515
+n_iter 68 : loss (0.155405) + tot_loss (0.316450) + tot_loss_crop (0.293313) + loss_clip_order (0.241611) = final_loss = 1.006778
+n_iter 69 : loss (0.164224) + tot_loss (0.317358) + tot_loss_crop (0.289055) + loss_clip_order (0.236546) = final_loss = 1.007182
+n_iter 70 : loss (0.167223) + tot_loss (0.315254) + tot_loss_crop (0.288806) + loss_clip_order (0.251617) = final_loss = 1.022900
+n_iter 71 : loss (0.161340) + tot_loss (0.309186) + tot_loss_crop (0.286179) + loss_clip_order (0.249276) = final_loss = 1.005981
+n_iter 72 : loss (0.162486) + tot_loss (0.311820) + tot_loss_crop (0.287656) + loss_clip_order (0.253194) = final_loss = 1.015156
+n_iter 73 : loss (0.156198) + tot_loss (0.309817) + tot_loss_crop (0.286175) + loss_clip_order (0.287222) = final_loss = 1.039412
+n_iter 74 : loss (0.158824) + tot_loss (0.305874) + tot_loss_crop (0.283857) + loss_clip_order (0.236733) = final_loss = 0.985288
+n_iter 75 : loss (0.163399) + tot_loss (0.318811) + tot_loss_crop (0.284364) + loss_clip_order (0.231897) = final_loss = 0.998470
+n_iter 76 : loss (0.162488) + tot_loss (0.304192) + tot_loss_crop (0.280958) + loss_clip_order (0.242670) = final_loss = 0.990308
+n_iter 77 : loss (0.169511) + tot_loss (0.315103) + tot_loss_crop (0.282712) + loss_clip_order (0.234146) = final_loss = 1.001473
+n_iter 78 : loss (0.153959) + tot_loss (0.307832) + tot_loss_crop (0.281154) + loss_clip_order (0.243008) = final_loss = 0.985953
+n_iter 79 : loss (0.157861) + tot_loss (0.317587) + tot_loss_crop (0.281303) + loss_clip_order (0.234104) = final_loss = 0.990855
+n_iter 80 : loss (0.163577) + tot_loss (0.302323) + tot_loss_crop (0.277483) + loss_clip_order (0.228760) = final_loss = 0.972144
+n_iter 81 : loss (0.164645) + tot_loss (0.310495) + tot_loss_crop (0.279745) + loss_clip_order (0.239036) = final_loss = 0.993922
+n_iter 82 : loss (0.158225) + tot_loss (0.308460) + tot_loss_crop (0.278083) + loss_clip_order (0.235172) = final_loss = 0.979940
+n_iter 83 : loss (0.160159) + tot_loss (0.312552) + tot_loss_crop (0.279250) + loss_clip_order (0.248385) = final_loss = 1.000345
+n_iter 84 : loss (0.168683) + tot_loss (0.306779) + tot_loss_crop (0.276591) + loss_clip_order (0.242486) = final_loss = 0.994539
+n_iter 85 : loss (0.176435) + tot_loss (0.305616) + tot_loss_crop (0.273733) + loss_clip_order (0.251844) = final_loss = 1.007628
+n_iter 86 : loss (0.168169) + tot_loss (0.302849) + tot_loss_crop (0.273041) + loss_clip_order (0.230674) = final_loss = 0.974733
+n_iter 87 : loss (0.157377) + tot_loss (0.310815) + tot_loss_crop (0.277989) + loss_clip_order (0.238261) = final_loss = 0.984442
+n_iter 88 : loss (0.160990) + tot_loss (0.307343) + tot_loss_crop (0.276096) + loss_clip_order (0.234047) = final_loss = 0.978476
+n_iter 89 : loss (0.168201) + tot_loss (0.303364) + tot_loss_crop (0.273203) + loss_clip_order (0.235500) = final_loss = 0.980268
+n_iter 90 : loss (0.169827) + tot_loss (0.311439) + tot_loss_crop (0.274795) + loss_clip_order (0.249466) = final_loss = 1.005527
+n_iter 91 : loss (0.157960) + tot_loss (0.297957) + tot_loss_crop (0.272303) + loss_clip_order (0.240381) = final_loss = 0.968601
+n_iter 92 : loss (0.164454) + tot_loss (0.300992) + tot_loss_crop (0.271088) + loss_clip_order (0.242538) = final_loss = 0.979072
+n_iter 93 : loss (0.155939) + tot_loss (0.292549) + tot_loss_crop (0.271765) + loss_clip_order (0.241552) = final_loss = 0.961805
+n_iter 94 : loss (0.159574) + tot_loss (0.293991) + tot_loss_crop (0.268356) + loss_clip_order (0.241644) = final_loss = 0.963566
+n_iter 95 : loss (0.155302) + tot_loss (0.302034) + tot_loss_crop (0.271040) + loss_clip_order (0.242795) = final_loss = 0.971170
+n_iter 96 : loss (0.171690) + tot_loss (0.301052) + tot_loss_crop (0.269195) + loss_clip_order (0.243434) = final_loss = 0.985371
+n_iter 97 : loss (0.173559) + tot_loss (0.297884) + tot_loss_crop (0.270099) + loss_clip_order (0.233482) = final_loss = 0.975024
+n_iter 98 : loss (0.157082) + tot_loss (0.300135) + tot_loss_crop (0.272076) + loss_clip_order (0.226387) = final_loss = 0.955681
+n_iter 99 : loss (0.175891) + tot_loss (0.290415) + tot_loss_crop (0.266826) + loss_clip_order (0.230968) = final_loss = 0.964100
+n_iter 100 : loss (0.169690) + tot_loss (0.292528) + tot_loss_crop (0.267370) + loss_clip_order (0.234447) = final_loss = 0.964036
+n_iter 101 : loss (0.158386) + tot_loss (0.296592) + tot_loss_crop (0.270937) + loss_clip_order (0.238673) = final_loss = 0.964588
+n_iter 102 : loss (0.150554) + tot_loss (0.287916) + tot_loss_crop (0.267363) + loss_clip_order (0.244917) = final_loss = 0.950750
+n_iter 103 : loss (0.164621) + tot_loss (0.299764) + tot_loss_crop (0.266601) + loss_clip_order (0.245368) = final_loss = 0.976353
+n_iter 104 : loss (0.167919) + tot_loss (0.296977) + tot_loss_crop (0.267103) + loss_clip_order (0.240680) = final_loss = 0.972679
+n_iter 105 : loss (0.152074) + tot_loss (0.294441) + tot_loss_crop (0.267811) + loss_clip_order (0.240409) = final_loss = 0.954734
+n_iter 106 : loss (0.158699) + tot_loss (0.286279) + tot_loss_crop (0.266313) + loss_clip_order (0.240303) = final_loss = 0.951593
+n_iter 107 : loss (0.176990) + tot_loss (0.291316) + tot_loss_crop (0.263945) + loss_clip_order (0.240836) = final_loss = 0.973087
+n_iter 108 : loss (0.156872) + tot_loss (0.295717) + tot_loss_crop (0.265047) + loss_clip_order (0.228308) = final_loss = 0.945944
+n_iter 109 : loss (0.158430) + tot_loss (0.294314) + tot_loss_crop (0.265060) + loss_clip_order (0.223524) = final_loss = 0.941327
+n_iter 110 : loss (0.164858) + tot_loss (0.277548) + tot_loss_crop (0.261156) + loss_clip_order (0.238650) = final_loss = 0.942212
+n_iter 111 : loss (0.158865) + tot_loss (0.294010) + tot_loss_crop (0.264621) + loss_clip_order (0.228175) = final_loss = 0.945672
+n_iter 112 : loss (0.156039) + tot_loss (0.291255) + tot_loss_crop (0.262453) + loss_clip_order (0.228063) = final_loss = 0.937810
+n_iter 113 : loss (0.156021) + tot_loss (0.284534) + tot_loss_crop (0.260648) + loss_clip_order (0.237634) = final_loss = 0.938836
+n_iter 114 : loss (0.167323) + tot_loss (0.298510) + tot_loss_crop (0.263646) + loss_clip_order (0.236635) = final_loss = 0.966115
+n_iter 115 : loss (0.169112) + tot_loss (0.290226) + tot_loss_crop (0.261518) + loss_clip_order (0.245568) = final_loss = 0.966424
+n_iter 116 : loss (0.170318) + tot_loss (0.286742) + tot_loss_crop (0.260548) + loss_clip_order (0.235944) = final_loss = 0.953552
+n_iter 117 : loss (0.154397) + tot_loss (0.291126) + tot_loss_crop (0.262848) + loss_clip_order (0.235518) = final_loss = 0.943890
+n_iter 118 : loss (0.163046) + tot_loss (0.284537) + tot_loss_crop (0.261250) + loss_clip_order (0.245701) = final_loss = 0.954535
+n_iter 119 : loss (0.156838) + tot_loss (0.282461) + tot_loss_crop (0.259431) + loss_clip_order (0.231778) = final_loss = 0.930508
+n_iter 120 : loss (0.167220) + tot_loss (0.282361) + tot_loss_crop (0.255508) + loss_clip_order (0.231902) = final_loss = 0.936991
+n_iter 121 : loss (0.158867) + tot_loss (0.279879) + tot_loss_crop (0.255628) + loss_clip_order (0.235941) = final_loss = 0.930315
+n_iter 122 : loss (0.159469) + tot_loss (0.297697) + tot_loss_crop (0.260742) + loss_clip_order (0.246609) = final_loss = 0.964517
+n_iter 123 : loss (0.164693) + tot_loss (0.286433) + tot_loss_crop (0.257602) + loss_clip_order (0.235340) = final_loss = 0.944068
+n_iter 124 : loss (0.157367) + tot_loss (0.289015) + tot_loss_crop (0.258156) + loss_clip_order (0.225776) = final_loss = 0.930314
+n_iter 125 : loss (0.163756) + tot_loss (0.286523) + tot_loss_crop (0.255417) + loss_clip_order (0.231558) = final_loss = 0.937254
+n_iter 126 : loss (0.162031) + tot_loss (0.284982) + tot_loss_crop (0.256419) + loss_clip_order (0.243164) = final_loss = 0.946597
+n_iter 127 : loss (0.160836) + tot_loss (0.287490) + tot_loss_crop (0.255679) + loss_clip_order (0.241298) = final_loss = 0.945302
+n_iter 128 : loss (0.166623) + tot_loss (0.281122) + tot_loss_crop (0.255808) + loss_clip_order (0.240303) = final_loss = 0.943856
+n_iter 129 : loss (0.155196) + tot_loss (0.274906) + tot_loss_crop (0.254292) + loss_clip_order (0.240068) = final_loss = 0.924462
+n_iter 130 : loss (0.159404) + tot_loss (0.284241) + tot_loss_crop (0.253734) + loss_clip_order (0.239180) = final_loss = 0.936558
+n_iter 131 : loss (0.163711) + tot_loss (0.277049) + tot_loss_crop (0.251712) + loss_clip_order (0.248420) = final_loss = 0.940891
+n_iter 132 : loss (0.165845) + tot_loss (0.275705) + tot_loss_crop (0.251637) + loss_clip_order (0.227374) = final_loss = 0.920561
+n_iter 133 : loss (0.161601) + tot_loss (0.274245) + tot_loss_crop (0.253317) + loss_clip_order (0.228944) = final_loss = 0.918107
+n_iter 134 : loss (0.161937) + tot_loss (0.281505) + tot_loss_crop (0.251865) + loss_clip_order (0.246666) = final_loss = 0.941973
+n_iter 135 : loss (0.162400) + tot_loss (0.282971) + tot_loss_crop (0.251969) + loss_clip_order (0.230956) = final_loss = 0.928296
+n_iter 136 : loss (0.159352) + tot_loss (0.272127) + tot_loss_crop (0.250543) + loss_clip_order (0.242066) = final_loss = 0.924088
+n_iter 137 : loss (0.160419) + tot_loss (0.276659) + tot_loss_crop (0.250208) + loss_clip_order (0.229826) = final_loss = 0.917112
+n_iter 138 : loss (0.161507) + tot_loss (0.281683) + tot_loss_crop (0.251141) + loss_clip_order (0.228429) = final_loss = 0.922761
+n_iter 139 : loss (0.159775) + tot_loss (0.276191) + tot_loss_crop (0.250544) + loss_clip_order (0.224986) = final_loss = 0.911496
+n_iter 140 : loss (0.156817) + tot_loss (0.272684) + tot_loss_crop (0.249755) + loss_clip_order (0.228453) = final_loss = 0.907710
+n_iter 141 : loss (0.164530) + tot_loss (0.286706) + tot_loss_crop (0.253081) + loss_clip_order (0.255839) = final_loss = 0.960155
+n_iter 142 : loss (0.159312) + tot_loss (0.272314) + tot_loss_crop (0.249305) + loss_clip_order (0.227865) = final_loss = 0.908796
+n_iter 143 : loss (0.154795) + tot_loss (0.277679) + tot_loss_crop (0.248670) + loss_clip_order (0.223514) = final_loss = 0.904659
+n_iter 144 : loss (0.159004) + tot_loss (0.277559) + tot_loss_crop (0.249714) + loss_clip_order (0.230904) = final_loss = 0.917180
+n_iter 145 : loss (0.165874) + tot_loss (0.275336) + tot_loss_crop (0.246232) + loss_clip_order (0.236416) = final_loss = 0.923858
+n_iter 146 : loss (0.169517) + tot_loss (0.278188) + tot_loss_crop (0.247684) + loss_clip_order (0.226151) = final_loss = 0.921540
+n_iter 147 : loss (0.162077) + tot_loss (0.265568) + tot_loss_crop (0.244565) + loss_clip_order (0.235646) = final_loss = 0.907857
+n_iter 148 : loss (0.158451) + tot_loss (0.277390) + tot_loss_crop (0.248891) + loss_clip_order (0.244086) = final_loss = 0.928819
+n_iter 149 : loss (0.161035) + tot_loss (0.267412) + tot_loss_crop (0.245597) + loss_clip_order (0.229406) = final_loss = 0.903450
+n_iter 150 : loss (0.166738) + tot_loss (0.277614) + tot_loss_crop (0.248118) + loss_clip_order (0.230062) = final_loss = 0.922532
+n_iter 151 : loss (0.157087) + tot_loss (0.269538) + tot_loss_crop (0.243803) + loss_clip_order (0.222485) = final_loss = 0.892914
+n_iter 152 : loss (0.161698) + tot_loss (0.272384) + tot_loss_crop (0.244850) + loss_clip_order (0.228495) = final_loss = 0.907428
+n_iter 153 : loss (0.165996) + tot_loss (0.268527) + tot_loss_crop (0.243683) + loss_clip_order (0.232443) = final_loss = 0.910649
+n_iter 154 : loss (0.166205) + tot_loss (0.270088) + tot_loss_crop (0.243127) + loss_clip_order (0.227052) = final_loss = 0.906471
+n_iter 155 : loss (0.161672) + tot_loss (0.269939) + tot_loss_crop (0.244135) + loss_clip_order (0.261702) = final_loss = 0.937448
+n_iter 156 : loss (0.164380) + tot_loss (0.258907) + tot_loss_crop (0.240369) + loss_clip_order (0.253727) = final_loss = 0.917384
+n_iter 157 : loss (0.169586) + tot_loss (0.273528) + tot_loss_crop (0.240807) + loss_clip_order (0.233656) = final_loss = 0.917578
+n_iter 158 : loss (0.166382) + tot_loss (0.266445) + tot_loss_crop (0.240860) + loss_clip_order (0.241104) = final_loss = 0.914791
+n_iter 159 : loss (0.159643) + tot_loss (0.280411) + tot_loss_crop (0.243054) + loss_clip_order (0.235250) = final_loss = 0.918358
+n_iter 160 : loss (0.154584) + tot_loss (0.263018) + tot_loss_crop (0.241218) + loss_clip_order (0.229049) = final_loss = 0.887869
+n_iter 161 : loss (0.164555) + tot_loss (0.264427) + tot_loss_crop (0.240442) + loss_clip_order (0.234700) = final_loss = 0.904124
+n_iter 162 : loss (0.156479) + tot_loss (0.270980) + tot_loss_crop (0.242547) + loss_clip_order (0.223809) = final_loss = 0.893815
+n_iter 163 : loss (0.161006) + tot_loss (0.265150) + tot_loss_crop (0.241765) + loss_clip_order (0.272250) = final_loss = 0.940171
+n_iter 164 : loss (0.160908) + tot_loss (0.260825) + tot_loss_crop (0.239588) + loss_clip_order (0.225190) = final_loss = 0.886512
+n_iter 165 : loss (0.153334) + tot_loss (0.268552) + tot_loss_crop (0.239268) + loss_clip_order (0.223478) = final_loss = 0.884631
+n_iter 166 : loss (0.162392) + tot_loss (0.264223) + tot_loss_crop (0.236464) + loss_clip_order (0.243621) = final_loss = 0.906700
+n_iter 167 : loss (0.167178) + tot_loss (0.265971) + tot_loss_crop (0.235999) + loss_clip_order (0.232829) = final_loss = 0.901977
+n_iter 168 : loss (0.158458) + tot_loss (0.268667) + tot_loss_crop (0.238466) + loss_clip_order (0.225307) = final_loss = 0.890898
+n_iter 169 : loss (0.163500) + tot_loss (0.269275) + tot_loss_crop (0.236808) + loss_clip_order (0.265948) = final_loss = 0.935530
+n_iter 170 : loss (0.166042) + tot_loss (0.255260) + tot_loss_crop (0.234812) + loss_clip_order (0.239605) = final_loss = 0.895718
+n_iter 171 : loss (0.159255) + tot_loss (0.253428) + tot_loss_crop (0.234176) + loss_clip_order (0.229733) = final_loss = 0.876592
+n_iter 172 : loss (0.167542) + tot_loss (0.254794) + tot_loss_crop (0.236288) + loss_clip_order (0.225745) = final_loss = 0.884370
+n_iter 173 : loss (0.156531) + tot_loss (0.255773) + tot_loss_crop (0.235157) + loss_clip_order (0.218412) = final_loss = 0.865872
+n_iter 174 : loss (0.165477) + tot_loss (0.256558) + tot_loss_crop (0.234020) + loss_clip_order (0.251336) = final_loss = 0.907391
+n_iter 175 : loss (0.164851) + tot_loss (0.250667) + tot_loss_crop (0.232165) + loss_clip_order (0.230617) = final_loss = 0.878301
+n_iter 176 : loss (0.163820) + tot_loss (0.256669) + tot_loss_crop (0.233780) + loss_clip_order (0.222594) = final_loss = 0.876862
+n_iter 177 : loss (0.159385) + tot_loss (0.263558) + tot_loss_crop (0.233660) + loss_clip_order (0.232705) = final_loss = 0.889308
+n_iter 178 : loss (0.163348) + tot_loss (0.264653) + tot_loss_crop (0.233058) + loss_clip_order (0.226998) = final_loss = 0.888057
+n_iter 179 : loss (0.159645) + tot_loss (0.260424) + tot_loss_crop (0.231975) + loss_clip_order (0.232426) = final_loss = 0.884470
+n_iter 180 : loss (0.172763) + tot_loss (0.253316) + tot_loss_crop (0.231692) + loss_clip_order (0.233270) = final_loss = 0.891041
+n_iter 181 : loss (0.164161) + tot_loss (0.268783) + tot_loss_crop (0.235486) + loss_clip_order (0.234008) = final_loss = 0.902438
+n_iter 182 : loss (0.163343) + tot_loss (0.255895) + tot_loss_crop (0.231345) + loss_clip_order (0.235231) = final_loss = 0.885815
+n_iter 183 : loss (0.156574) + tot_loss (0.259160) + tot_loss_crop (0.229989) + loss_clip_order (0.232101) = final_loss = 0.877825
+n_iter 184 : loss (0.154791) + tot_loss (0.263415) + tot_loss_crop (0.231037) + loss_clip_order (0.229572) = final_loss = 0.878816
+n_iter 185 : loss (0.156745) + tot_loss (0.249754) + tot_loss_crop (0.227086) + loss_clip_order (0.223304) = final_loss = 0.856889
+n_iter 186 : loss (0.157731) + tot_loss (0.257665) + tot_loss_crop (0.230270) + loss_clip_order (0.231369) = final_loss = 0.877034
+n_iter 187 : loss (0.164568) + tot_loss (0.263072) + tot_loss_crop (0.231488) + loss_clip_order (0.228568) = final_loss = 0.887696
+n_iter 188 : loss (0.161360) + tot_loss (0.255414) + tot_loss_crop (0.229254) + loss_clip_order (0.220927) = final_loss = 0.866954
+n_iter 189 : loss (0.165950) + tot_loss (0.263304) + tot_loss_crop (0.228238) + loss_clip_order (0.221305) = final_loss = 0.878797
+n_iter 190 : loss (0.164945) + tot_loss (0.266780) + tot_loss_crop (0.231842) + loss_clip_order (0.216329) = final_loss = 0.879897
+n_iter 191 : loss (0.163417) + tot_loss (0.254063) + tot_loss_crop (0.230373) + loss_clip_order (0.230800) = final_loss = 0.878654
+n_iter 192 : loss (0.160272) + tot_loss (0.248845) + tot_loss_crop (0.227015) + loss_clip_order (0.227715) = final_loss = 0.863847
+n_iter 193 : loss (0.173605) + tot_loss (0.248329) + tot_loss_crop (0.226599) + loss_clip_order (0.221220) = final_loss = 0.869754
+n_iter 194 : loss (0.164223) + tot_loss (0.251663) + tot_loss_crop (0.225559) + loss_clip_order (0.225470) = final_loss = 0.866915
+n_iter 195 : loss (0.164370) + tot_loss (0.239835) + tot_loss_crop (0.225474) + loss_clip_order (0.230646) = final_loss = 0.860325
+n_iter 196 : loss (0.165333) + tot_loss (0.243323) + tot_loss_crop (0.226343) + loss_clip_order (0.258725) = final_loss = 0.893724
+n_iter 197 : loss (0.155389) + tot_loss (0.247051) + tot_loss_crop (0.223983) + loss_clip_order (0.222605) = final_loss = 0.849028
+n_iter 198 : loss (0.155402) + tot_loss (0.250083) + tot_loss_crop (0.224811) + loss_clip_order (0.237713) = final_loss = 0.868009
+n_iter 199 : loss (0.170034) + tot_loss (0.259946) + tot_loss_crop (0.226764) + loss_clip_order (0.247277) = final_loss = 0.904020
+n_iter 200 : loss (0.172206) + tot_loss (0.255918) + tot_loss_crop (0.225744) + loss_clip_order (0.232531) = final_loss = 0.886399
+n_iter 201 : loss (0.171824) + tot_loss (0.251218) + tot_loss_crop (0.222211) + loss_clip_order (0.216868) = final_loss = 0.862122
+n_iter 202 : loss (0.165220) + tot_loss (0.255509) + tot_loss_crop (0.228462) + loss_clip_order (0.278761) = final_loss = 0.927951
+n_iter 203 : loss (0.151175) + tot_loss (0.246428) + tot_loss_crop (0.224628) + loss_clip_order (0.213494) = final_loss = 0.835726
+n_iter 204 : loss (0.168418) + tot_loss (0.252877) + tot_loss_crop (0.224179) + loss_clip_order (0.225329) = final_loss = 0.870802
+n_iter 205 : loss (0.164207) + tot_loss (0.252271) + tot_loss_crop (0.224330) + loss_clip_order (0.229466) = final_loss = 0.870275
+n_iter 206 : loss (0.165148) + tot_loss (0.252251) + tot_loss_crop (0.223401) + loss_clip_order (0.231461) = final_loss = 0.872260
+n_iter 207 : loss (0.169475) + tot_loss (0.236725) + tot_loss_crop (0.221071) + loss_clip_order (0.250297) = final_loss = 0.877568
+n_iter 208 : loss (0.163002) + tot_loss (0.241711) + tot_loss_crop (0.223042) + loss_clip_order (0.218917) = final_loss = 0.846672
+n_iter 209 : loss (0.157937) + tot_loss (0.252592) + tot_loss_crop (0.224445) + loss_clip_order (0.225419) = final_loss = 0.860393
+n_iter 210 : loss (0.163735) + tot_loss (0.258890) + tot_loss_crop (0.227277) + loss_clip_order (0.248551) = final_loss = 0.898454
+n_iter 211 : loss (0.156255) + tot_loss (0.243993) + tot_loss_crop (0.222572) + loss_clip_order (0.222834) = final_loss = 0.845654
+n_iter 212 : loss (0.172868) + tot_loss (0.247876) + tot_loss_crop (0.219866) + loss_clip_order (0.229650) = final_loss = 0.870260
+n_iter 213 : loss (0.161873) + tot_loss (0.261890) + tot_loss_crop (0.224723) + loss_clip_order (0.224620) = final_loss = 0.873106
+n_iter 214 : loss (0.162223) + tot_loss (0.247058) + tot_loss_crop (0.220137) + loss_clip_order (0.239317) = final_loss = 0.868735
+n_iter 215 : loss (0.164449) + tot_loss (0.246757) + tot_loss_crop (0.219936) + loss_clip_order (0.221252) = final_loss = 0.852394
+n_iter 216 : loss (0.163527) + tot_loss (0.251085) + tot_loss_crop (0.221568) + loss_clip_order (0.209535) = final_loss = 0.845716
+n_iter 217 : loss (0.156430) + tot_loss (0.246402) + tot_loss_crop (0.222059) + loss_clip_order (0.253581) = final_loss = 0.878471
+n_iter 218 : loss (0.161940) + tot_loss (0.253052) + tot_loss_crop (0.221627) + loss_clip_order (0.214372) = final_loss = 0.850990
+n_iter 219 : loss (0.170364) + tot_loss (0.247622) + tot_loss_crop (0.221218) + loss_clip_order (0.227608) = final_loss = 0.866812
+n_iter 220 : loss (0.156103) + tot_loss (0.247122) + tot_loss_crop (0.219066) + loss_clip_order (0.230055) = final_loss = 0.852346
+n_iter 221 : loss (0.166046) + tot_loss (0.250732) + tot_loss_crop (0.216116) + loss_clip_order (0.224416) = final_loss = 0.857311
+n_iter 222 : loss (0.162672) + tot_loss (0.245819) + tot_loss_crop (0.218061) + loss_clip_order (0.227484) = final_loss = 0.854036
+n_iter 223 : loss (0.173169) + tot_loss (0.240757) + tot_loss_crop (0.215701) + loss_clip_order (0.235902) = final_loss = 0.865529
+n_iter 224 : loss (0.157843) + tot_loss (0.246736) + tot_loss_crop (0.217268) + loss_clip_order (0.230023) = final_loss = 0.851870
+n_iter 225 : loss (0.163486) + tot_loss (0.245994) + tot_loss_crop (0.218762) + loss_clip_order (0.219408) = final_loss = 0.847650
+n_iter 226 : loss (0.157928) + tot_loss (0.244438) + tot_loss_crop (0.216548) + loss_clip_order (0.216059) = final_loss = 0.834974
+n_iter 227 : loss (0.167498) + tot_loss (0.246283) + tot_loss_crop (0.217806) + loss_clip_order (0.219517) = final_loss = 0.851104
+n_iter 228 : loss (0.157282) + tot_loss (0.239058) + tot_loss_crop (0.214054) + loss_clip_order (0.222714) = final_loss = 0.833109
+n_iter 229 : loss (0.161223) + tot_loss (0.239664) + tot_loss_crop (0.214971) + loss_clip_order (0.220751) = final_loss = 0.836609
+n_iter 230 : loss (0.156134) + tot_loss (0.238220) + tot_loss_crop (0.214667) + loss_clip_order (0.234539) = final_loss = 0.843559
+n_iter 231 : loss (0.172798) + tot_loss (0.241237) + tot_loss_crop (0.214510) + loss_clip_order (0.223354) = final_loss = 0.851899
+n_iter 232 : loss (0.172304) + tot_loss (0.242278) + tot_loss_crop (0.214354) + loss_clip_order (0.225466) = final_loss = 0.854402
+n_iter 233 : loss (0.159148) + tot_loss (0.235867) + tot_loss_crop (0.212398) + loss_clip_order (0.222564) = final_loss = 0.829978
+n_iter 234 : loss (0.159058) + tot_loss (0.244298) + tot_loss_crop (0.213495) + loss_clip_order (0.208935) = final_loss = 0.825786
+n_iter 235 : loss (0.168552) + tot_loss (0.242055) + tot_loss_crop (0.212778) + loss_clip_order (0.229162) = final_loss = 0.852547
+n_iter 236 : loss (0.154583) + tot_loss (0.236345) + tot_loss_crop (0.211161) + loss_clip_order (0.224079) = final_loss = 0.826167
+n_iter 237 : loss (0.163414) + tot_loss (0.247379) + tot_loss_crop (0.212984) + loss_clip_order (0.216756) = final_loss = 0.840533
+n_iter 238 : loss (0.164332) + tot_loss (0.243369) + tot_loss_crop (0.212655) + loss_clip_order (0.212261) = final_loss = 0.832618
+n_iter 239 : loss (0.152501) + tot_loss (0.238359) + tot_loss_crop (0.211913) + loss_clip_order (0.209531) = final_loss = 0.812304
+n_iter 240 : loss (0.162923) + tot_loss (0.227326) + tot_loss_crop (0.208535) + loss_clip_order (0.228695) = final_loss = 0.827479
+n_iter 241 : loss (0.165872) + tot_loss (0.227238) + tot_loss_crop (0.208402) + loss_clip_order (0.224663) = final_loss = 0.826174
+n_iter 242 : loss (0.162882) + tot_loss (0.232773) + tot_loss_crop (0.209248) + loss_clip_order (0.218984) = final_loss = 0.823888
+n_iter 243 : loss (0.164667) + tot_loss (0.236740) + tot_loss_crop (0.209890) + loss_clip_order (0.224366) = final_loss = 0.835663
+n_iter 244 : loss (0.170092) + tot_loss (0.235481) + tot_loss_crop (0.208906) + loss_clip_order (0.212213) = final_loss = 0.826692
+n_iter 245 : loss (0.161567) + tot_loss (0.231411) + tot_loss_crop (0.206178) + loss_clip_order (0.223041) = final_loss = 0.822198
+n_iter 246 : loss (0.154511) + tot_loss (0.239308) + tot_loss_crop (0.211464) + loss_clip_order (0.234163) = final_loss = 0.839447
+n_iter 247 : loss (0.165882) + tot_loss (0.219803) + tot_loss_crop (0.205453) + loss_clip_order (0.232597) = final_loss = 0.823735
+n_iter 248 : loss (0.169711) + tot_loss (0.236035) + tot_loss_crop (0.206112) + loss_clip_order (0.226111) = final_loss = 0.837968
+n_iter 249 : loss (0.171803) + tot_loss (0.231647) + tot_loss_crop (0.204699) + loss_clip_order (0.227819) = final_loss = 0.835968
+n_iter 250 : loss (0.162553) + tot_loss (0.238941) + tot_loss_crop (0.207114) + loss_clip_order (0.216585) = final_loss = 0.825193
+n_iter 251 : loss (0.152888) + tot_loss (0.228671) + tot_loss_crop (0.206951) + loss_clip_order (0.223578) = final_loss = 0.812088
+n_iter 252 : loss (0.164738) + tot_loss (0.237004) + tot_loss_crop (0.206420) + loss_clip_order (0.228614) = final_loss = 0.836777
+n_iter 253 : loss (0.168689) + tot_loss (0.235235) + tot_loss_crop (0.206111) + loss_clip_order (0.215552) = final_loss = 0.825587
+n_iter 254 : loss (0.158259) + tot_loss (0.238232) + tot_loss_crop (0.206254) + loss_clip_order (0.220456) = final_loss = 0.823201
+n_iter 255 : loss (0.170278) + tot_loss (0.227525) + tot_loss_crop (0.204301) + loss_clip_order (0.214588) = final_loss = 0.816692
+n_iter 256 : loss (0.172225) + tot_loss (0.237272) + tot_loss_crop (0.206643) + loss_clip_order (0.215799) = final_loss = 0.831940
+n_iter 257 : loss (0.164614) + tot_loss (0.226444) + tot_loss_crop (0.203675) + loss_clip_order (0.223245) = final_loss = 0.817978
+n_iter 258 : loss (0.159413) + tot_loss (0.224183) + tot_loss_crop (0.202217) + loss_clip_order (0.218974) = final_loss = 0.804788
+n_iter 259 : loss (0.162826) + tot_loss (0.230251) + tot_loss_crop (0.203497) + loss_clip_order (0.219491) = final_loss = 0.816065
+n_iter 260 : loss (0.159412) + tot_loss (0.230897) + tot_loss_crop (0.205818) + loss_clip_order (0.231199) = final_loss = 0.827326
+n_iter 261 : loss (0.154064) + tot_loss (0.225320) + tot_loss_crop (0.205087) + loss_clip_order (0.220082) = final_loss = 0.804552
+n_iter 262 : loss (0.155455) + tot_loss (0.225265) + tot_loss_crop (0.203160) + loss_clip_order (0.212220) = final_loss = 0.796100
+n_iter 263 : loss (0.158491) + tot_loss (0.228402) + tot_loss_crop (0.202714) + loss_clip_order (0.213393) = final_loss = 0.803000
+n_iter 264 : loss (0.151200) + tot_loss (0.233928) + tot_loss_crop (0.203869) + loss_clip_order (0.220723) = final_loss = 0.809720
+n_iter 265 : loss (0.157641) + tot_loss (0.237717) + tot_loss_crop (0.204734) + loss_clip_order (0.225004) = final_loss = 0.825097
+n_iter 266 : loss (0.161897) + tot_loss (0.222479) + tot_loss_crop (0.200949) + loss_clip_order (0.216046) = final_loss = 0.801372
+n_iter 267 : loss (0.159216) + tot_loss (0.230253) + tot_loss_crop (0.201164) + loss_clip_order (0.211847) = final_loss = 0.802480
+n_iter 268 : loss (0.152957) + tot_loss (0.223086) + tot_loss_crop (0.201506) + loss_clip_order (0.207174) = final_loss = 0.784723
+n_iter 269 : loss (0.158994) + tot_loss (0.226063) + tot_loss_crop (0.200168) + loss_clip_order (0.217386) = final_loss = 0.802610
+n_iter 270 : loss (0.160096) + tot_loss (0.226427) + tot_loss_crop (0.202606) + loss_clip_order (0.214270) = final_loss = 0.803398
+n_iter 271 : loss (0.158854) + tot_loss (0.223046) + tot_loss_crop (0.200443) + loss_clip_order (0.209147) = final_loss = 0.791490
+n_iter 272 : loss (0.157398) + tot_loss (0.218996) + tot_loss_crop (0.198384) + loss_clip_order (0.210283) = final_loss = 0.785061
+n_iter 273 : loss (0.155551) + tot_loss (0.222701) + tot_loss_crop (0.200242) + loss_clip_order (0.215486) = final_loss = 0.793980
+n_iter 274 : loss (0.162836) + tot_loss (0.221761) + tot_loss_crop (0.197718) + loss_clip_order (0.220506) = final_loss = 0.802820
+n_iter 275 : loss (0.164281) + tot_loss (0.226674) + tot_loss_crop (0.196345) + loss_clip_order (0.218738) = final_loss = 0.806039
+n_iter 276 : loss (0.165844) + tot_loss (0.218119) + tot_loss_crop (0.198317) + loss_clip_order (0.214354) = final_loss = 0.796634
+n_iter 277 : loss (0.153559) + tot_loss (0.224663) + tot_loss_crop (0.198294) + loss_clip_order (0.238242) = final_loss = 0.814758
+n_iter 278 : loss (0.155812) + tot_loss (0.217899) + tot_loss_crop (0.196365) + loss_clip_order (0.220331) = final_loss = 0.790407
+n_iter 279 : loss (0.157258) + tot_loss (0.225406) + tot_loss_crop (0.196658) + loss_clip_order (0.218916) = final_loss = 0.798238
+n_iter 280 : loss (0.157319) + tot_loss (0.215238) + tot_loss_crop (0.195012) + loss_clip_order (0.221009) = final_loss = 0.788578
+n_iter 281 : loss (0.162628) + tot_loss (0.215613) + tot_loss_crop (0.193866) + loss_clip_order (0.227445) = final_loss = 0.799551
+n_iter 282 : loss (0.179369) + tot_loss (0.222279) + tot_loss_crop (0.193201) + loss_clip_order (0.216578) = final_loss = 0.811426
+n_iter 283 : loss (0.168484) + tot_loss (0.228344) + tot_loss_crop (0.197997) + loss_clip_order (0.213082) = final_loss = 0.807906
+n_iter 284 : loss (0.169847) + tot_loss (0.226763) + tot_loss_crop (0.198496) + loss_clip_order (0.237133) = final_loss = 0.832239
+n_iter 285 : loss (0.160942) + tot_loss (0.221421) + tot_loss_crop (0.195316) + loss_clip_order (0.226771) = final_loss = 0.804450
+n_iter 286 : loss (0.163454) + tot_loss (0.231308) + tot_loss_crop (0.197082) + loss_clip_order (0.218444) = final_loss = 0.810288
+n_iter 287 : loss (0.162206) + tot_loss (0.225511) + tot_loss_crop (0.197555) + loss_clip_order (0.218007) = final_loss = 0.803279
+n_iter 288 : loss (0.158749) + tot_loss (0.222417) + tot_loss_crop (0.196122) + loss_clip_order (0.211462) = final_loss = 0.788750
+n_iter 289 : loss (0.154779) + tot_loss (0.224882) + tot_loss_crop (0.197093) + loss_clip_order (0.219612) = final_loss = 0.796366
+n_iter 290 : loss (0.163639) + tot_loss (0.218830) + tot_loss_crop (0.194758) + loss_clip_order (0.211676) = final_loss = 0.788903
+n_iter 291 : loss (0.165476) + tot_loss (0.226524) + tot_loss_crop (0.194709) + loss_clip_order (0.217820) = final_loss = 0.804529
+n_iter 292 : loss (0.172821) + tot_loss (0.220221) + tot_loss_crop (0.193760) + loss_clip_order (0.219770) = final_loss = 0.806572
+n_iter 293 : loss (0.162359) + tot_loss (0.222173) + tot_loss_crop (0.192793) + loss_clip_order (0.218883) = final_loss = 0.796208
+n_iter 294 : loss (0.155748) + tot_loss (0.220756) + tot_loss_crop (0.194620) + loss_clip_order (0.219944) = final_loss = 0.791069
+n_iter 295 : loss (0.171710) + tot_loss (0.210930) + tot_loss_crop (0.190411) + loss_clip_order (0.224452) = final_loss = 0.797502
+n_iter 296 : loss (0.162879) + tot_loss (0.222822) + tot_loss_crop (0.192859) + loss_clip_order (0.210096) = final_loss = 0.788656
+n_iter 297 : loss (0.167583) + tot_loss (0.215619) + tot_loss_crop (0.189517) + loss_clip_order (0.225370) = final_loss = 0.798090
+n_iter 298 : loss (0.152309) + tot_loss (0.221707) + tot_loss_crop (0.193819) + loss_clip_order (0.215287) = final_loss = 0.783122
+n_iter 299 : loss (0.160656) + tot_loss (0.225433) + tot_loss_crop (0.194888) + loss_clip_order (0.209316) = final_loss = 0.790293
+n_iter 300 : loss (0.164380) + tot_loss (0.216556) + tot_loss_crop (0.191332) + loss_clip_order (0.228312) = final_loss = 0.800580
+n_iter 301 : loss (0.161088) + tot_loss (0.221319) + tot_loss_crop (0.193201) + loss_clip_order (0.208248) = final_loss = 0.783856
+n_iter 302 : loss (0.167131) + tot_loss (0.208146) + tot_loss_crop (0.188606) + loss_clip_order (0.218374) = final_loss = 0.782256
+n_iter 303 : loss (0.159124) + tot_loss (0.217486) + tot_loss_crop (0.191600) + loss_clip_order (0.213364) = final_loss = 0.781574
+n_iter 304 : loss (0.164146) + tot_loss (0.225435) + tot_loss_crop (0.192882) + loss_clip_order (0.212816) = final_loss = 0.795280
+n_iter 305 : loss (0.159967) + tot_loss (0.210798) + tot_loss_crop (0.188167) + loss_clip_order (0.208506) = final_loss = 0.767439
+n_iter 306 : loss (0.154458) + tot_loss (0.218851) + tot_loss_crop (0.189548) + loss_clip_order (0.207420) = final_loss = 0.770276
+n_iter 307 : loss (0.166829) + tot_loss (0.216034) + tot_loss_crop (0.188772) + loss_clip_order (0.211668) = final_loss = 0.783302
+n_iter 308 : loss (0.160540) + tot_loss (0.213910) + tot_loss_crop (0.188827) + loss_clip_order (0.213854) = final_loss = 0.777131
+n_iter 309 : loss (0.157613) + tot_loss (0.208065) + tot_loss_crop (0.186175) + loss_clip_order (0.202895) = final_loss = 0.754747
+n_iter 310 : loss (0.179804) + tot_loss (0.213943) + tot_loss_crop (0.188199) + loss_clip_order (0.209631) = final_loss = 0.791577
+n_iter 311 : loss (0.172720) + tot_loss (0.210755) + tot_loss_crop (0.187180) + loss_clip_order (0.227520) = final_loss = 0.798176
+n_iter 312 : loss (0.163012) + tot_loss (0.210258) + tot_loss_crop (0.188098) + loss_clip_order (0.213010) = final_loss = 0.774378
+n_iter 313 : loss (0.163627) + tot_loss (0.222894) + tot_loss_crop (0.188899) + loss_clip_order (0.206575) = final_loss = 0.781995
+[Pretraining Epoch 002] Total-Loss 0.22 =  F-Loss 0.22 + Clip-Loss 0.21 (train)
+training epoch 0
+use Semi !!! use all label !!!
+[Epoch 000] Total-Loss 3.21 = T-Loss 2.57 + B-Loss 0.65  (train)
+[Epoch 000] Total-Loss 3.34 = T-Loss 2.71 + B-Loss 0.63  (val)
+training epoch 1
+use Semi !!! use all label !!!
+[Epoch 001] Total-Loss 2.88 = T-Loss 2.24 + B-Loss 0.64  (train)
+[Epoch 001] Total-Loss 3.05 = T-Loss 2.42 + B-Loss 0.63  (val)
+training epoch 2
+use Semi !!! use all label !!!
+[Epoch 002] Total-Loss 2.69 = T-Loss 2.05 + B-Loss 0.64  (train)
+[Epoch 002] Total-Loss 2.88 = T-Loss 2.25 + B-Loss 0.62  (val)
+training epoch 3
+use Semi !!! use all label !!!
+[Epoch 003] Total-Loss 2.57 = T-Loss 1.93 + B-Loss 0.64  (train)
+[Epoch 003] Total-Loss 2.78 = T-Loss 2.16 + B-Loss 0.62  (val)
+training epoch 4
+use Semi !!! use all label !!!
+[Epoch 004] Total-Loss 2.49 = T-Loss 1.86 + B-Loss 0.64  (train)
+[Epoch 004] Total-Loss 2.70 = T-Loss 2.08 + B-Loss 0.62  (val)
+training epoch 5
+use Semi !!! use all label !!!
+[Epoch 005] Total-Loss 2.45 = T-Loss 1.82 + B-Loss 0.64  (train)
+[Epoch 005] Total-Loss 2.67 = T-Loss 2.05 + B-Loss 0.62  (val)
+Total Time taken for Running 4 epoch is :1671.17725 secs
+
+real	28m22.007s
+user	36m20.546s
+sys	6m0.985s
+Loading validation Video Information ...
+  0% 0/4728 [00:00<?, ?it/s] 20% 927/4728 [00:00<00:00, 9269.59it/s] 39% 1854/4728 [00:00<00:00, 8539.64it/s] 57% 2712/4728 [00:00<00:00, 8003.77it/s] 74% 3517/4728 [00:00<00:00, 7535.66it/s] 90% 4275/4728 [00:00<00:00, 7117.50it/s]100% 4728/4728 [00:00<00:00, 7378.34it/s]Inference start
+
+Inference finished
+Start Post-Processing
+End Post-Processing
+
+real	4m18.085s
+user	8m27.458s
+sys	1m27.546s
+Detection: average-mAP 29.667 mAP@0.50 46.356 mAP@0.55 42.859 mAP@0.60 39.191 mAP@0.65 36.486 mAP@0.70 33.516 mAP@0.75 29.368 mAP@0.80 25.426 mAP@0.85 20.652 mAP@0.90 14.997 mAP@0.95 7.821
+
+real	0m53.866s
+user	11m1.460s
+sys	0m51.640s

@@ -38,7 +38,7 @@ class SPOTDataset(data.Dataset):
         self.mode = mode
 
         # HACK: this is just for trying out this fix, really there should not be self.mode and self.split (until we want kfold). 
-        self.split = {'train': 'training', 'validation': 'testing'}[self.subset]
+        self.split = {'train': 'training', 'validation': 'testing', 'testing': 'testing'}[self.subset]
 
         self.feature_path = config[self.split]['feature_path'] # FIX: something like config[self.mode] instead, and the same for other instances of config['training'] in this file.
         self.unlabel_percent = config['dataset']['training']['unlabel_percent']
@@ -52,19 +52,24 @@ class SPOTDataset(data.Dataset):
         video_infos = self.get_video_info(self.video_info_path)
         self.info = video_infos
         video_annos = self.get_video_anno(video_infos, self.video_anno_path)
+        print("len(video_annos)", len(video_annos))
         """
         Issue: it is looking for a CSV file within self.feature_path, rather than expecting a .npy
         (Pdb) self.getVideoData(0)
         *** FileNotFoundError: [Errno 2] No such file or directory: '/data/i5O/ActivityNet1.3/train/v_---9CpRcKoU.csv'
         """
         self.subset_mask = self.getVideoMask(video_annos,self.temporal_scale)
-        self.subset_mask_list = list(self.subset_mask.keys())        
+        self.subset_mask_list = list(self.subset_mask.keys())
+        print("len(self.subset_mask_list)", len(self.subset_mask_list))
 
 
         
     def get_video_anno(self,video_infos,video_anno_path):
 
         anno_database = load_json(self.video_anno_path)
+
+        #breakpoint()
+
         # print(anno_database)
         video_dict = {}
         for video_name in video_infos.keys():
@@ -80,6 +85,8 @@ class SPOTDataset(data.Dataset):
     
 
     def get_video_info(self,video_info_path):
+        """ Gets the relevant info (duration, subset) out of the video_info_new* dataframe.
+        """
 
         df_info = pd.DataFrame(pd.read_csv(video_info_path)).values[:]
         video_infos = {}
@@ -130,7 +137,10 @@ class SPOTDataset(data.Dataset):
         self.anno_final = idx_list
         self.anno_final_idx = list(idx_list.keys())
 
-        print('Loading '+self.subset+' Video Information ...') 
+        print('Loading '+self.subset+' Video Information ...')
+
+        #breakpoint()
+
         for idx in tqdm.tqdm(list(video_annos.keys()),ncols=0):
             if os.path.exists(os.path.join(self.feature_path+"/",idx+".npy")) and idx in list(idx_list.keys()):
                 cur_annos = idx_list[idx]["labels"]
@@ -289,6 +299,7 @@ class SPOTDatasetUnlabeled(data.Dataset):
         video_annos = self.get_video_anno(video_infos, self.video_anno_path)
         self.subset_mask = self.getVideoMask(video_annos,self.temporal_scale)
         self.subset_mask_list = list(self.subset_mask.keys())
+        print("len(self.subset_mask_list)", len(self.subset_mask_list))
         
 
 

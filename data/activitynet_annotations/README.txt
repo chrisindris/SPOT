@@ -24,3 +24,27 @@ one entry per video, each entry looks like this:
 
 ./per_label_num.json: ------------------------------------------------------
 200 entries, where each entry is class_name: num of that class
+
+
+
+Video Distribution Breakdown:
+Total Videos: 19228
+- training: 9649
+- - training_unlabeled: X * 9649, where X is the proportion of unlabeled (eg. 0.9)
+- - train_loader_pretrain in spot_train.py uses (1 - X) * 9649 (ie. the labeled portion of the training set), or 80-ish% of it
+- - train_loader_unlabel in spot_train.py uses X * 9649 (ie. the unlabled portion of the training set), or 80-ish% of it (uses an adjusted batch size; 24 when unlabeled=0.9, 4 when unlabeled=0.0)
+- validation: 4728
+- testing: 4851 # the test_loader in spot_train.py
+
+The length of the data loader is the number of videos divided by the number of videos per batch (the batch_size)
+
+The setup seems to be:
+We only have the train and test sets 
+- train is where we get the training
+- - X is the proportion that gets used for train_loader 
+- - (1 - X) is the proportion that gets used for train_loader_unlabel
+- test set we use as validation in train_semi (no backprop) and we use this same test set in its entirety as a test set in spot_inference; hence, it is okay to use the same dataset in train_semi and spot_inference 
+
+# TODOs:
+- ensure that the train_loader (regular one) does what it is supposed to
+- ensure that the spot_inference loader uses the test set, whereas the validation uses the validation set; currently, it seems as though both use the validation set

@@ -280,10 +280,12 @@ def pretrain(data_loader, model, optimizer, pretrain_epoch=0):
   
     for ep in epochs: 
 
-        for n_iter, (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt, input_data_big, input_data_small, _) in enumerate(data_loader):
+        for n_iter, (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt, input_data_big, input_data_small) in enumerate(data_loader): # NOTE pretrain_unlabel: reduced from 8 outputs (last one is not used)
             # input_data.size = batch_size, dimension of inputted numpy features, base temporal scale
 
             #breakpoint()
+
+            #print([x.shape for x in (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt, input_data_big, input_data_small)])
 
             # Perform dropout on the three scales of input feature
             input_data_tdrop = F.dropout(input_data.cuda(),0.1)
@@ -785,9 +787,11 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
 
 def train_semi_full(data_loader, model, optimizer, epoch):
     model.train()
-    for n_iter, (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt) in enumerate(data_loader):
+
+    for n_iter, (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt, input_data_big, input_data_small, f_mask) in enumerate(data_loader):
+    #for n_iter, (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt) in enumerate(data_loader):
         # forward pass
-        top_br_pred, bottom_br_pred = model(input_data.cuda())
+        top_br_pred, bottom_br_pred, feat = model(input_data.cuda())
         loss = spot_loss(top_br_gt,top_br_pred,bottom_br_gt,bottom_br_pred, action_gt,label_gt)
         # update step
         optimizer.zero_grad()
@@ -867,30 +871,43 @@ if __name__ == '__main__':
     print(" Saving all Checkpoints in path : "+ output_path )
     optimizer = optim.Adam(model.parameters(), lr=learning_rate,
                            weight_decay=decay)
-    
+
+    print('train_loader')
     train_loader = torch.utils.data.DataLoader(spot_dataset.SPOTDataset(subset="train"),
                                                batch_size=num_batch, shuffle=False,
                                                num_workers=1, pin_memory=False, drop_last=True)
-    train_loader_pretrain = torch.utils.data.DataLoader(spot_dataset.SPOTDataset(subset="train"),
-                                               batch_size=num_batch, shuffle=False,
-                                               num_workers=1, pin_memory=False, drop_last=True)
 
+    print('train_loader_pretrain')
+    #train_loader_pretrain = torch.utils.data.DataLoader(spot_dataset.SPOTDataset(subset="train"),
+    #                                          batch_size=num_batch, shuffle=False,
+    #                                           num_workers=1, pin_memory=False, drop_last=True)
+    train_loader_pretrain = torch.utils.data.DataLoader(spot_dataset.SPOTDatasetUnlabeled(subset="unlabel"),
+                                            #    batch_size=num_batch, shuffle=True,
+                                               batch_size=num_batch, shuffle=False,drop_last=True,
+                                                        num_workers=1, pin_memory=False) # NOTE pretrain_unlabel: we see what happens when we pretrain with the unlabeled data
 
     if use_semi and unlabel_percent > 0.:
+        print('train_loader_unlabel')
         train_loader_unlabel = torch.utils.data.DataLoader(spot_dataset.SPOTDatasetUnlabeled(subset="unlabel"),
                                             #    batch_size=num_batch, shuffle=True,
                                                batch_size=min(max(round(num_batch*unlabel_percent/(4*(1.-unlabel_percent)))*4, 4), 24), shuffle=False,drop_last=True,
                                                num_workers=1, pin_memory=False)
-    
-    
+     
         
     #breakpoint()
+    print('test_loader')
     test_loader = torch.utils.data.DataLoader(spot_dataset.SPOTDataset(subset="validation"),
                                               batch_size=num_batch, shuffle=False,
                                               num_workers=2, pin_memory=False, drop_last=True)
 
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_train, gamma=gamma_train)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_train, gamma=gamma_train) # NOTE: a scheduler is placed here and is not used. Good to know for playing around with the scheduler.step()
     best_loss = 1e10
+
+    
+    print("training: len(train_loader)", len(train_loader))
+    print("training: len(train_loader_pretrain)", len(train_loader_pretrain))
+    print("training: len(train_loader_unlabel)", len(train_loader_unlabel))
+    print("training: len(test_loader)", len(test_loader))
 
     start = torch.cuda.Event(enable_timing=True)
     end = torch.cuda.Event(enable_timing=True)
@@ -914,7 +931,7 @@ if __name__ == '__main__':
         if config["training"]["alternate"] and pretrain_epoch < config['pretraining']['warmup_epoch']:
             #for e in range(config["pretraining"]["consecutive_warmup_epochs"]): 
             print(pretrain_epoch)
-            pretrain(train_loader_pretrain,model,optimizer, pretrain_epoch)
+            pretrain(train_loader_pretrain,model,optimizer, pretrain_epoch) # what happens if we use unlabel as our pretraining?
             checkpoint_pre = torch.load(output_path + "/SPOT.pth.tar")
             model.load_state_dict(checkpoint_pre['state_dict'])
             optimizer.load_state_dict(checkpoint_pre['optimizer'])

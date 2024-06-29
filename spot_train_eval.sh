@@ -7,7 +7,7 @@
 
 export CUDA_VISIBLE_DEVICES="$1"
 
-echo "$0" "$@" | tee "output/experiments/${2}" # record the command used to run this script.
+#echo "$0" "$@" | tee "output/experiments/${2}" # record the command used to run this script.
 
 { time python spot_train.py "${@:3}" ; } 2>&1 | tee -a "output/experiments/${2}"
 { time python spot_inference.py "${@:3}" ; } 2>&1 | tee -a "output/experiments/${2}"
