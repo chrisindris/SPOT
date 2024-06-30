@@ -17,9 +17,16 @@
 gpu=$1
 
 if (( gpu == 0 )); then
-  output_pth="./output/"
+  output_pth="./output_3/"
 
-  
+  ./spot_train_eval.sh "$gpu" latest_trial-training_bloss_new-toploss-unlabel_percent_0.4-max_epoch_20.txt ./configs/anet.yaml \
+    dataset.training.unlabel_percent=0.0 \
+    dataset.testing.unlabel_percent=0.0 \
+    pretraining.warmup_epoch=18 \
+    training.max_epoch=20 \
+    dataset.training.output_path=$output_pth \
+    dataset.testing.output_path=$output_pth \
+    training.checkpoint_path=$output_pth
 
 else
   output_pth="./output_2/"

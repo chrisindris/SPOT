@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ./spot_train_eval.sh 1 latest_trial-training_bloss_new-toploss-unlabel_percent_0.4-max_epoch_20.txt ./configs/anet.yaml dataset.training.unlabel_percent=0.4 dataset.testing.unlabel_percent=0.4 pretraining.warmup_epoch=18 training.max_epoch=20 dataset.training.output_path=./output_2/ dataset.testing.output_path=./output_2/ training.checkpoint_path=./output_2/
 {'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.4, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.4, 'use_semi': True}}, 'model': {'embedding_head': 4, 'feat_dim': 400, 'temporal_scale': 100}, 'pretraining': {'warmup_epoch': 18, 'consecutive_warmup_epochs': 3}, 'training': {'batch_size': 25, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 20, 'consecutive_train_epochs': 3, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
 
@@ -3894,7 +3895,6 @@ user	134m1.142s
 sys	20m39.298s
 Loading validation Video Information ...
   0% 0/4728 [00:00<?, ?it/s] 20% 925/4728 [00:00<00:00, 9235.59it/s] 39% 1849/4728 [00:00<00:00, 8497.04it/s] 57% 2703/4728 [00:00<00:00, 7980.19it/s] 74% 3505/4728 [00:00<00:00, 7496.46it/s] 90% 4259/4728 [00:00<00:00, 7134.97it/s]100% 4728/4728 [00:00<00:00, 7380.48it/s]Inference start
-
 Inference finished
 Start Post-Processing
 End Post-Processing

@@ -8,4 +8,9 @@ output/experiments/latest_trial-training_bloss_new-toploss.txt
 - This is why I base the successive experiments regarding increasing the percentage of labeled data (see output/experiments/latest_trial-training_bloss_new-toploss-unlabel_percent*) on this one.
 
 TRIAL*
-- These are re-runs of latest_trial-training_bloss_new-toploss-* that I use to make sure that the code is working, as of 27/06/24. Dually, I use them to train the multirun script. 
+- These are re-runs of latest_trial-training_bloss_new-toploss-* that I use to make sure that the code is working, as of 27/06/24. Dually, I use them to train the multirun script.
+
+
+
+
+I have noticed that the train, validation and test sets seem to only use about 80% of each of train, val, test.

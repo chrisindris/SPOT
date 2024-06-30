@@ -16,7 +16,7 @@ dataset:
     video_anno_path: "./data/activitynet_annotations/anet_anno_action.json"
     num_frame: 16
     output_path: '/root/models/SPOT/output/'
-    unlabel_percent: 0.7
+    unlabel_percent: 0.7 # Never used
     use_semi: True
 
 model:
@@ -27,6 +27,7 @@ model:
 pretraining:
   warmup_epoch: 30 # Default 30
   consecutive_warmup_epochs: 3 # 3 works well
+  unlabeled_pretrain: False
 
 training:
   batch_size: 25 # 100, 50, 25 make it run, but 100 crashes (CUDA out of memory on 80GB A100), 1 seems to work for training but not pretraining 
