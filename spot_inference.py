@@ -43,7 +43,7 @@ if __name__ == '__main__':
     model.load_state_dict(checkpoint['state_dict'])
     model.eval()
     ### Load Dataloader ###
-    test_loader = torch.utils.data.DataLoader(spot_dataset.SPOTDataset(subset='validation', mode='inference'), # to get validation set: subset='validation', mode='inference'
+    test_loader = torch.utils.data.DataLoader(spot_dataset.SPOTDataset(subset='validation', mode='inference'), # to get validation set (which is /data/i5O/ActivityNet1.3/test/): subset='validation', mode='inference'
                                               batch_size=1, shuffle=False,
                                               num_workers=8, pin_memory=True, drop_last=False)
 

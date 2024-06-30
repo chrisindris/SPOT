@@ -278,9 +278,11 @@ def pretrain(data_loader, model, optimizer, pretrain_epoch=0):
     else:
         epochs = range(warmup_epoch)
   
-    for ep in epochs: 
+    for ep in epochs:
 
-        for n_iter, (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt, input_data_big, input_data_small) in enumerate(data_loader): # NOTE pretrain_unlabel: reduced from 8 outputs (last one is not used)
+        for n_iter, data in enumerate(data_loader): # NOTE pretrain_unlabel: reduced from 8 outputs (last one is not used)
+            (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt, input_data_big, input_data_small) = data[:7] # Only the first seven outputs are used
+
             # input_data.size = batch_size, dimension of inputted numpy features, base temporal scale
 
             #breakpoint()
@@ -740,7 +742,7 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
             loss_all = loss_total[0] + consistency_loss + loss_feat_unlabel + loss_contrast_label + loss_contrast_unlabel + loss_feat_label
 
         optimizer.zero_grad()
-        weighed_loss = 0.1 * loss_total[1] + 0.9 * loss_total[2]
+        weighed_loss = 0.1 * loss_total[1] + 0.9 * loss_total[2] # NOTE Hyperparam: should be made adjustable
         weighed_loss.backward() # loss_all.backward()
         optimizer.step()
         global_step += 1
@@ -787,6 +789,7 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
 
 def train_semi_full(data_loader, model, optimizer, epoch):
     model.train()
+    global global_step
 
     for n_iter, (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt, input_data_big, input_data_small, f_mask) in enumerate(data_loader):
     #for n_iter, (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt) in enumerate(data_loader):
@@ -795,8 +798,11 @@ def train_semi_full(data_loader, model, optimizer, epoch):
         loss = spot_loss(top_br_gt,top_br_pred,bottom_br_gt,bottom_br_pred, action_gt,label_gt)
         # update step
         optimizer.zero_grad()
-        loss[0].backward()
+        #loss[0].backward()
+        weighed_loss = 1 * loss[1] + 1 * loss[2]
+        weighed_loss.backward()
         optimizer.step()
+        global_step += 1
     print("[Epoch {0:03d}] Total-Loss {1:.2f} = T-Loss {2:.2f} + B-Loss {3:.2f}  (train)".format(
     epoch, loss[0],loss[1],loss[2]))
 
@@ -878,20 +884,23 @@ if __name__ == '__main__':
                                                num_workers=1, pin_memory=False, drop_last=True)
 
     print('train_loader_pretrain')
-    #train_loader_pretrain = torch.utils.data.DataLoader(spot_dataset.SPOTDataset(subset="train"),
-    #                                          batch_size=num_batch, shuffle=False,
-    #                                           num_workers=1, pin_memory=False, drop_last=True)
-    train_loader_pretrain = torch.utils.data.DataLoader(spot_dataset.SPOTDatasetUnlabeled(subset="unlabel"),
-                                            #    batch_size=num_batch, shuffle=True,
+    if config['pretraining']['unlabeled_pretrain']:
+        train_loader_pretrain = torch.utils.data.DataLoader(spot_dataset.SPOTDatasetUnlabeled(subset="unlabel"),
+                                               #batch_size=num_batch, shuffle=True,
                                                batch_size=num_batch, shuffle=False,drop_last=True,
                                                         num_workers=1, pin_memory=False) # NOTE pretrain_unlabel: we see what happens when we pretrain with the unlabeled data
-
+    else:
+        train_loader_pretrain = torch.utils.data.DataLoader(spot_dataset.SPOTDataset(subset="train"),
+                                             batch_size=num_batch, shuffle=False,
+                                              num_workers=1, pin_memory=False, drop_last=True)
+    
     if use_semi and unlabel_percent > 0.:
         print('train_loader_unlabel')
         train_loader_unlabel = torch.utils.data.DataLoader(spot_dataset.SPOTDatasetUnlabeled(subset="unlabel"),
                                             #    batch_size=num_batch, shuffle=True,
                                                batch_size=min(max(round(num_batch*unlabel_percent/(4*(1.-unlabel_percent)))*4, 4), 24), shuffle=False,drop_last=True,
                                                num_workers=1, pin_memory=False)
+        print("training: len(train_loader_unlabel)", len(train_loader_unlabel))
      
         
     #breakpoint()
@@ -905,8 +914,7 @@ if __name__ == '__main__':
 
     
     print("training: len(train_loader)", len(train_loader))
-    print("training: len(train_loader_pretrain)", len(train_loader_pretrain))
-    print("training: len(train_loader_unlabel)", len(train_loader_unlabel))
+    print("training: len(train_loader_pretrain)", len(train_loader_pretrain)) 
     print("training: len(test_loader)", len(test_loader))
 
     start = torch.cuda.Event(enable_timing=True)

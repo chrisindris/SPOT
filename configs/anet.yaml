@@ -27,6 +27,7 @@ model:
 pretraining:
   warmup_epoch: 30 # Default 30
   consecutive_warmup_epochs: 3 # 3 works well
+  unlabeled_pretrain: False
 
 training:
   batch_size: 25 # 100, 50, 25 make it run, but 100 crashes (CUDA out of memory on 80GB A100), 1 seems to work for training but not pretraining 
