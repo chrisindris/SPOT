@@ -5,24 +5,24 @@ dataset:
     video_info_path: "./data/activitynet_annotations/video_info_new.csv"
     video_info_path_unlabeled: "./data/activitynet_annotations/"
     video_anno_path: "./data/activitynet_annotations/anet_anno_action.json"
-    num_frame: 16
+    num_frame: 16 # length of the clip?
     output_path: '/root/models/SPOT/output/'
-    unlabel_percent: 0.7
+    unlabel_percent: 0.9
     use_semi: True
     
   testing:
     video_info_path: "./data/activitynet_annotations/video_info_new.csv"
     video_info_path_unlabeled: "./data/activitynet_annotations/"
     video_anno_path: "./data/activitynet_annotations/anet_anno_action.json"
-    num_frame: 16
+    num_frame: 16 # the number of frames in the snippet. The paper seems to think that the clips are equidistant; they seem to be 3 apart.
     output_path: '/root/models/SPOT/output/'
-    unlabel_percent: 0.7 # Never used
+    unlabel_percent: 0.9 # Never used
     use_semi: True
 
 model:
   embedding_head: 4
-  feat_dim: 400
-  temporal_scale: 100
+  feat_dim: 400 # this is the "internal feature width" that we can play with (it is included in the code, does it work? Not yet!)
+  temporal_scale: 100 # Like feat_dim, this has been hardcoded in the repo and needs to be fixed.
 
 pretraining:
   warmup_epoch: 30 # Default 30
@@ -38,13 +38,17 @@ training:
   consecutive_train_epochs: 3 # 3 works well
   checkpoint_path: "/root/models/SPOT/output/"
   random_seed: 1
-  step: 10
+  step: 10 # every <step> epochs, the learning rate gets multiplied by <gamma>
   gamma: 0.2
+  scheduler: False
   feature_path: "/data/i5O/ActivityNet1.3/train/"
-  num_gpu: 1 
+  num_gpu: 1
+  loss_balance: 0.1
+  loss_balance_full: 0.5
+  regular_eval: False
 
 loss:
-  lambda_1: 0.5
+  lambda_1: 0.5 # doesn't get used anymore
   lambda_2: 0.4
 
 testing:

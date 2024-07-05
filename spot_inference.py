@@ -28,6 +28,21 @@ with open(sys.argv[1], 'r', encoding='utf-8') as f:
         config = modify_config(yaml.load(tmp, Loader=yaml.FullLoader), *handle_args(sys.argv))
 print(config)
 
+
+################## fix everything ##################
+fix_seed = config['training']['random_seed']
+import random
+seed = fix_seed
+random.seed(seed)
+np.random.seed(seed)
+torch.manual_seed(seed)
+torch.cuda.manual_seed(seed)
+torch.cuda.manual_seed_all(seed)
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
+#######################################################
+
+
 if __name__ == '__main__':
     mode = "semi"  ## "semi", "semi_ema" ,""
     output_path = config['dataset']['testing']['output_path']

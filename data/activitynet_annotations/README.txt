@@ -43,7 +43,8 @@ We only have the train and test sets
 - train is where we get the training
 - - X is the proportion that gets used for train_loader 
 - - (1 - X) is the proportion that gets used for train_loader_unlabel
-- test set we use as validation in train_semi (no backprop) and we use this same test set in its entirety as a test set in spot_inference; hence, it is okay to use the same dataset in train_semi and spot_inference 
+- test set we use as validation in train_semi (no backprop) and we use this same test set in its entirety as a test set in spot_inference; hence, it is okay to use the same dataset in train_semi and spot_inference
+- NOTE: ActivityNet does not release the test set annotations. So, /data/i5O/ActivityNet1.3/test/ is really the valiation set. 
 
 # TODOs:
 - ensure that the train_loader (regular one) does what it is supposed to

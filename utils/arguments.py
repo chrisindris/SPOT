@@ -12,7 +12,7 @@ def handle_args(args=sys.argv):
     """
     keys = []
     new_values = []
-    for arg in filter(lambda x : '=' in x, args[1:]):
+    for arg in filter(lambda x : ('=' in x) and ('#' not in x), args[1:]):
         key, value = arg.split('=')
         key = key.split('.')
         keys.append(key)

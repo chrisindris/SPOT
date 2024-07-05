@@ -25,6 +25,7 @@ from spot_lib.tsne import viusalize
 # writer = SummaryWriter()
 
 from utils.arguments import handle_args, modify_config
+import subprocess
 import pdb
 
 # TODO: num_workers and pretrain() warmup_epoch should be specifiable in the config file.
@@ -97,8 +98,6 @@ def top_lr_loss(target,pred):
     loss = (gt_action * pred_p).sum() / count_pos + alpha*(topk_neg_loss.cuda()).mean()
 
     return -1*loss
-
-
 
 
 def get_mem_usage():
@@ -507,6 +506,7 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
     consistency_loss_ema_all = 0
     consistency_criterion = softmax_mse_loss  # softmax_kl_loss
     consistency_criterion_top = softmax_kl_loss
+    loss_balance = config["training"]["loss_balance"]
 
     
     temporal_perb = TemporalShift_random(400, 64)   
@@ -742,7 +742,7 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
             loss_all = loss_total[0] + consistency_loss + loss_feat_unlabel + loss_contrast_label + loss_contrast_unlabel + loss_feat_label
 
         optimizer.zero_grad()
-        weighed_loss = 0.1 * loss_total[1] + 0.9 * loss_total[2] # NOTE Hyperparam: should be made adjustable
+        weighed_loss = loss_balance * loss_total[1] + (1 - loss_balance) * loss_total[2] # NOTE Hyperparam: should be made adjustable
         weighed_loss.backward() # loss_all.backward()
         optimizer.step()
         global_step += 1
@@ -781,6 +781,8 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
                 ) 
         )
     )
+    if config['training']['scheduler']:
+        scheduler.step() # this needs to be here, not in __main__
     state = {'epoch': epoch + 1,
              'state_dict': model.state_dict()}
     torch.save(state, output_path + "/SPOT.pth.tar")
@@ -791,6 +793,8 @@ def train_semi_full(data_loader, model, optimizer, epoch):
     model.train()
     global global_step
 
+    loss_balance_full = config['training']['loss_balance_full']
+
     for n_iter, (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt, input_data_big, input_data_small, f_mask) in enumerate(data_loader):
     #for n_iter, (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt) in enumerate(data_loader):
         # forward pass
@@ -799,10 +803,12 @@ def train_semi_full(data_loader, model, optimizer, epoch):
         # update step
         optimizer.zero_grad()
         #loss[0].backward()
-        weighed_loss = 1 * loss[1] + 1 * loss[2]
+        weighed_loss = loss_balance_full * loss[1] + (1 - loss_balance_full) * loss[2]
         weighed_loss.backward()
         optimizer.step()
         global_step += 1
+    if config['training']['scheduler']:
+        scheduler.step()
     print("[Epoch {0:03d}] Total-Loss {1:.2f} = T-Loss {2:.2f} + B-Loss {3:.2f}  (train)".format(
     epoch, loss[0],loss[1],loss[2]))
 
@@ -964,6 +970,11 @@ if __name__ == '__main__':
                     test(test_loader, model, train_epoch, best_loss)
 
                 train_epoch += 1
+
+            # every few epochs, we can run this as a "debugging step"
+            if config["training"]["regular_eval"] and (train_epoch < epoch - config["training"]["consecutive_train_epochs"] + 1):
+                subprocess.run(["python", "spot_inference.py"] + sys.argv[1:])
+                subprocess.run(["python", "eval.py"] + sys.argv[1:])
 
 
 

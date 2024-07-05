@@ -52,7 +52,7 @@ class SPOTDataset(data.Dataset):
         video_infos = self.get_video_info(self.video_info_path)
         self.info = video_infos
         video_annos = self.get_video_anno(video_infos, self.video_anno_path)
-        print("len(video_annos)", len(video_annos))
+        #print("len(video_annos)", len(video_annos))
         """
         Issue: it is looking for a CSV file within self.feature_path, rather than expecting a .npy
         (Pdb) self.getVideoData(0)
@@ -60,7 +60,7 @@ class SPOTDataset(data.Dataset):
         """
         self.subset_mask = self.getVideoMask(video_annos,self.temporal_scale)
         self.subset_mask_list = list(self.subset_mask.keys())
-        print("len(self.subset_mask_list)", len(self.subset_mask_list))
+        #print("len(self.subset_mask_list)", len(self.subset_mask_list))
 
 
         
@@ -105,15 +105,19 @@ class SPOTDataset(data.Dataset):
 
         temporal_dict={}
         for idx in anno.keys():
+
+            #breakpoint()
+
             labels = anno[idx]['annotations']
             subset_vid  = anno[idx]['subset']
             num_frame = anno[idx]['feature_frame']
             vid_frame = anno[idx]['duration_frame']
             num_sec = anno[idx]['duration_second']
-            corr_sec = float(num_frame) / vid_frame * num_sec
+            corr_sec = float(num_frame) / vid_frame * num_sec # The number of seconds in the video frames that are actually used
             label_list= []
             if subset in subset_vid:
                 if 'unlabel' not in subset_vid:
+                    #breakpoint()
                     for j in range(len(labels)):
                         tmp_info = labels[j]
                         clip_factor = self.temporal_scale / ( corr_sec * (self.num_frame+1) )
@@ -299,7 +303,7 @@ class SPOTDatasetUnlabeled(data.Dataset):
         video_annos = self.get_video_anno(video_infos, self.video_anno_path)
         self.subset_mask = self.getVideoMask(video_annos,self.temporal_scale)
         self.subset_mask_list = list(self.subset_mask.keys())
-        print("len(self.subset_mask_list)", len(self.subset_mask_list))
+        #print("len(self.subset_mask_list)", len(self.subset_mask_list))
         
 
 

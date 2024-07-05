@@ -1,0 +1,37 @@
+./spot_train_eval.sh 0 TRIAL_scheduler-check.txt ./configs/anet.yaml model.temporal_scale=50 pretraining.warmup_epoch=1 pretraining.consecutive_warmup_epochs=1 training.max_epoch=1 training.consecutive_train_epochs=1 dataset.training.output_path=./output/ dataset.testing.output_path=./output/ training.checkpoint_path=./output/
+{'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output/', 'unlabel_percent': 0.9, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output/', 'unlabel_percent': 0.9, 'use_semi': True}}, 'model': {'embedding_head': 4, 'feat_dim': 400, 'temporal_scale': 50}, 'pretraining': {'warmup_epoch': 1, 'consecutive_warmup_epochs': 1, 'unlabeled_pretrain': False}, 'training': {'batch_size': 25, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 1, 'consecutive_train_epochs': 1, 'checkpoint_path': './output/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1, 'loss_balance': 0.1, 'loss_balance_full': 0.5}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
+
+Total Number of Learnable Paramters (in M) :  6.66426
+No of Gpus using to Train :  1 
+ Saving all Checkpoints in path : ./output/
+train_loader
+Loading train Video Information ...
+  0% 0/9649 [00:00<?, ?it/s]  8% 788/9649 [00:00<00:01, 7875.95it/s] 16% 1576/9649 [00:00<00:01, 7641.27it/s] 24% 2341/9649 [00:00<00:01, 6458.12it/s] 31% 3005/9649 [00:00<00:01, 6071.00it/s] 38% 3623/9649 [00:00<00:01, 5921.44it/s] 44% 4222/9649 [00:00<00:00, 5817.83it/s] 50% 4808/9649 [00:00<00:00, 5757.37it/s] 56% 5386/9649 [00:00<00:00, 5715.01it/s] 63% 6097/9649 [00:00<00:00, 6126.82it/s] 72% 6900/9649 [00:01<00:00, 6691.04it/s] 79% 7669/9649 [00:01<00:00, 6987.31it/s] 87% 8372/9649 [00:01<00:00, 6474.48it/s] 94% 9029/9649 [00:01<00:00, 6165.04it/s]100% 9649/9649 [00:01<00:00, 6224.95it/s]
+train_loader_pretrain
+Loading train Video Information ...
+  0% 0/9649 [00:00<?, ?it/s] 34% 3283/9649 [00:00<00:00, 32825.18it/s] 68% 6575/9649 [00:00<00:00, 32876.41it/s]100% 9649/9649 [00:00<00:00, 32831.72it/s]
+train_loader_unlabel
+Loading unlabel Video Information ...
+  0% 0/8683 [00:00<?, ?it/s]  8% 669/8683 [00:00<00:01, 6679.48it/s] 15% 1337/8683 [00:00<00:01, 6427.56it/s] 23% 1981/8683 [00:00<00:01, 6259.10it/s] 30% 2608/8683 [00:00<00:01, 6071.71it/s] 37% 3216/8683 [00:00<00:00, 5908.95it/s] 44% 3808/8683 [00:00<00:00, 5812.73it/s] 51% 4390/8683 [00:00<00:00, 5651.73it/s] 57% 4956/8683 [00:00<00:00, 5460.66it/s] 63% 5503/8683 [00:00<00:00, 5317.08it/s] 70% 6036/8683 [00:01<00:00, 5159.66it/s] 75% 6553/8683 [00:01<00:00, 5043.41it/s] 81% 7058/8683 [00:01<00:00, 4932.42it/s] 87% 7552/8683 [00:01<00:00, 4783.48it/s] 92% 8031/8683 [00:01<00:00, 4683.50it/s] 98% 8500/8683 [00:01<00:00, 4578.47it/s]100% 8683/8683 [00:01<00:00, 5223.43it/s]
+training: len(train_loader_unlabel) 252
+test_loader
+Loading validation Video Information ...
+  0% 0/4728 [00:00<?, ?it/s] 10% 490/4728 [00:00<00:00, 4896.11it/s] 21% 980/4728 [00:00<00:00, 4813.20it/s] 31% 1462/4728 [00:00<00:00, 4747.20it/s] 41% 1937/4728 [00:00<00:00, 4706.41it/s] 51% 2408/4728 [00:00<00:00, 4681.16it/s] 61% 2877/4728 [00:00<00:00, 4640.94it/s] 71% 3342/4728 [00:00<00:00, 4607.38it/s] 80% 3803/4728 [00:00<00:00, 4542.11it/s] 90% 4258/4728 [00:00<00:00, 4489.44it/s]100% 4708/4728 [00:01<00:00, 4451.14it/s]100% 4728/4728 [00:01<00:00, 4580.79it/s]training: len(train_loader) 26
+training: len(train_loader_pretrain) 26
+training: len(test_loader) 132
+0
+
+Traceback (most recent call last):
+  File "spot_train.py", line 948, in <module>
+    pretrain(train_loader_pretrain,model,optimizer, pretrain_epoch) # what happens if we use unlabel as our pretraining?
+  File "spot_train.py", line 375, in pretrain
+    loss = spot_loss(top_br_gt,top_br_pred,bottom_br_gt,bottom_br_pred, action_gt,label_gt,pretrain=True)
+  File "/root/models/SPOT/spot_lib/loss_spot.py", line 263, in spot_loss
+    bottom_loss = bottom_branch_loss(gt_action.cuda(), pred_action)
+  File "/root/models/SPOT/spot_lib/loss_spot.py", line 232, in bottom_branch_loss
+    loss_pos = coef_1 * torch.log(pred_action + epsilon) * pmask
+RuntimeError: The size of tensor a (50) must match the size of tensor b (100) at non-singleton dimension 1
+
+real	0m30.330s
+user	0m26.929s
+sys	0m16.725s

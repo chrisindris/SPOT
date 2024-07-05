@@ -12,7 +12,16 @@ from utils.arguments import handle_args, modify_config
 with open(sys.argv[1], 'r', encoding='utf-8') as f:
         tmp = f.read()
         config = modify_config(yaml.load(tmp, Loader=yaml.FullLoader), *handle_args(sys.argv))
-print(config)
+#print(config)
+
+
+################## fix everything ##################
+fix_seed = config['training']['random_seed']
+import random
+seed = fix_seed
+random.seed(seed)
+np.random.seed(seed)
+#######################################################
 
 output_path = config['dataset']['testing']['output_path']
 nms_thresh = config['testing']['nms_thresh']

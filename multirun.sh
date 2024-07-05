@@ -1,4 +1,5 @@
 # Usage: ./multirun.sh <GPU-index>
+# Purpose: run programs in series (per gpu) and parallel (across GPUs)
 
 # ./spot_train_eval.sh 0 TRIAL_0.9_parallel.txt ./configs/anet.yaml \
   # dataset.training.unlabel_percent=0.9 \
@@ -17,13 +18,13 @@
 gpu=$1
 
 if (( gpu == 0 )); then
-  output_pth="./output_3/"
+  output_pth="./output/"
 
-  ./spot_train_eval.sh "$gpu" latest_trial-training_bloss_new-toploss-unlabel_percent_0.4-max_epoch_20.txt ./configs/anet.yaml \
-    dataset.training.unlabel_percent=0.0 \
-    dataset.testing.unlabel_percent=0.0 \
-    pretraining.warmup_epoch=18 \
-    training.max_epoch=20 \
+  ./spot_train_eval.sh "$gpu" TRIAL_scheduler-check.txt ./configs/anet.yaml \
+    pretraining.warmup_epoch=1 \
+    pretraining.consecutive_warmup_epochs=1 \
+    training.max_epoch=1 \
+    training.consecutive_train_epochs=1 \
     dataset.training.output_path=$output_pth \
     dataset.testing.output_path=$output_pth \
     training.checkpoint_path=$output_pth

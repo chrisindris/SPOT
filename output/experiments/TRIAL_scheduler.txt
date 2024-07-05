@@ -1,0 +1,94 @@
+./spot_train_eval.sh 0 TRIAL_scheduler-2.txt ./configs/anet.yaml dataset.training.unlabel_percent=0.9 dataset.testing.unlabel_percent=0.9 training.step=1 training.gamma=0.1 pretraining.warmup_epoch=0 training.max_epoch=6 dataset.training.output_path=./output/ dataset.testing.output_path=./output/ training.checkpoint_path=./output/
+{'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output/', 'unlabel_percent': 0.9, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output/', 'unlabel_percent': 0.9, 'use_semi': True}}, 'model': {'embedding_head': 4, 'feat_dim': 400, 'temporal_scale': 100}, 'pretraining': {'warmup_epoch': 0, 'consecutive_warmup_epochs': 3, 'unlabeled_pretrain': False}, 'training': {'batch_size': 25, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 6, 'consecutive_train_epochs': 3, 'checkpoint_path': './output/', 'random_seed': 1, 'step': 1, 'gamma': 0.1, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1, 'loss_balance': 0.1, 'loss_balance_full': 0.5}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
+
+Total Number of Learnable Paramters (in M) :  6.67706
+No of Gpus using to Train :  1 
+ Saving all Checkpoints in path : ./output/
+train_loader
+Loading train Video Information ...
+  0% 0/9649 [00:00<?, ?it/s]  6% 620/9649 [00:00<00:01, 6195.90it/s] 13% 1274/9649 [00:00<00:01, 6391.65it/s] 20% 1944/9649 [00:00<00:01, 6530.84it/s] 27% 2598/9649 [00:00<00:01, 6042.93it/s] 33% 3208/9649 [00:00<00:01, 6029.93it/s] 40% 3815/9649 [00:00<00:00, 6005.30it/s] 46% 4418/9649 [00:00<00:00, 5830.69it/s] 52% 5008/9649 [00:00<00:00, 5851.62it/s] 58% 5595/9649 [00:00<00:00, 5832.67it/s] 64% 6184/9649 [00:01<00:00, 5849.48it/s] 70% 6770/9649 [00:01<00:00, 5805.84it/s] 76% 7367/9649 [00:01<00:00, 5853.55it/s] 83% 7968/9649 [00:01<00:00, 5897.43it/s] 89% 8559/9649 [00:01<00:00, 5835.64it/s] 95% 9148/9649 [00:01<00:00, 5850.92it/s]100% 9649/9649 [00:01<00:00, 5922.19it/s]
+train_loader_pretrain
+Loading train Video Information ...
+  0% 0/9649 [00:00<?, ?it/s] 30% 2850/9649 [00:00<00:00, 28496.15it/s] 59% 5700/9649 [00:00<00:00, 28484.17it/s] 89% 8549/9649 [00:00<00:00, 28424.88it/s]100% 9649/9649 [00:00<00:00, 28386.17it/s]
+train_loader_unlabel
+Loading unlabel Video Information ...
+  0% 0/8683 [00:00<?, ?it/s]  7% 606/8683 [00:00<00:01, 6057.41it/s] 14% 1212/8683 [00:00<00:01, 5903.59it/s] 21% 1803/8683 [00:00<00:01, 5715.28it/s] 27% 2376/8683 [00:00<00:01, 5566.50it/s] 34% 2934/8683 [00:00<00:01, 5369.32it/s] 40% 3472/8683 [00:00<00:00, 5239.39it/s] 46% 3997/8683 [00:00<00:00, 5112.88it/s] 52% 4509/8683 [00:00<00:00, 4946.95it/s] 58% 5005/8683 [00:00<00:00, 4799.75it/s] 63% 5486/8683 [00:01<00:00, 4665.08it/s] 69% 5953/8683 [00:01<00:00, 4515.01it/s] 74% 6406/8683 [00:01<00:00, 4383.94it/s] 79% 6845/8683 [00:01<00:00, 4258.77it/s] 84% 7272/8683 [00:01<00:00, 4157.85it/s] 89% 7688/8683 [00:01<00:00, 4060.49it/s] 93% 8095/8683 [00:01<00:00, 3987.20it/s] 98% 8494/8683 [00:01<00:00, 3899.31it/s]100% 8683/8683 [00:01<00:00, 4579.05it/s]
+training: len(train_loader_unlabel) 295
+test_loader
+Loading validation Video Information ...
+  0% 0/4728 [00:00<?, ?it/s]  9% 434/4728 [00:00<00:00, 4329.74it/s] 18% 867/4728 [00:00<00:00, 4315.52it/s] 28% 1313/4728 [00:00<00:00, 4380.30it/s] 37% 1754/4728 [00:00<00:00, 4391.72it/s] 46% 2195/4728 [00:00<00:00, 4397.52it/s] 56% 2635/4728 [00:00<00:00, 4348.01it/s] 65% 3070/4728 [00:00<00:00, 4317.75it/s] 74% 3502/4728 [00:00<00:00, 4194.71it/s] 83% 3923/4728 [00:00<00:00, 4028.04it/s] 92% 4328/4728 [00:01<00:00, 3786.03it/s]100% 4710/4728 [00:01<00:00, 3574.27it/s]100% 4728/4728 [00:01<00:00, 4009.78it/s]training: len(train_loader) 31
+training: len(train_loader_pretrain) 31
+training: len(test_loader) 154
+training epoch 0
+use Semi !!!
+
+[Iteration 000] Total-Loss 6.04 = T-Loss 5.32 + B-Loss 0.72 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 5.19 = T-Loss 4.50 + B-Loss 0.69 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 5.12 = T-Loss 4.45 + B-Loss 0.68 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 5.14 = T-Loss 4.47 + B-Loss 0.68 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 000] Total-Loss 5.14 = T-Loss 4.47 + B-Loss 0.68 (train)[0m
+/root/models/venv_SPOT/lib/python3.8/site-packages/torch/nn/_reduction.py:42: UserWarning: size_average and reduce args will be deprecated, please use reduction='none' instead.
+  warnings.warn(warning.format(ret))
+[Epoch 000] Total-Loss 5.03 = T-Loss 4.37 + B-Loss 0.65  (val)
+training epoch 1
+use Semi !!!
+[Iteration 000] Total-Loss 4.66 = T-Loss 3.97 + B-Loss 0.69 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 4.78 = T-Loss 4.11 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 4.76 = T-Loss 4.09 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 4.83 = T-Loss 4.16 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 001] Total-Loss 4.83 = T-Loss 4.16 + B-Loss 0.67 (train)[0m
+[Epoch 001] Total-Loss 5.02 = T-Loss 4.37 + B-Loss 0.65  (val)
+training epoch 2
+use Semi !!!
+[Iteration 000] Total-Loss 4.57 = T-Loss 3.87 + B-Loss 0.69 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 4.74 = T-Loss 4.07 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 4.73 = T-Loss 4.07 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 4.80 = T-Loss 4.13 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 002] Total-Loss 4.80 = T-Loss 4.13 + B-Loss 0.67 (train)[0m
+[Epoch 002] Total-Loss 5.02 = T-Loss 4.37 + B-Loss 0.65  (val)
+training epoch 3
+use Semi !!!
+[Iteration 000] Total-Loss 4.55 = T-Loss 3.86 + B-Loss 0.69 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 4.74 = T-Loss 4.07 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 4.73 = T-Loss 4.06 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 4.80 = T-Loss 4.13 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 003] Total-Loss 4.80 = T-Loss 4.13 + B-Loss 0.67 (train)[0m
+[Epoch 003] Total-Loss 5.02 = T-Loss 4.37 + B-Loss 0.65  (val)
+training epoch 4
+use Semi !!!
+[Iteration 000] Total-Loss 4.55 = T-Loss 3.86 + B-Loss 0.69 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 4.74 = T-Loss 4.07 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 4.73 = T-Loss 4.06 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 4.80 = T-Loss 4.13 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 004] Total-Loss 4.80 = T-Loss 4.13 + B-Loss 0.67 (train)[0m
+[Epoch 004] Total-Loss 5.02 = T-Loss 4.37 + B-Loss 0.65  (val)
+training epoch 5
+use Semi !!!
+[Iteration 000] Total-Loss 4.55 = T-Loss 3.86 + B-Loss 0.69 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 4.74 = T-Loss 4.07 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 4.73 = T-Loss 4.06 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 4.80 = T-Loss 4.13 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 005] Total-Loss 4.80 = T-Loss 4.13 + B-Loss 0.67 (train)[0m
+[Epoch 005] Total-Loss 5.02 = T-Loss 4.37 + B-Loss 0.65  (val)
+Total Time taken for Running 6 epoch is :118.9647109375 secs
+
+real	2m28.019s
+user	3m29.201s
+sys	2m14.610s
+{'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output/', 'unlabel_percent': 0.9, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output/', 'unlabel_percent': 0.9, 'use_semi': True}}, 'model': {'embedding_head': 4, 'feat_dim': 400, 'temporal_scale': 100}, 'pretraining': {'warmup_epoch': 0, 'consecutive_warmup_epochs': 3, 'unlabeled_pretrain': False}, 'training': {'batch_size': 25, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 6, 'consecutive_train_epochs': 3, 'checkpoint_path': './output/', 'random_seed': 1, 'step': 1, 'gamma': 0.1, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1, 'loss_balance': 0.1, 'loss_balance_full': 0.5}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
+Loading validation Video Information ...
+  0% 0/4728 [00:00<?, ?it/s] 19% 907/4728 [00:00<00:00, 9053.58it/s] 38% 1813/4728 [00:00<00:00, 7919.02it/s] 55% 2615/4728 [00:00<00:00, 7618.07it/s] 72% 3382/4728 [00:00<00:00, 7296.13it/s] 87% 4115/4728 [00:00<00:00, 6965.54it/s]100% 4728/4728 [00:00<00:00, 6414.10it/s]len(test_loader), 3852
+Inference start
+
+Inference finished
+Start Post-Processing
+End Post-Processing
+
+real	3m30.654s
+user	7m3.197s
+sys	1m13.614s
+Detection: average-mAP 25.276 mAP@0.50 43.123 mAP@0.55 38.668 mAP@0.60 35.012 mAP@0.65 31.564 mAP@0.70 27.412 mAP@0.75 24.089 mAP@0.80 20.112 mAP@0.85 15.584 mAP@0.90 11.025 mAP@0.95 6.168
+
+real	0m25.265s
+user	6m14.733s
+sys	0m48.866s
