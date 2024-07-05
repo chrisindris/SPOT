@@ -272,7 +272,7 @@ class SPOTDataset(data.Dataset):
             return mask_data,top_branch,bottom_branch,mask_top,cas_mask, mask_data_big, mask_data_small, b_mask
             # return mask_data,top_branch,bottom_branch,mask_top,cas_mask
         else:
-            return index, mask_data , mask_data_big, mask_data_small, b_mask
+            return index, mask_data, mask_data_big, mask_data_small, b_mask
             # return index, mask_data
 
     def __len__(self):
