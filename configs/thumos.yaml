@@ -29,7 +29,7 @@ dataset:
 model:
   embedding_head: 4
   feat_dim: 400
-  temporal_scale: 100
+  temporal_scale: 100 # TODO: we want the temporal scale to be about 300 to include almost all of the videos (although 100 is likely good enough), but we need to make sure the model can handle that. Might want to change all instances of 100 to self.temporal_scale
 
 training:
   batch_size: 100

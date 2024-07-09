@@ -117,7 +117,7 @@ def get_video_anno(video_infos,
         mask_start = int(math.floor(temporal_scale * snip_start)) # puts annotation in range(0, temporal_scale); we have resized the video to be temporal_scale seconds long
         mask_end = int(math.floor(temporal_scale * snip_end))
  
-        if mask_end - mask_start > 1: # we focus on large-enough actions
+        if mask_end - mask_start > 1: # NOTE: we only use on large-enough actions for the temporal scale
             if video_annos.get(video_name) is None:
                 video_annos[video_name] = [[mask_start, mask_end, class_idx]]
             else:
@@ -240,7 +240,8 @@ class THUMOS_Dataset(Dataset):
                  rgb_norm=True,
                  training=True,
                  origin_ratio=0.5,
-                 subset='train'):
+                 subset='train',
+                 unlabeled=False):
  
         self.num_classes = config['dataset']['num_classes']
         self.temporal_scale = config['model']['temporal_scale']
@@ -250,7 +251,9 @@ class THUMOS_Dataset(Dataset):
 
         self.split = {'train': 'training', 'validation': 'testing', 'testing': 'testing'}[self.subset]
 
-        self.video_info_path = config['dataset'][self.split]['video_info_path']
+        self.video_info_path_unlabeled = config['dataset']['training']['video_info_path_unlabeled'] # NOTE: unlabel_percent only matters for training. We always use the full dataset for testing.
+        self.unlabel_percent = config['dataset']['training']['unlabel_percent']
+        self.video_info_path = os.path.join(self.video_info_path_unlabeled, "video_info_new_"+str(self.unlabel_percent)+".csv") if unlabeled else config['dataset'][self.split]['video_info_path']
         self.video_anno_path = config['dataset'][self.split]['video_anno_path']
         self.npy_data_path = config[self.split]['feature_path']
  
@@ -332,6 +335,7 @@ class THUMOS_Dataset(Dataset):
         originidx_to_idx, idx_to_class = get_class_index_map()
         video_annos = {}
         for anno in df_anno:
+
             video_name = anno[0]
             originidx = anno[2]
             start_frame = anno[-2]
@@ -550,6 +554,18 @@ class THUMOS_Dataset(Dataset):
         b_mask = torch.Tensor(temporary_mask) # aka temp_mask_cls; 1 if clip is part of action, 0 otherwise
 
         return mask_data, classifier_branch,global_mask_branch,mask_top,cas_mask, mask_data_big, mask_data_small, b_mask
+
+    
+    def splitter(self):
+        # This function will re-make the dataset by turning each video into a split.
+        video_annos = {}
+
+
+        breakpoint()
+        
+
+
+
 
     """
     def __getitem__(self, idx):
