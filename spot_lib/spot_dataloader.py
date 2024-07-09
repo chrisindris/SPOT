@@ -52,6 +52,7 @@ class SPOTDataset(data.Dataset):
         video_infos = self.get_video_info(self.video_info_path)
         self.info = video_infos
         video_annos = self.get_video_anno(video_infos, self.video_anno_path)
+        self.video_annos = video_annos
         #print("len(video_annos)", len(video_annos))
         """
         Issue: it is looking for a CSV file within self.feature_path, rather than expecting a .npy
@@ -65,11 +66,7 @@ class SPOTDataset(data.Dataset):
 
         
     def get_video_anno(self,video_infos,video_anno_path):
-
         anno_database = load_json(self.video_anno_path)
-
-        #breakpoint()
-
         # print(anno_database)
         video_dict = {}
         for video_name in video_infos.keys():
@@ -86,6 +83,7 @@ class SPOTDataset(data.Dataset):
 
     def get_video_info(self,video_info_path):
         """ Gets the relevant info (duration, subset) out of the video_info_new* dataframe.
+        Produces {'v_---9CpRcKoU': {'duration': 14.07, 'subset': 'training_unlabel'} ...} for all videos
         """
 
         df_info = pd.DataFrame(pd.read_csv(video_info_path)).values[:]
@@ -134,7 +132,10 @@ class SPOTDataset(data.Dataset):
 
         return temporal_dict
 
-    def getVideoMask(self,video_annos,clip_length=100):
+    
+    def getVideoMask(self,video_annos,clip_length=100): # clip_length seems to relate to that temporal_scale param
+        # result looks like {idx: [[mask_start, mask_end, label_idx]]}
+        # mask start and end are the cur_annos (in range between 0 and 1) multiplied by the clip length; this is the temporal scale to ensure that all videos are cast to the same length 
 
         self.video_mask = {}
         idx_list = self.getAnnotation(self.subset,video_annos)
@@ -147,6 +148,7 @@ class SPOTDataset(data.Dataset):
 
         for idx in tqdm.tqdm(list(video_annos.keys()),ncols=0):
             if os.path.exists(os.path.join(self.feature_path+"/",idx+".npy")) and idx in list(idx_list.keys()):
+                #breakpoint()
                 cur_annos = idx_list[idx]["labels"]
                 mask_list=[]
                 for l_id in range(len(cur_annos)):
@@ -175,90 +177,99 @@ class SPOTDataset(data.Dataset):
         video_data_big = F.interpolate(video_data.unsqueeze(0), size=200, mode='linear',align_corners=False)[0,...]
         video_data_small = F.interpolate(video_data.unsqueeze(0), size=50, mode='linear',align_corners=False)[0,...]
 
-        return video_data_, video_data_big, video_data_small
+        return video_data_, video_data_big, video_data_small #[torch.Size([2048, 100]), torch.Size([2048, 200]), torch.Size([2048, 50])]
 
 
     def getVideoData(self,index):
 
+        """[Collects all of the versions of the data that SPOT wants. ]
+
+        Args:
+            index ([int]): [numerical index of the video (not the video name string)]
+
+        Returns:
+            [TODO:return]
+        """
+        breakpoint()
+
         mask_idx = self.subset_mask_list[index]
-        mask_data , mask_data_big, mask_data_small = self.loadFeature(mask_idx)
+        mask_data, mask_data_big, mask_data_small = self.loadFeature(mask_idx)
         mask_label = self.video_mask[mask_idx]
 
-        bbox = np.array(mask_label)
+        bbox = np.array(mask_label) # converts the start, end and labels into arrays (size of array is the number of annotations in the video)
         start_id = bbox[:,0]
         end_id = bbox[:,1]
         label_id = bbox[:,2]
 
-        cls_mask = np.zeros([self.num_classes+1, self.temporal_scale]) ## dim : 201x100
-        temporary_mask = np.zeros([self.temporal_scale])
+        cls_mask = np.zeros([self.num_classes+1, self.temporal_scale]) ## dim : 201x100 (ie. one-hot encoding for each clip)
+        temporary_mask = np.zeros([self.temporal_scale]) # dim: 100 (ie. one value per clip)
         action_mask = np.zeros([self.temporal_scale,self.temporal_scale]) ## dim : 100 x 100
-        cas_mask = np.zeros([self.num_classes])
+        cas_mask = np.zeros([self.num_classes]) # dim: 20 (ie. one value per class)
     
         start_indexes = []
         end_indexes = []
         tuple_list =[]
 
-        for idx in range(len(start_id)):
-          lbl_id = label_id[idx]
+        for idx in range(len(start_id)): # one iteration per annotation for this video
+          lbl_id = label_id[idx] # get the class
           start_indexes.append(start_id[idx]+1)
           end_indexes.append(end_id[idx]-1)
-          tuple_list.append([start_id[idx]+1, end_id[idx]-1,lbl_id])
+          tuple_list.append([start_id[idx]+1, end_id[idx]-1, lbl_id]) # reduce the segment's size by 2
+
         temp_mask_cls = np.zeros([self.temporal_scale])
 
         for idx in range(len(start_id)):
-            temp_mask_cls[tuple_list[idx][0]:tuple_list[idx][1]]=1
+            temp_mask_cls[tuple_list[idx][0]:tuple_list[idx][1]]=1 # create a mask of annotation, where the clips contained in the annotation get a 1, otherwise 0
             lbl_idx = int(tuple_list[idx][2])
 
-            cls_mask[lbl_idx,:]= temp_mask_cls
+            cls_mask[lbl_idx,:]= temp_mask_cls # one-hot encode to track when an action occurs, and (via one-hot) track the action label. 
             
         for idx in range(len(start_id)):
-          temporary_mask[tuple_list[idx][0]:tuple_list[idx][1]] = 1
+          temporary_mask[tuple_list[idx][0]:tuple_list[idx][1]] = 1 # can we not just make this a deepcopy of temp_mask_cls?
  
-        background_mask = 1 - temporary_mask
+        background_mask = 1 - temporary_mask # a class mask, but where the class is "background"
 
         v_label = np.zeros([1])
 
         new_mask = np.zeros([self.temporal_scale])
         
         for p in range(self.temporal_scale):
-            new_mask[p] = -1 
+            new_mask[p] = -1 # seems redundant by construction. np.zeros([self.temporal_scale]) -1 would be equivalent. 
 
-        cls_mask[self.num_classes,:] = background_mask
+        cls_mask[self.num_classes,:] = background_mask # the background class has been assigned the number self.num_classes = 200; so, cls_mask[self.num_classes] shows the 100 locations in time, and has a 1 iff it is a background clip.
 
         filter_lab = list(set(label_id))
 
         for j in range(len(filter_lab)):
             label_idx = filter_lab[j]
-            cas_mask[label_idx] = 1
+            cas_mask[label_idx] = 1 # cas_mask lists the classes that are present in the video in a kind of "multi-hot" setup.
+
+        len_gt = np.array(end_indexes) - np.array(start_indexes)
+
 
         for idx in range(len(start_indexes)):
-          len_gt = int(end_indexes[idx] - start_indexes[idx])
-
           mod_start = tuple_list[idx][0]
           mod_end = tuple_list[idx][1]
           new_lab = tuple_list[idx][2]
 
-          new_mask[mod_start:mod_end] = new_lab
+          new_mask[mod_start:mod_end] = new_lab # for each clip, the class index (-1 for background)
 
 
         for p in range(self.temporal_scale):
             if new_mask[p] == -1:
-                new_mask[p] = self.num_classes
+                new_mask[p] = self.num_classes # this just converts the -1 backgrounds to 200. Seems redundant given how new_mask could just be constructed using the 200. 
 
         classifier_branch = torch.Tensor(new_mask).type(torch.LongTensor)
 
-        for idx in range(len(start_indexes)):
-            len_gt = int(end_indexes[idx] - start_indexes[idx])
+        for idx in range(len(start_indexes)): # can we not combine this with the loop on line 254? 
             mod_start = tuple_list[idx][0]
             mod_end = tuple_list[idx][1]
-            action_mask[mod_start:(mod_end), mod_start:(mod_end)] = 1
+            action_mask[mod_start:(mod_end), mod_start:(mod_end)] = 1 # a kind of 2D version of the one-hot temp_mask_cls
 
-        global_mask_branch = torch.Tensor(action_mask)
-
-        cas_mask = torch.Tensor(cas_mask)
-        mask_top = torch.Tensor(cls_mask)
-        v_label = torch.Tensor()
-        b_mask = torch.Tensor(temporary_mask)
+        global_mask_branch = torch.Tensor(action_mask) # temporary_mask but expanded to 2D
+        cas_mask = torch.Tensor(cas_mask) # multi-hot encoding of the classes present in the video
+        mask_top = torch.Tensor(cls_mask) # for each clip, a one-hot encoding of the class
+        b_mask = torch.Tensor(temporary_mask) # aka temp_mask_cls; 1 if clip is part of action, 0 otherwise
 
         
         return mask_data, classifier_branch,global_mask_branch,mask_top,cas_mask, mask_data_big, mask_data_small, b_mask
@@ -309,7 +320,6 @@ class SPOTDatasetUnlabeled(data.Dataset):
 
         
     def get_video_anno(self,video_infos,video_anno_path):
-
         anno_database = load_json(self.video_anno_path)
         # print(anno_database)
         video_dict = {}
@@ -326,6 +336,9 @@ class SPOTDatasetUnlabeled(data.Dataset):
     
 
     def get_video_info(self,video_info_path):
+        """
+        spacer
+        """
 
         df_info = pd.DataFrame(pd.read_csv(video_info_path)).values[:]
         video_infos = {}

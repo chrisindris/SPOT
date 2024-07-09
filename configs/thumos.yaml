@@ -17,7 +17,7 @@ dataset:
   testing:
     video_info_path: "data/thumos_annotations/test_video_info.csv" # from AFSD 
     video_info_path_unlabeled: "./data/activitynet_annotations/"
-    video_anno_path: "./data/activitynet_annotations/anet_anno_action.json"
+    video_anno_path: "data/thumos_annotations/test_Annotation_ours.csv" # from AFSD
     num_frame: 16
     output_path: '/root/models/SPOT/thumos_output/'
     unlabel_percent: 0.9
@@ -39,21 +39,19 @@ training:
   checkpoint_path: "/root/models/SPOT/thumos_output/"
   random_seed: 1
   step: 10
-  gamma: 0.2
-  feature_path: #TODO: add the path to the features to be used; corresponds to video_data_path
+  gamma: 0.2 
   num_gpu: 1
-  feature_path: "/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/" 
+  feature_path: "/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/"  #TODO: add the path to the features to be used; corresponds to video_data_path
 
 loss:
   lambda_1: 0.5
   lambda_2: 0.4
 
-testing:
-  feature_path: #TODO: add the path to the features to be used; corresponds to video_data_path
+testing: 
   cls_thresh: 0.01
   mask_thresh: [0,0.2,0.4,0.6,0.8]
   class_thresh: [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
   top_k_snip: 10
   top_k: 500
   nms_thresh: 0.6
-  feature_path: "/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/"
+  feature_path: "/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/" #TODO: add the path to the features to be used; corresponds to video_data_path
