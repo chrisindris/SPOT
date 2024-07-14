@@ -21,6 +21,7 @@ from utils.arguments import handle_args, modify_config
 from torch.functional import F
 import copy
 import pdb
+from configs.dataset_class import thumos_dict
 
 with open(sys.argv[1], 'r', encoding='utf-8') as f:
         tmp = f.read()
@@ -64,7 +65,7 @@ def get_video_info(video_info_path):
             'count': info[3],
             'sample_count': info[4],
             'duration': info[3] / info[1], # sample and non-sample have same length in seconds
-            'subset': 'training' if 'val' in video_info_path else 'testing'} # hack: i will need to base this off of a video_info_new_*.csv-type file that has the training set (incl. unlabel); this should be in (training, training_unlabel, validation, testing)
+            'subset': 'training' if 'val' in video_info_path else 'testing'} # HACK: i will need to base this off of a video_info_new_*.csv-type file that has the training set (incl. unlabel); this should be in (training, training_unlabel, validation, testing)
     return video_infos
 
 
@@ -89,7 +90,7 @@ def get_video_anno(video_infos,
     Does not differ between regular and unlabeled
     """
     df_anno = pd.DataFrame(pd.read_csv(video_anno_path)).values[:]
-    originidx_to_idx, idx_to_class = get_class_index_map()
+    originidx_to_idx, idx_to_class = get_class_index_map() 
     video_annos = {}
     for anno in df_anno:
         video_name = anno[0]
@@ -241,21 +242,26 @@ class THUMOS_Dataset(Dataset):
                  training=True,
                  origin_ratio=0.5,
                  subset='train',
-                 unlabeled=False):
- 
+                 unlabeled=False,
+                 labeled=False):
+
+        self.training = training
+        self.unlabeled = unlabeled
+        self.labeled = labeled
         self.num_classes = config['dataset']['num_classes']
         self.temporal_scale = config['model']['temporal_scale']
         self.temporal_gap = 1. / self.temporal_scale
         self.subset = subset
         self.mode = subset
+        self.class_to_idx = thumos_dict
 
         self.split = {'train': 'training', 'validation': 'testing', 'testing': 'testing'}[self.subset]
 
         self.video_info_path_unlabeled = config['dataset']['training']['video_info_path_unlabeled'] # NOTE: unlabel_percent only matters for training. We always use the full dataset for testing.
         self.unlabel_percent = config['dataset']['training']['unlabel_percent']
-        self.video_info_path = os.path.join(self.video_info_path_unlabeled, "video_info_new_"+str(self.unlabel_percent)+".csv") if unlabeled else config['dataset'][self.split]['video_info_path']
+        self.video_info_path = os.path.join(self.video_info_path_unlabeled, "val_video_info_"+str(self.unlabel_percent)+".csv") if self.training else config['dataset'][self.split]['video_info_path']
         self.video_anno_path = config['dataset'][self.split]['video_anno_path']
-        self.npy_data_path = config[self.split]['feature_path']
+        self.npy_data_path = config[self.split]['feature_path'] 
  
         self.video_infos = self.get_video_info()
         self.video_annos = self.get_video_anno()
@@ -266,8 +272,7 @@ class THUMOS_Dataset(Dataset):
         self.random_crop = videotransforms.RandomCrop(self.crop_size)
         self.random_flip = videotransforms.RandomHorizontalFlip(p=0.5)
         self.center_crop = videotransforms.CenterCrop(self.crop_size)
-        self.rgb_norm = rgb_norm
-        self.training = training
+        self.rgb_norm = rgb_norm 
 
         self.origin_ratio = origin_ratio
 
@@ -299,17 +304,33 @@ class THUMOS_Dataset(Dataset):
         
         Does not differ between regular and unlabeled
         """
-        df_info = pd.DataFrame(pd.read_csv(self.video_info_path)).values[:]
-        video_infos = {}
-        for info in df_info:
-            video_infos[info[0]] = {
-                'fps': info[1],
-                'sample_fps': info[2],
-                'count': info[3],
-                'sample_count': info[4],
-                'duration': info[3] / info[1], # sample and non-sample have same length in seconds
-                'subset': 'training' if 'val' in self.video_info_path else 'testing'} # HACK: I will need to base this off of a video_info_new_*.csv-type file that has the training set (incl. unlabel); this should be in (training, training_unlabel, validation, testing)
-        return video_infos
+        if False: #self.unlabeled:
+ 
+            video_infos = {}
+
+            def foo(r):
+                #global video_infos
+                video_infos[r['video']] = {'fps':r['fps'], 'sample_fps':r['sample_fps'], 'count':r['count'], 'sample_count':r['sample_count'], 'duration':r['count']/r['fps'], 'subset':r['subset']}
+     
+            df_info = pd.read_csv(self.video_info_path)
+            df_info.apply(foo, axis=1)
+
+            return video_infos
+
+        else:
+
+            df_info = pd.DataFrame(pd.read_csv(self.video_info_path)).values[:]
+            video_infos = {}
+            for info in df_info:
+                if self.subset in info[5] and (not self.unlabeled or ('unlabel' in info[5])):
+                    video_infos[info[0]] = {
+                        'fps': info[1],
+                        'sample_fps': info[2],
+                        'count': info[3],
+                        'sample_count': info[4],
+                        'duration': info[3] / info[1], # sample and non-sample have same length in seconds
+                        'subset': 'training' if 'val' in self.video_info_path else 'testing'} # HACK: I will need to base this off of a video_info_new_*.csv-type file that has the training set (incl. unlabel); this should be in (training, training_unlabel, validation, testing)
+            return video_infos
 
 
     def get_video_anno(self):
@@ -331,8 +352,14 @@ class THUMOS_Dataset(Dataset):
 
         Does not differ between regular and unlabeled
         """
-        df_anno = pd.DataFrame(pd.read_csv(self.video_anno_path)).values[:]
-        originidx_to_idx, idx_to_class = get_class_index_map()
+        # if self.unlabeled:
+            # breakpoint()
+
+        #breakpoint()
+        df_anno = pd.DataFrame(pd.read_csv(self.video_anno_path))#.values[:]
+        df_anno = df_anno[df_anno['video'].isin(self.video_infos.keys())]
+        df_anno = df_anno.values[:]
+        originidx_to_idx, idx_to_class = get_class_index_map() # NOTE: should "Ambiguous" be used as a class? No, use val_Annotation_ours.csv
         video_annos = {}
         for anno in df_anno:
 
@@ -350,16 +377,16 @@ class THUMOS_Dataset(Dataset):
             end_gt = end_frame * ratio
             start_gt_time = (start_gt / sample_fps)
             end_gt_time = (end_gt / sample_fps)
-            class_idx = originidx_to_idx[originidx]
+            class_idx = self.class_to_idx[idx_to_class[originidx_to_idx[originidx]]] #originidx_to_idx[originidx]
 
             # maintaining temporal scale
             clip_factor = self.temporal_scale / (duration * (sample_count+1))
-            action_start = start_gt_time * clip_factor # scale the start time (seconds) by clip factor
+            action_start = start_gt_time * clip_factor # scale the start time (seconds) by clip factor # TODO: might want to look at using action_start and action_end
             action_end = end_gt_time * clip_factor
             snip_start = max(min(1, start_gt_time / duration), 0) # puts the annotation in range (0, 1); ie. what proportion of the video has gone by before this annotation starts?
             snip_end = max(min(1, end_gt_time / duration), 0)
             mask_start = int(math.floor(self.temporal_scale * snip_start)) # puts annotation in range(0, temporal_scale); we have resized the video to be temporal_scale seconds long
-            mask_end = int(math.floor(self.temporal_scale * snip_end))
+            mask_end = int(math.ceil(self.temporal_scale * snip_end)) # NOTE: I've changed this to ceil.
      
             if mask_end - mask_start > 1: # we focus on large-enough actions
                 if video_annos.get(video_name) is None:
@@ -484,8 +511,16 @@ class THUMOS_Dataset(Dataset):
         Returns:
             [TODO:return]
         """
-        mask_idx = self.training_list[index]['video_name']
+        #print("index =", index)
+
+        #breakpoint()
+
+        mask_idx = list(self.video_annos.keys())[index] #self.training_list[index]['video_name']
         video_infos = self.video_infos[mask_idx]
+
+        print("mask_idx", mask_idx)
+        #print("video_infos", video_infos)
+
         mask_label = self.video_annos[mask_idx]
         mask_data, mask_data_big, mask_data_small = self.data_dict[mask_idx]
 
@@ -493,6 +528,8 @@ class THUMOS_Dataset(Dataset):
         start_id = bbox[:,0]
         end_id = bbox[:,1]
         label_id = bbox[:,2]
+
+        print(bbox)
     
         cls_mask = np.zeros([self.num_classes+1, self.temporal_scale]) ## dim : 21x100 (ie. one-hot encoding for each clip)
         temporary_mask = np.zeros([self.temporal_scale]) # dim: 100 (ie. one value per clip)
@@ -507,7 +544,7 @@ class THUMOS_Dataset(Dataset):
           lbl_id = label_id[idx] # get the class
           start_indexes.append(start_id[idx]+1)
           end_indexes.append(end_id[idx]-1)
-          tuple_list.append([start_id[idx]+1, end_id[idx]-1, lbl_id]) # reduce the segment's size by 2
+          tuple_list.append([start_id[idx], end_id[idx], lbl_id]) # NOTE: reduce the segment's size by 2, but I did away with this. 
 
         temp_mask_cls = np.zeros([self.temporal_scale])
 
@@ -553,19 +590,10 @@ class THUMOS_Dataset(Dataset):
         mask_top = torch.Tensor(cls_mask) # for each clip, a one-hot encoding of the class
         b_mask = torch.Tensor(temporary_mask) # aka temp_mask_cls; 1 if clip is part of action, 0 otherwise
 
-        return mask_data, classifier_branch,global_mask_branch,mask_top,cas_mask, mask_data_big, mask_data_small, b_mask
-
-    
-    def splitter(self):
-        # This function will re-make the dataset by turning each video into a split.
-        video_annos = {}
-
+        print(classifier_branch)
 
         breakpoint()
-        
-
-
-
+        return mask_data, classifier_branch,global_mask_branch,mask_top,cas_mask, mask_data_big, mask_data_small, b_mask
 
     """
     def __getitem__(self, idx):

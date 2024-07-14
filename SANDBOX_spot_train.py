@@ -44,21 +44,39 @@ if sys.argv[1] == "configs/thumos.yaml":
 
     #train_data_dict = load_video_data(train_video_infos, config['training']['feature_path'])
     #test_data_dict = load_video_data(test_video_infos, config['testing']['feature_path'])
+    print('train')
+    train_dataset = THUMOS_Dataset(training=True, subset='train', labeled=True)
 
-    train_dataset = THUMOS_Dataset(training=True, subset='train')
+    print('train_unlabel')
+    train_unlabel_dataset = THUMOS_Dataset(training=True, subset='train', unlabeled=True)
 
+    print('test')
     test_dataset = THUMOS_Dataset(training=False, subset='testing')
-
+    
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=1, shuffle=False,num_workers=1, pin_memory=False, drop_last=True)
-
+ 
+    train_unlabel_loader = torch.utils.data.DataLoader(train_unlabel_dataset, batch_size=1, shuffle=False,num_workers=1, pin_memory=False, drop_last=True)
+ 
     test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=1, shuffle=False,num_workers=1, pin_memory=False, drop_last=True)
 
     #train_data_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True,
     #                               num_workers=4, worker_init_fn=worker_init_fn,
     #                               collate_fn=detection_collate, pin_memory=True, drop_last=True)
 
+    """
     count = 0
     for n_iter, (mask_data,classifier_branch,global_mask_branch,mask_top,cas_mask,mask_data_big,mask_data_small,b_mask) in enumerate(train_loader):
+        count += 1
+        #break#breakpoint()
+        #print(cas_mask[0])
+        if count == 8:
+            break
+    print(count)
+    """
+
+    """
+    count = 0
+    for n_iter, (mask_data,classifier_branch,global_mask_branch,mask_top,cas_mask,mask_data_big,mask_data_small,b_mask) in enumerate(train_unlabel_loader):
         #breakpoint()
         count += 1
     print(count)
@@ -70,6 +88,7 @@ if sys.argv[1] == "configs/thumos.yaml":
     print(count)
 
     epoch_step_num = len(train_dataset) // batch_size
+    """
 
 elif sys.argv[1] == "configs/anet.yaml":
 

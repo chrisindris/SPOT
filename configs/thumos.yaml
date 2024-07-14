@@ -1,9 +1,9 @@
 dataset:
   name: "thumos"
-  num_classes: 21
+  num_classes: 20 # Don't use ambiguous
   training:
     video_info_path: "data/thumos_annotations/val_video_info.csv" # from AFSD. TODO: we are using the validation set for training? Not something like the actionformer subset?
-    video_info_path_unlabeled: "./data/activitynet_annotations/"
+    video_info_path_unlabeled: "./data/thumos_annotations"
     video_anno_path: "data/thumos_annotations/val_Annotation_ours.csv" # from AFSD 
     num_frame: 16
     output_path: '/root/models/SPOT/thumos_output/'
@@ -15,7 +15,7 @@ dataset:
     class_info: "./data/thumos_annotations/Class Index_Detection.txt"
     
   testing:
-    video_info_path: "data/thumos_annotations/test_video_info.csv" # from AFSD 
+    video_info_path: "data/thumos_annotations/test_video_info_new.csv" # from AFSD 
     video_info_path_unlabeled: "./data/activitynet_annotations/"
     video_anno_path: "data/thumos_annotations/test_Annotation_ours.csv" # from AFSD
     num_frame: 16

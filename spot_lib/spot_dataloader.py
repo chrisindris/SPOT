@@ -190,7 +190,7 @@ class SPOTDataset(data.Dataset):
         Returns:
             [TODO:return]
         """
-        breakpoint()
+        #breakpoint()
 
         mask_idx = self.subset_mask_list[index]
         mask_data, mask_data_big, mask_data_small = self.loadFeature(mask_idx)
