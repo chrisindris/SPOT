@@ -30,7 +30,7 @@ if (( gpu == 0 )); then
       L2=${loss_lambda_2[$l2]}
 
       #echo $EH $S $G $LB $L2
-      outfile="sweep_eh-${EH}-s_${S}-g_${G}-lb_${LB}-l2_${L2}.txt"
+      outfile="sweep_eh-${EH}-s_${S}-g_${G}-lb_${LB}-l2_${L2}-unlabel_percent_0.4.txt"
       
       if [ ! -e "./output/experiments/$outfile" ]; then
         # Ensure that only used variables are listed in the output file name.
@@ -67,7 +67,7 @@ else
       L2=${loss_lambda_2[$l2]}
 
       #echo $EH $S $G $LB $L2
-      outfile="sweep_eh-${EH}-s_${S}-g_${G}-lb_${LB}-l2_${L2}.txt"
+      outfile="sweep_eh-${EH}-s_${S}-g_${G}-lb_${LB}-l2_${L2}.-unlabel_percent_0.4.txt"
 
       if [ ! -e "./output/experiments/$outfile" ]; then
         # Ensure that only used variables are listed in the output file name.

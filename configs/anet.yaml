@@ -7,7 +7,7 @@ dataset:
     video_anno_path: "./data/activitynet_annotations/anet_anno_action.json"
     num_frame: 16 # length of the clip?
     output_path: '/root/models/SPOT/output/'
-    unlabel_percent: 0.9
+    unlabel_percent: 0.4
     use_semi: True
     
   testing:
@@ -16,7 +16,7 @@ dataset:
     video_anno_path: "./data/activitynet_annotations/anet_anno_action.json"
     num_frame: 16 # the number of frames in the snippet. The paper seems to think that the clips are equidistant; they seem to be 3 apart.
     output_path: '/root/models/SPOT/output/'
-    unlabel_percent: 0.9 # Never used
+    unlabel_percent: 0.4 # Never used
     use_semi: True
 
 model:
