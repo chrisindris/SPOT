@@ -6,6 +6,14 @@ import torch
 import torch.nn.functional as F
 import seaborn as sns
 
+import sys
+import yaml
+from utils.arguments import handle_args, modify_config
+
+with open(sys.argv[1], 'r', encoding='utf-8') as f:
+        tmp = f.read()
+        config = modify_config(yaml.load(tmp, Loader=yaml.FullLoader), *handle_args(sys.argv))
+        feat_dim = config['model']['feat_dim']
 
 def viusalize(features1,gt,count,modes):
     cmap = cm.get_cmap('tab20')
@@ -81,8 +89,8 @@ def viusalize(features1,gt,count,modes):
     # print(np.shape(np.array(cmap(new_gt[0]))))
     
     # ax.scatter(tsne[0, 0],tsne[0, 1], np.array(cmap(new_gt[0])).reshape(1,4) ,alpha=0.5)
-    ax.scatter(tx[0:400],ty[0:400], c = colors[0] ,alpha=0.5, marker = 'o', label = "foreground")
-    ax.scatter(tx[401:],ty[401:], c = colors[1] ,alpha=0.5, marker = 'o', label = "background")
+    ax.scatter(tx[0:feat_dim],ty[0:feat_dim], c = colors[0] ,alpha=0.5, marker = 'o', label = "foreground")
+    ax.scatter(tx[feat_dim+1:],ty[feat_dim+1:], c = colors[1] ,alpha=0.5, marker = 'o', label = "background")
     
     # indices = 
     # current_tx = np.take(tx,indices)

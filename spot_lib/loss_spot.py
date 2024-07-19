@@ -7,19 +7,20 @@ import yaml
 import sys
 from utils.arguments import handle_args, modify_config
 
+from configs.dataset_class import activity_dict # NOTE: would need to be modified to include THUMOS, although I don't know if this class is ever used.
+
 import pdb
 
 with open(sys.argv[1], 'r', encoding='utf-8') as f:
         tmp = f.read()
         config = modify_config(yaml.load(tmp, Loader=yaml.FullLoader), *handle_args(sys.argv))
+        temporal_scale = config['model']['temporal_scale']
 
 
 ce = nn.CrossEntropyLoss()
 
 lambda_1 = config['loss']['lambda_1']
 lambda_2 = config['loss']['lambda_2']
-
-activity_dict = {'Beer pong': 0, 'Kneeling': 1, 'Tumbling': 2, 'Sharpening knives': 3, 'Playing water polo': 4, 'Scuba diving': 5, 'Arm wrestling': 6, 'Archery': 7, 'Shaving': 8, 'Playing bagpipes': 9, 'Riding bumper cars': 10, 'Surfing': 11, 'Hopscotch': 12, 'Gargling mouthwash': 13, 'Playing violin': 14, 'Plastering': 15, 'Changing car wheel': 16, 'Horseback riding': 17, 'Playing congas': 18, 'Doing a powerbomb': 19, 'Walking the dog': 20, 'Using the pommel horse': 21, 'Rafting': 22, 'Hurling': 23, 'Removing curlers': 24, 'Windsurfing': 25, 'Playing drums': 26, 'Tug of war': 27, 'Playing badminton': 28, 'Getting a piercing': 29, 'Camel ride': 30, 'Sailing': 31, 'Wrapping presents': 32, 'Hand washing clothes': 33, 'Braiding hair': 34, 'Using the monkey bar': 35, 'Longboarding': 36, 'Doing motocross': 37, 'Cleaning shoes': 38, 'Vacuuming floor': 39, 'Blow-drying hair': 40, 'Doing fencing': 41, 'Playing harmonica': 42, 'Playing blackjack': 43, 'Discus throw': 44, 'Playing flauta': 45, 'Ice fishing': 46, 'Spread mulch': 47, 'Mowing the lawn': 48, 'Capoeira': 49, 'Preparing salad': 50, 'Beach soccer': 51, 'BMX': 52, 'Playing kickball': 53, 'Shoveling snow': 54, 'Swimming': 55, 'Cheerleading': 56, 'Removing ice from car': 57, 'Calf roping': 58, 'Breakdancing': 59, 'Mooping floor': 60, 'Powerbocking': 61, 'Kite flying': 62, 'Running a marathon': 63, 'Swinging at the playground': 64, 'Shaving legs': 65, 'Starting a campfire': 66, 'River tubing': 67, 'Zumba': 68, 'Putting on makeup': 69, 'Raking leaves': 70, 'Canoeing': 71, 'High jump': 72, 'Futsal': 73, 'Hitting a pinata': 74, 'Wakeboarding': 75, 'Playing lacrosse': 76, 'Grooming dog': 77, 'Cricket': 78, 'Getting a tattoo': 79, 'Playing saxophone': 80, 'Long jump': 81, 'Paintball': 82, 'Tango': 83, 'Throwing darts': 84, 'Ping-pong': 85, 'Tennis serve with ball bouncing': 86, 'Triple jump': 87, 'Peeling potatoes': 88, 'Doing step aerobics': 89, 'Building sandcastles': 90, 'Elliptical trainer': 91, 'Baking cookies': 92, 'Rock-paper-scissors': 93, 'Playing piano': 94, 'Croquet': 95, 'Playing squash': 96, 'Playing ten pins': 97, 'Using parallel bars': 98, 'Snowboarding': 99, 'Preparing pasta': 100, 'Trimming branches or hedges': 101, 'Playing guitarra': 102, 'Cleaning windows': 103, 'Playing field hockey': 104, 'Skateboarding': 105, 'Rollerblading': 106, 'Polishing shoes': 107, 'Fun sliding down': 108, 'Smoking a cigarette': 109, 'Spinning': 110, 'Disc dog': 111, 'Installing carpet': 112, 'Using the balance beam': 113, 'Drum corps': 114, 'Playing polo': 115, 'Doing karate': 116, 'Hammer throw': 117, 'Baton twirling': 118, 'Tai chi': 119, 'Kayaking': 120, 'Grooming horse': 121, 'Washing face': 122, 'Bungee jumping': 123, 'Clipping cat claws': 124, 'Putting in contact lenses': 125, 'Playing ice hockey': 126, 'Brushing hair': 127, 'Welding': 128, 'Mixing drinks': 129, 'Smoking hookah': 130, 'Having an ice cream': 131, 'Chopping wood': 132, 'Plataform diving': 133, 'Dodgeball': 134, 'Clean and jerk': 135, 'Snow tubing': 136, 'Decorating the Christmas tree': 137, 'Rope skipping': 138, 'Hand car wash': 139, 'Doing kickboxing': 140, 'Fixing the roof': 141, 'Playing pool': 142, 'Assembling bicycle': 143, 'Making a sandwich': 144, 'Shuffleboard': 145, 'Curling': 146, 'Brushing teeth': 147, 'Fixing bicycle': 148, 'Javelin throw': 149, 'Pole vault': 150, 'Playing accordion': 151, 'Bathing dog': 152, 'Washing dishes': 153, 'Skiing': 154, 'Playing racquetball': 155, 'Shot put': 156, 'Drinking coffee': 157, 'Hanging wallpaper': 158, 'Layup drill in basketball': 159, 'Springboard diving': 160, 'Volleyball': 161, 'Ballet': 162, 'Rock climbing': 163, 'Ironing clothes': 164, 'Snatch': 165, 'Drinking beer': 166, 'Roof shingle removal': 167, 'Blowing leaves': 168, 'Cumbia': 169, 'Hula hoop': 170, 'Waterskiing': 171, 'Carving jack-o-lanterns': 172, 'Cutting the grass': 173, 'Sumo': 174, 'Making a cake': 175, 'Painting fence': 176, 'Doing crunches': 177, 'Making a lemonade': 178, 'Applying sunscreen': 179, 'Painting furniture': 180, 'Washing hands': 181, 'Painting': 182, 'Putting on shoes': 183, 'Knitting': 184, 'Doing nails': 185, 'Getting a haircut': 186, 'Using the rowing machine': 187, 'Polishing forniture': 188, 'Using uneven bars': 189, 'Playing beach volleyball': 190, 'Cleaning sink': 191, 'Slacklining': 192, 'Bullfighting': 193, 'Table soccer': 194, 'Waxing skis': 195, 'Playing rubik cube': 196, 'Belly dance': 197, 'Making an omelette': 198, 'Laying tile': 199}
 
 easy_class = ['Windsurfing','Using the pommel horse','Using the monkey bar','Tango','Table soccer','Swinging at the playground','Surfing','Springboard diving','Snowboarding','Snow tubing','Slacklining','Skiing','Shoveling snow','Sailing','Rock climbing','River tubing','Riding bumper cars','Raking leaves','Rafting','Putting in contact lenses','Preparing pasta','Pole vault','Volleyball','Playing pool','Playing field hockey','Playing blackjack','Playing beach volleyball','Playing accordion','Plataform diving','Plastering','Mixing drinks','Making an omelette','Longboarding','Hurling','Horseback riding','Hitting a pinata','Hanging wallpaper','Hammer throw','Grooming dog','Getting a piercing','Elliptical trainer','Drum corps','Doing motocross','Decorating the Christmas tree','Curling','Croquet','Cleaning sink','Clean and jerk','Carving jack-o-lanterns','Camel ride']
 hard_class = ['Drinking coffee','Doing a powerbomb','Polishing forniture','Putting on shoes','Removing curlers','Rock-paper-scissors','Gargling mouthwash','Having an ice cream','Polishing shoes','Smoking a cigarette','Applying sunscreen','Drinking beer','Washing face','Doing nails','Brushing hair','Playing harmonica','Painting furniture','Peeling potatoes','Cumbia','Cleaning shoes','Doing karate','Chopping wood','Hand washing clothes','Painting','Shaving legs','Using parallel bars','Baking cookies','Playing drums','Bathing dog','Kneeling','Hopscotch','Playing kickball','Doing crunches','Playing saxophone','Roof shingle removal','Shot put','Playing flauta','Swimming','Preparing salad','Washing dishes','Getting a tattoo','Getting a haircut','Fixing bicycle','Playing guitarra','Tai chi','Washing hands','Vacuuming floor','Waxing skis','Doing step aerobics','Putting on makeup']
@@ -51,7 +52,7 @@ class ACSL(nn.Module):
         
         self.n_i, self.n_c, _ = cls_logits_.size()
         cls_loss = 0
-        for snip_id in range(100):
+        for snip_id in range(temporal_scale):
             cls_logits = cls_logits_[:,:,snip_id]  # batch x class
             labels = labels_[:,:,snip_id]
             
@@ -135,7 +136,7 @@ class ACSL(nn.Module):
 
             cls_loss+= F.binary_cross_entropy_with_logits(cls_logits, target.float(), reduction='none')
 
-        return torch.sum(weight_mask * cls_loss) / (self.n_i*100)
+        return torch.sum(weight_mask * cls_loss) / (self.n_i*temporal_scale)
 
 
 
@@ -218,7 +219,7 @@ def top_ce_loss(gt_cls, pred_cls, nm=False):
     return loss
 
 
-def bottom_branch_loss(gt_action, pred_action, f_loss=False): # gt action and pred action are both shape [256, 100, 100] 
+def bottom_branch_loss(gt_action, pred_action, f_loss=False): # gt action and pred action are both shape [256, temporal_scale, temporal_scale] 
 
     pmask = (gt_action == 1).float()
     nmask = (gt_action == 0).float()

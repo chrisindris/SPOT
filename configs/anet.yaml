@@ -21,8 +21,8 @@ dataset:
 
 model:
   embedding_head: 4
-  feat_dim: 400 # this is the "internal feature width" that we can play with (it is included in the code, does it work? Not yet!)
-  temporal_scale: 100 # Like feat_dim, this has been hardcoded in the repo and needs to be fixed.
+  feat_dim: 400 # this is the internal feature width (d_model). NOTE: must divide 2*batch_size*(input feature size)
+  temporal_scale: 64 # Like feat_dim, this has been hardcoded in the repo and needs to be fixed.
 
 pretraining:
   warmup_epoch: 30 # Default 30
@@ -55,7 +55,7 @@ testing:
   feature_path: "/data/i5O/ActivityNet1.3/test/"
   cls_thresh: 0.01
   mask_thresh: [0,0.2,0.4,0.6,0.8]
-  class_thresh: [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
+  class_thresh: [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
   top_k_snip: 10
   top_k: 500
   nms_thresh: 0.6

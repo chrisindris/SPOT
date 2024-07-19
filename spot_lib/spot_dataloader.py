@@ -22,6 +22,7 @@ import pdb
 with open(sys.argv[1], 'r', encoding='utf-8') as f:
         tmp = f.read()
         config = modify_config(yaml.load(tmp, Loader=yaml.FullLoader), *handle_args(sys.argv))
+        temporal_scale = config['model']['temporal_scale']
 
 def load_json(file):
     with open(file) as json_file:
@@ -133,7 +134,7 @@ class SPOTDataset(data.Dataset):
         return temporal_dict
 
     
-    def getVideoMask(self,video_annos,clip_length=100): # clip_length seems to relate to that temporal_scale param
+    def getVideoMask(self,video_annos,clip_length=temporal_scale): # clip_length seems to relate to that temporal_scale param
         # result looks like {idx: [[mask_start, mask_end, label_idx]]}
         # mask start and end are the cur_annos (in range between 0 and 1) multiplied by the clip length; this is the temporal scale to ensure that all videos are cast to the same length 
 
@@ -174,10 +175,10 @@ class SPOTDataset(data.Dataset):
         feat_tensor = torch.Tensor(feat)
         video_data = torch.transpose(feat_tensor, 0, 1)
         video_data_ = F.interpolate(video_data.unsqueeze(0), size=self.temporal_scale, mode='linear',align_corners=False)[0,...]
-        video_data_big = F.interpolate(video_data.unsqueeze(0), size=200, mode='linear',align_corners=False)[0,...]
-        video_data_small = F.interpolate(video_data.unsqueeze(0), size=50, mode='linear',align_corners=False)[0,...]
+        video_data_big = F.interpolate(video_data.unsqueeze(0), size=2*temporal_scale, mode='linear',align_corners=False)[0,...]
+        video_data_small = F.interpolate(video_data.unsqueeze(0), size=self.temporal_scale//2, mode='linear',align_corners=False)[0,...]
 
-        return video_data_, video_data_big, video_data_small #[torch.Size([2048, 100]), torch.Size([2048, 200]), torch.Size([2048, 50])]
+        return video_data_, video_data_big, video_data_small #[torch.Size([2048, self.temporal_scale]), torch.Size([2048, 2*temporal_scale]), torch.Size([2048, self.temporal_scale//2])]
 
 
     def getVideoData(self,index):
@@ -196,14 +197,18 @@ class SPOTDataset(data.Dataset):
         mask_data, mask_data_big, mask_data_small = self.loadFeature(mask_idx)
         mask_label = self.video_mask[mask_idx]
 
+        #print("mask_idx", mask_idx)
+
         bbox = np.array(mask_label) # converts the start, end and labels into arrays (size of array is the number of annotations in the video)
         start_id = bbox[:,0]
         end_id = bbox[:,1]
         label_id = bbox[:,2]
 
-        cls_mask = np.zeros([self.num_classes+1, self.temporal_scale]) ## dim : 201x100 (ie. one-hot encoding for each clip)
-        temporary_mask = np.zeros([self.temporal_scale]) # dim: 100 (ie. one value per clip)
-        action_mask = np.zeros([self.temporal_scale,self.temporal_scale]) ## dim : 100 x 100
+        #print("bbox", bbox)
+
+        cls_mask = np.zeros([self.num_classes+1, self.temporal_scale]) ## dim : 201xself.temporal_scale (ie. one-hot encoding for each clip)
+        temporary_mask = np.zeros([self.temporal_scale]) # dim: self.temporal_scale (ie. one value per clip)
+        action_mask = np.zeros([self.temporal_scale,self.temporal_scale]) ## dim : self.temporal_scale x self.temporal_scale
         cas_mask = np.zeros([self.num_classes]) # dim: 20 (ie. one value per class)
     
         start_indexes = []
@@ -236,7 +241,7 @@ class SPOTDataset(data.Dataset):
         for p in range(self.temporal_scale):
             new_mask[p] = -1 # seems redundant by construction. np.zeros([self.temporal_scale]) -1 would be equivalent. 
 
-        cls_mask[self.num_classes,:] = background_mask # the background class has been assigned the number self.num_classes = 200; so, cls_mask[self.num_classes] shows the 100 locations in time, and has a 1 iff it is a background clip.
+        cls_mask[self.num_classes,:] = background_mask # the background class has been assigned the number self.num_classes = 2*temporal_scale; so, cls_mask[self.num_classes] shows the self.temporal_scale locations in time, and has a 1 iff it is a background clip.
 
         filter_lab = list(set(label_id))
 
@@ -257,7 +262,7 @@ class SPOTDataset(data.Dataset):
 
         for p in range(self.temporal_scale):
             if new_mask[p] == -1:
-                new_mask[p] = self.num_classes # this just converts the -1 backgrounds to 200. Seems redundant given how new_mask could just be constructed using the 200. 
+                new_mask[p] = self.num_classes # this just converts the -1 backgrounds to 2*temporal_scale. Seems redundant given how new_mask could just be constructed using the 2*temporal_scale. 
 
         classifier_branch = torch.Tensor(new_mask).type(torch.LongTensor)
 
@@ -271,11 +276,14 @@ class SPOTDataset(data.Dataset):
         mask_top = torch.Tensor(cls_mask) # for each clip, a one-hot encoding of the class
         b_mask = torch.Tensor(temporary_mask) # aka temp_mask_cls; 1 if clip is part of action, 0 otherwise
 
+        #print("cas_mask", cas_mask)
         
         return mask_data, classifier_branch,global_mask_branch,mask_top,cas_mask, mask_data_big, mask_data_small, b_mask
 
 
     def __getitem__(self, index):
+
+        #print("index", index)
         
         mask_data, top_branch, bottom_branch, mask_top, cas_mask, mask_data_big, mask_data_small, b_mask = self.getVideoData(index)
 
@@ -379,7 +387,7 @@ class SPOTDatasetUnlabeled(data.Dataset):
 
         return temporal_dict
 
-    def getVideoMask(self,video_annos,clip_length=100):
+    def getVideoMask(self,video_annos,clip_length=temporal_scale):
 
         self.video_mask = {}
         idx_list = self.getAnnotation(self.subset,video_annos)
@@ -411,8 +419,8 @@ class SPOTDatasetUnlabeled(data.Dataset):
         feat_tensor = torch.Tensor(feat)
         video_data = torch.transpose(feat_tensor, 0, 1)
         video_data_ = F.interpolate(video_data.unsqueeze(0), size=self.temporal_scale, mode='linear',align_corners=False)[0,...]
-        video_data_big = F.interpolate(video_data.unsqueeze(0), size=200, mode='linear',align_corners=False)[0,...]
-        video_data_small = F.interpolate(video_data.unsqueeze(0), size=50, mode='linear',align_corners=False)[0,...]
+        video_data_big = F.interpolate(video_data.unsqueeze(0), size=2*temporal_scale, mode='linear',align_corners=False)[0,...]
+        video_data_small = F.interpolate(video_data.unsqueeze(0), size=self.temporal_scale//2, mode='linear',align_corners=False)[0,...]
 
         return video_data_, video_data_big, video_data_small
 
@@ -423,14 +431,16 @@ class SPOTDatasetUnlabeled(data.Dataset):
         mask_data , mask_data_big, mask_data_small = self.loadFeature(mask_idx)
         mask_label = self.video_mask[mask_idx]
 
+        #print("mask_idx", mask_idx)
+
         bbox = np.array(mask_label)
         start_id = bbox[:,0]
         end_id = bbox[:,1]
         label_id = bbox[:,2]
 
-        cls_mask = np.zeros([self.num_classes+1, self.temporal_scale]) ## dim : 201x100
+        cls_mask = np.zeros([self.num_classes+1, self.temporal_scale]) ## dim : 201xself.temporal_scale
         temporary_mask = np.zeros([self.temporal_scale])
-        action_mask = np.zeros([self.temporal_scale,self.temporal_scale]) ## dim : 100 x 100
+        action_mask = np.zeros([self.temporal_scale,self.temporal_scale]) ## dim : self.temporal_scale x self.temporal_scale
         cas_mask = np.zeros([self.num_classes])
     
         start_indexes = []
@@ -605,7 +615,7 @@ class SPOTDatasetPretrain(data.Dataset):
 
         return temporal_dict
 
-    def getVideoMask(self,video_annos,clip_length=100):
+    def getVideoMask(self,video_annos,clip_length=temporal_scale):
 
         self.video_mask = {}
         idx_list = self.getAnnotation(self.subset,video_annos)
@@ -637,8 +647,8 @@ class SPOTDatasetPretrain(data.Dataset):
         feat_tensor = torch.Tensor(feat)
         video_data = torch.transpose(feat_tensor, 0, 1)
         video_data_ = F.interpolate(video_data.unsqueeze(0), size=self.temporal_scale, mode='linear',align_corners=False)[0,...]
-        video_data_big = F.interpolate(video_data.unsqueeze(0), size=200, mode='linear',align_corners=False)[0,...]
-        video_data_small = F.interpolate(video_data.unsqueeze(0), size=50, mode='linear',align_corners=False)[0,...]
+        video_data_big = F.interpolate(video_data.unsqueeze(0), size=2*self.temporal_scale, mode='linear',align_corners=False)[0,...]
+        video_data_small = F.interpolate(video_data.unsqueeze(0), size=self.temporal_scale//2, mode='linear',align_corners=False)[0,...]
        
         return video_data_, video_data_big, video_data_small
 
@@ -657,9 +667,9 @@ class SPOTDatasetPretrain(data.Dataset):
         end_id = bbox[:,1]
         label_id = bbox[:,2]
 
-        cls_mask = np.zeros([self.num_classes+1, self.temporal_scale]) ## dim : 201x100
+        cls_mask = np.zeros([self.num_classes+1, self.temporal_scale]) ## dim : 201xself.temporal_scale
         temporary_mask = np.zeros([self.temporal_scale])
-        action_mask = np.zeros([self.temporal_scale,self.temporal_scale]) ## dim : 100 x 100
+        action_mask = np.zeros([self.temporal_scale,self.temporal_scale]) ## dim : self.temporal_scale x self.temporal_scale
         cas_mask = np.zeros([self.num_classes])
         # for i in range(self.num_classes):
         #     cas_mask[i] = 200
@@ -736,7 +746,7 @@ class SPOTDatasetPretrain(data.Dataset):
 
 
     def __getitem__(self, index):
-        
+         
         mask_data, top_branch, bottom_branch, mask_top, cas_mask, mask_data_big, mask_data_small, b_mask = self.getVideoData(index)
 
         if self.mode == "train":

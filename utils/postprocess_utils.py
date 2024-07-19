@@ -13,6 +13,7 @@ from utils.arguments import handle_args, modify_config
 with open(sys.argv[1], 'r', encoding='utf-8') as f:
         tmp = f.read()
         config = modify_config(yaml.load(tmp, Loader=yaml.FullLoader), *handle_args(sys.argv))
+        temporal_scale = config['model']['temporal_scale']
 
 
 vid_info = config['dataset']['training']['video_info_path']
@@ -52,7 +53,7 @@ def get_infer_dict():
 
 
 
-def Soft_NMS(df, nms_threshold=1e-5, num_prop=100):
+def Soft_NMS(df, nms_threshold=1e-5, num_prop=temporal_scale):
  
     df = df.sort_values(by="score", ascending=False)
 
@@ -123,7 +124,7 @@ def multithread_detection(video_name, video_cls, video_info, label_dict, pred_pr
     video_duration=float(video_info["feature_frame"])/video_info["duration_frame"]*video_info["duration_second"]
     proposal_list = []
 
-    for j in range(min(100, len(df))):
+    for j in range(min(temporal_scale, len(df))):
         
         tmp_proposal = {}
         if float(df.score.values[j]) > best_score:

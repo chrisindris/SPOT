@@ -322,7 +322,7 @@ class THUMOS_Dataset(Dataset):
             df_info = pd.DataFrame(pd.read_csv(self.video_info_path)).values[:]
             video_infos = {}
             for info in df_info:
-                if self.subset in info[5] and (not self.unlabeled or ('unlabel' in info[5])):
+                if self.subset in info[5] and not (self.unlabeled ^ ('unlabel' in info[5])):
                     video_infos[info[0]] = {
                         'fps': info[1],
                         'sample_fps': info[2],
@@ -518,7 +518,7 @@ class THUMOS_Dataset(Dataset):
         mask_idx = list(self.video_annos.keys())[index] #self.training_list[index]['video_name']
         video_infos = self.video_infos[mask_idx]
 
-        print("mask_idx", mask_idx)
+        #print("mask_idx", mask_idx)
         #print("video_infos", video_infos)
 
         mask_label = self.video_annos[mask_idx]
@@ -529,7 +529,7 @@ class THUMOS_Dataset(Dataset):
         end_id = bbox[:,1]
         label_id = bbox[:,2]
 
-        print(bbox)
+        #print(bbox)
     
         cls_mask = np.zeros([self.num_classes+1, self.temporal_scale]) ## dim : 21x100 (ie. one-hot encoding for each clip)
         temporary_mask = np.zeros([self.temporal_scale]) # dim: 100 (ie. one value per clip)
@@ -544,7 +544,7 @@ class THUMOS_Dataset(Dataset):
           lbl_id = label_id[idx] # get the class
           start_indexes.append(start_id[idx]+1)
           end_indexes.append(end_id[idx]-1)
-          tuple_list.append([start_id[idx], end_id[idx], lbl_id]) # NOTE: reduce the segment's size by 2, but I did away with this. 
+          tuple_list.append([start_id[idx]+1, end_id[idx]-1, lbl_id]) # NOTE: reduce the segment's size by 2, but I could do away with this. 
 
         temp_mask_cls = np.zeros([self.temporal_scale])
 
@@ -590,9 +590,9 @@ class THUMOS_Dataset(Dataset):
         mask_top = torch.Tensor(cls_mask) # for each clip, a one-hot encoding of the class
         b_mask = torch.Tensor(temporary_mask) # aka temp_mask_cls; 1 if clip is part of action, 0 otherwise
 
-        print(classifier_branch)
+        #print(classifier_branch)
 
-        breakpoint()
+        #breakpoint()
         return mask_data, classifier_branch,global_mask_branch,mask_top,cas_mask, mask_data_big, mask_data_small, b_mask
 
     """

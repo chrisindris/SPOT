@@ -31,11 +31,18 @@ model:
   feat_dim: 400
   temporal_scale: 100 # TODO: we want the temporal scale to be about 300 to include almost all of the videos (although 100 is likely good enough), but we need to make sure the model can handle that. Might want to change all instances of 100 to self.temporal_scale
 
+pretraining:
+  warmup_epoch: 30 # Default 30
+  consecutive_warmup_epochs: 3 # 3 works well
+  unlabeled_pretrain: False
+
 training:
-  batch_size: 100
+  batch_size: 1
   learning_rate: 0.0004
   weight_decay: 0.005
+  alternate: True
   max_epoch: 25
+  consecutive_train_epochs: 3 # 3 works well
   checkpoint_path: "/root/models/SPOT/thumos_output/"
   random_seed: 1
   step: 10

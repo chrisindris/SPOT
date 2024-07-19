@@ -28,6 +28,13 @@ from utils.arguments import handle_args, modify_config
 import subprocess
 import pdb
 
+import gc
+
+os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
+torch.cuda.empty_cache()
+gc.collect()
+print(torch.cuda.mem_get_info())
+
 # TODO: num_workers and pretrain() warmup_epoch should be specifiable in the config file.
 # TODO: for the model, it would be nice to be able to control the size of it and output different feature vector sizes
 
@@ -39,8 +46,12 @@ acsl_loss = ACSL()
 with open(sys.argv[1], 'r', encoding='utf-8') as f:
         tmp = f.read()
         config = modify_config(yaml.load(tmp, Loader=yaml.FullLoader), *handle_args(sys.argv))
+        temporal_scale = config['model']['temporal_scale']
+        num_classes = config['dataset']['num_classes']
+        feat_dim = config['model']['feat_dim']
 
-output_path=config['dataset']['training']['output_path']
+dataset_name = config['dataset']['name']
+output_path = config['dataset']['training']['output_path']
 num_gpu = config['training']['num_gpu']
 batch_size = config['training']['batch_size']
 learning_rate = config['training']['learning_rate']
@@ -72,7 +83,6 @@ def top_lr_loss(target,pred):
     gt_action = target
     pred_action = pred
     topratio = 0.6
-    num_classes = 200
     alpha = 10
 
     pmask = (gt_action == 1).float()
@@ -114,11 +124,11 @@ consistency = 2  # 30  # 3  # None
 
 def temporal_crop(snip):
 
-    ran_start = random.randint(0,100)
-    if (ran_start + 10) > 100:
-        ran_end = 100
+    ran_start = random.randint(0,temporal_scale)
+    if (ran_start + 10) > temporal_scale:
+        ran_end = temporal_scale
     else:
-        ran_end = random.randint(ran_start+10,100)
+        ran_end = random.randint(ran_start+10,temporal_scale)
     feat_crop = snip[:,]
 
 
@@ -146,20 +156,20 @@ def TemporalCrop(input_feat,top_br):
 
     #breakpoint()
 
-    n_btach, feat_dim, tmp_dim = input_feat.size()
-    n_batch ,_,_ = top_br.size()
+    n_btach, feat_dim, tmp_dim = input_feat.size() # 256, feat_dim, 100 
+    n_batch ,_,_ = top_br.size() # [256, num_classes+1, 100]
     batch_start = np.zeros([n_batch])
     batch_end = np.zeros([n_batch])
-    temp_mask_cls = np.zeros([100])
+    temp_mask_cls = np.zeros([temporal_scale])
     
-    bottom_gt = np.zeros([n_batch,100,100])
-    fg_action_idx = torch.argmax(top_br[:,:200,:],dim=1) # I assume this selects the most likely class from the top branch for each location in time
+    bottom_gt = np.zeros([n_batch,temporal_scale,temporal_scale])
+    fg_action_idx = torch.argmax(top_br[:,:num_classes,:],dim=1) # I assume this selects the most likely class from the top branch for each location in time; crop to num_classes because we don't want the final class (the 'background')
     fg_action_idx_mode, _ = torch.mode(fg_action_idx,dim=1) # The most common class value through across the time locations 
-    new_mask = np.zeros([n_batch,100])
+    new_mask = np.zeros([n_batch,temporal_scale])
     empty_gt = np.zeros_like(top_br.detach().cpu().numpy())
-    labeled_gt = np.zeros([n_batch,200])
+    labeled_gt = np.zeros([n_batch,num_classes])
 
-    for p in range(100):
+    for p in range(temporal_scale):
         new_mask[:,p] = -1 
     temp_data = torch.zeros_like(input_feat)
     for i in range(0,n_batch):
@@ -168,9 +178,9 @@ def TemporalCrop(input_feat,top_br):
         batch_feat -= batch_feat.min(1, keepdim=True)[0]
         batch_feat /= zero_to_nearzero(batch_feat.max(1, keepdim=True)[0]) - batch_feat.min(1, keepdim=True)[0] 
        
-        for p in range(0,2):
-            rand_start = np.random.randint(0,94,size=1)[0]
-            rand_end = np.random.randint(rand_start,100,size=1)[0]
+        for p in range(0,2): # 0 and 1; seems to lead into a binary mask
+            rand_start = np.random.randint(0,temporal_scale - 5,size=1)[0] # 94 -> temporal_scale - 5 (5 seems important to the len_snip)
+            rand_end = np.random.randint(rand_start,temporal_scale,size=1)[0]
             len_snip = rand_end - rand_start
             if len_snip < 5:
                 rand_end = rand_end+5
@@ -178,23 +188,23 @@ def TemporalCrop(input_feat,top_br):
 
             if rand_start < 0:
                 rand_start = 0
-            if rand_end > 99:
-                rand_end = 99
+            if rand_end > temporal_scale - 1: # 99 -> temporal_scale - 1
+                rand_end = temporal_scale - 1
 
             if rand_start > rand_end:
-                rand_start = np.random.randint(0,49,size=1)
-                rand_end = np.random.randint(rand_start[0],99,size=1)
+                rand_start = np.random.randint(0,temporal_scale // 2 - 1,size=1) # 49 -> temporal_scale // 2 - 1?
+                rand_end = np.random.randint(rand_start[0],temporal_scale-1,size=1)
             temp_data[i,:,rand_start:rand_end] = batch_feat[:,rand_start:rand_end]
             temp_mask_cls[rand_start:rand_end] = 1
             background_mask = 1 - temp_mask_cls
             empty_gt[i,fg_action_idx_mode[i],:] = temp_mask_cls
-            empty_gt[i,200,:] = background_mask
+            empty_gt[i,num_classes,:] = background_mask
             bottom_gt[i,rand_start:rand_end,rand_start:rand_end] = 1
             new_mask[i,rand_start:rand_end] = fg_action_idx_mode[i].detach().cpu().numpy()
             labeled_gt[i,fg_action_idx_mode[i]] = 1
-            for p in range(100):
+            for p in range(temporal_scale):
                 if new_mask[i,p] == -1:
-                    new_mask[i,p] = 200
+                    new_mask[i,p] = num_classes
         
 
     top_gt_crop = torch.Tensor(new_mask).type(torch.LongTensor)
@@ -221,7 +231,7 @@ def softmax_kl_loss(input_logits, target_logits):
     return F.kl_div(input_logits, target_logits, reduction='mean')
 
 
-def Motion_MSEloss(output,clip_label,motion_mask=torch.ones(100).cuda()):
+def Motion_MSEloss(output,clip_label,motion_mask=torch.ones(temporal_scale).cuda()):
     #print(torch.sum(torch.isnan(output)))
     #print(torch.sum(torch.isnan(clip_label)))
     #breakpoint()
@@ -293,19 +303,19 @@ def pretrain(data_loader, model, optimizer, pretrain_epoch=0):
             input_data_tdrop_big = F.dropout(input_data_big.cuda(),0.1)
             input_data_tdrop_small = F.dropout(input_data_small.cuda(),0.1)
             #print(torch.stack([input_data.cuda(),input_data_tdrop],dim=0).shape)
-            input_data_aug = torch.stack([input_data.cuda(),input_data_tdrop],dim=0).view(-1,400,100) # with an without dropout is being stacked together; I suspect this is for the different branches that need one or the other. [25+25, 2048, 100] -> [256, 400, 100] (same temporal scale, feature vector size goes from 2048 to 400)
+            input_data_aug = torch.stack([input_data.cuda(),input_data_tdrop],dim=0).view(-1,feat_dim,temporal_scale) # with an without dropout is being stacked together; I suspect this is for the different branches that need one or the other. [25+25, 2048, temporal_scale] -> [256, feat_dim, temporal_scale] (same temporal scale, feature vector size goes from 2048 to feat_dim)
             input_data_aug[input_data_aug != input_data_aug] = 0 # seems to be behaving okay
 
 
             #print(input_data_aug.shape)
-            input_data_aug_b = torch.stack([input_data_big.cuda(),input_data_tdrop_big],dim=0).view(-1,400,200)
-            input_data_aug_s = torch.stack([input_data_small.cuda(),input_data_tdrop_small],dim=0).view(-1,400,50)
+            input_data_aug_b = torch.stack([input_data_big.cuda(),input_data_tdrop_big],dim=0).view(-1,feat_dim,2*temporal_scale)
+            input_data_aug_s = torch.stack([input_data_small.cuda(),input_data_tdrop_small],dim=0).view(-1,feat_dim,temporal_scale // 2)
 
             #breakpoint() # let's look at the effect of the TemporalCrop on the size, since I feel like loss and loss_crop being the same is kind of odd.
-            top_br_pred, bottom_br_pred, feat = model(input_data_aug) # the model gives a top branch result, bottom branch result, and outputs its features. [torch.Size([256, 201, 100]), torch.Size([256, 100, 100]), torch.Size([256, 400, 100])]
+            top_br_pred, bottom_br_pred, feat = model(input_data_aug) # the model gives a top branch result, bottom branch result, and outputs its features. [torch.Size([256, num_classes+1, temporal_scale]), torch.Size([256, temporal_scale, temporal_scale]), torch.Size([256, feat_dim, temporal_scale])]
             #print(torch.sum(torch.isnan(feat)))
 
-            mod_input_data, top_br_gt, bottom_br_gt, action_gt, label_gt  = TemporalCrop(input_data_aug,top_br_pred) # [torch.Size([256, 400, 100]), torch.Size([256, 100]), torch.Size([256, 100, 100]), torch.Size([256, 201, 100]), torch.Size([256, 200])]
+            mod_input_data, top_br_gt, bottom_br_gt, action_gt, label_gt  = TemporalCrop(input_data_aug,top_br_pred) # [torch.Size([256, feat_dim, temporal_scale]), torch.Size([256, temporal_scale]), torch.Size([256, temporal_scale, temporal_scale]), torch.Size([256, num_classes+1, temporal_scale]), torch.Size([256, num_classes])]
             mod_input_data[mod_input_data != mod_input_data] = 0
 
             if not_freeze_class:
@@ -314,10 +324,10 @@ def pretrain(data_loader, model, optimizer, pretrain_epoch=0):
  
             #print("mod_input_data.shape", mod_input_data.shape)
             #breakpoint()
-            top_br_pred_crop, bottom_br_pred_crop, feat_crop = model(mod_input_data) # [torch.Size([256, 201, 100]), torch.Size([256, 100, 100]), torch.Size([256, 400, 100])]
+            top_br_pred_crop, bottom_br_pred_crop, feat_crop = model(mod_input_data) # [torch.Size([256, num_classes+1, temporal_scale]), torch.Size([256, temporal_scale, temporal_scale]), torch.Size([256, feat_dim, temporal_scale])]
             #print([x.shape for x in model(mod_input_data)])
 
-            # top_br_pred/top_br_pred_crop and bottom_br_pred/bottom_br_pred_crop remain the same shape (torch.Size([256, 201, 100]), torch.Size([256, 100, 100]) respectively), but do not contain the same elements.
+            # top_br_pred/top_br_pred_crop and bottom_br_pred/bottom_br_pred_crop remain the same shape (torch.Size([256, num_classes+1, temporal_scale]), torch.Size([256, temporal_scale, temporal_scale]) respectively), but do not contain the same elements.
 
             if not_freeze_class:
                 easy_dict_label_crop = easy_snippets_mining(top_br_pred_crop, feat_crop) 
@@ -348,7 +358,7 @@ def pretrain(data_loader, model, optimizer, pretrain_epoch=0):
 
             # clip order 
 
-            input_data_all = torch.cat([input_data_aug,mod_input_data], 0).view(-1,400,100) # input_data_aug (input_data and the dropout input_data_tdrop) and the TemporalCrop'd mod_input data come together and will be sent through the model. [512, 400, 100]
+            input_data_all = torch.cat([input_data_aug,mod_input_data], 0).view(-1,feat_dim,temporal_scale) # input_data_aug (input_data and the dropout input_data_tdrop) and the TemporalCrop'd mod_input data come together and will be sent through the model. [512, feat_dim, temporal_scale]
             input_data_all[input_data_all != input_data_all] = 0
             batch_size, C, T = input_data_all.size()
             
@@ -488,12 +498,12 @@ def test(data_loader, model, epoch, best_loss):
 
 
 def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
-    # TODO: input data is modified to [256, 100, 400] in pretrain, but it seems to want the [25, 100, 2048] here (modifying it as in pretrain has later parts of train_semi complain about not having the right batch size).
-    # Plan of action: add an additional fc layer to reduce the size of the features, [25, 100, 2048] -> [25, 100, 400]
-    # - Add an extra layer nn.linear(2048, 400) to SPOT.__init__()
+    # TODO: input data is modified to [256, temporal_scale, feat_dim] in pretrain, but it seems to want the [25, temporal_scale, 2048] here (modifying it as in pretrain has later parts of train_semi complain about not having the right batch size).
+    # Plan of action: add an additional fc layer to reduce the size of the features, [25, temporal_scale, 2048] -> [25, temporal_scale, feat_dim]
+    # - Add an extra layer nn.linear(2048, feat_dim) to SPOT.__init__()
     # - Give SPOT separate pretrain and train modes, something like SPOT.__init__(self, pretrain=True) followed by super(SPOT, self).__init__() (since parent nn.Module won't use pretrain=True)
     # - model = SPOT() and model = SPOT(pretrain=True) are no longer the same object, so both would need to be initialized as model currently is in __main__() below; however, the pretraining weights are saved and used to initialize for the training, it should be okay to put those weights in the new version of model.
-    # - Speaking of weights, ensure that the new nn.linear(2048, 400) is properly handled when we load the weights; I don't know how much torch will complain if it tries to load weights when it sees a new weight being loaded. Either torch automatically saves the weights even if the function is not used (the new linear layer might be hidden by an if during pretraining, but perhaps it will be detected anyway and just recieve its default weights). Or, if it isn't automatically recognized, perhaps there is a standard torch way to deal with it if/when load_state_dict notices a layer it doesn't have an entry for. If this happens quietly, I can simply use the random initalization of the new layer; I shouldn't even need to check since if torch tried to shove a weight matrix from load_state_dict into my new layer, torch would probably complain about the shape (there are no other instances of nn.Linear(2048, 400) so it's not like another layer's weights would fit'). Last case scenario could be to manually manipulate the checkpoint?   
+    # - Speaking of weights, ensure that the new nn.linear(2048, feat_dim) is properly handled when we load the weights; I don't know how much torch will complain if it tries to load weights when it sees a new weight being loaded. Either torch automatically saves the weights even if the function is not used (the new linear layer might be hidden by an if during pretraining, but perhaps it will be detected anyway and just recieve its default weights). Or, if it isn't automatically recognized, perhaps there is a standard torch way to deal with it if/when load_state_dict notices a layer it doesn't have an entry for. If this happens quietly, I can simply use the random initalization of the new layer; I shouldn't even need to check since if torch tried to shove a weight matrix from load_state_dict into my new layer, torch would probably complain about the shape (there are no other instances of nn.Linear(2048, feat_dim) so it's not like another layer's weights would fit'). Last case scenario could be to manually manipulate the checkpoint?   
 
     global global_step
     model.module.classifier[0].weight.requires_grad = True
@@ -509,7 +519,7 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
     loss_balance = config["training"]["loss_balance"]
 
     
-    temporal_perb = TemporalShift_random(400, 64)   
+    temporal_perb = TemporalShift_random(feat_dim, 64)   
     order_clip_criterion = nn.CrossEntropyLoss()
     consistency = False
     clip_order = True
@@ -597,16 +607,16 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
         thresh_warmup = True
         if dynmaic_thres: # NOTE: This code is pretty slow; might want to vectorize those loops!
             pseudo_counter = Counter(selected_label.tolist())
-            classwise_acc = torch.zeros((201,)).cuda()
+            classwise_acc = torch.zeros((num_classes+1,)).cuda()
             if max(pseudo_counter.values()) < len(unlabeled_train_iter):  # not all(5w) -1
                 if thresh_warmup:
-                    for i in range(201):
+                    for i in range(num_classes+1):
                         classwise_acc[i] = pseudo_counter[i] / max(pseudo_counter.values())
                 else:
                     wo_negative_one = deepcopy(pseudo_counter)
                     if -1 in wo_negative_one.keys():
                         wo_negative_one.pop(-1)
-                    for i in range(201):
+                    for i in range(num_classes+1):
                         classwise_acc[i] = pseudo_counter[i] / max(wo_negative_one.values())
 
             
@@ -616,12 +626,12 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
             use_hard_labels=True
             max_probs, max_idx = torch.max(pseudo_label, dim=1)
             mask = max_probs.ge(p_cutoff * (classwise_acc[max_idx] / (2. - classwise_acc[max_idx]))).float()  # convex
-            select = max_probs.ge(p_cutoff).long() # 24 x 100
+            select = max_probs.ge(p_cutoff).long() # 24 x temporal_scale
             if use_hard_labels:
  
                 pseudo_label = torch.softmax(top_br_pred_unlabel / T, dim=1)
                 max_probs, max_idx = torch.max(pseudo_label,dim=1)
-                mask_unlabel_gt = F.one_hot(max_idx,num_classes=201).permute(0,2,1)
+                mask_unlabel_gt = F.one_hot(max_idx,num_classes=num_classes+1).permute(0,2,1)
                 masked_loss = top_ce_loss(max_idx,top_br_pred_unlabel,nm=True)* mask
 
             pseudo_lb = max_idx.long()
@@ -639,7 +649,7 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
             # top_br_target_unlabel 
 
             max_probs, targets_u = torch.max(torch.softmax(top_br_pred_unlabel, dim=1),dim=1)
-            mask_unlabel_gt = F.one_hot(targets_u,num_classes=201).permute(0,2,1)
+            mask_unlabel_gt = F.one_hot(targets_u,num_classes=num_classes+1).permute(0,2,1)
             top_br_target_unlabel = targets_u
             bottom_br_target_unlabel = torch.ge(bottom_br_pred_unlabel, 0.7).float()
             loss_unlabel = spot_loss(top_br_target_unlabel,top_br_pred_unlabel, bottom_br_target_unlabel, bottom_br_pred_unlabel, mask_unlabel_gt, mask_unlabel_gt)
@@ -697,11 +707,11 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
 
             top_one_hot = torch.argmax(top_br_pred_teacher,dim=1)
 
-            top_br_pred_teacher_gt = F.one_hot(top_one_hot,num_classes=201).permute(0,2,1).type(torch.cuda.FloatTensor)
+            top_br_pred_teacher_gt = F.one_hot(top_one_hot,num_classes=num_classes+1).permute(0,2,1).type(torch.cuda.FloatTensor)
 
             top_unlabel_onehot = torch.argmax(top_br_pred_unlabel_student,dim=1)
 
-            top_br_pred_unlabel_student_gt = F.one_hot(top_unlabel_onehot,num_classes=201).permute(0,2,1).type(torch.cuda.FloatTensor)
+            top_br_pred_unlabel_student_gt = F.one_hot(top_unlabel_onehot,num_classes=num_classes+1).permute(0,2,1).type(torch.cuda.FloatTensor)
 
             consistency_weight = get_current_consistency_weight(epoch)
 
@@ -878,31 +888,43 @@ if __name__ == '__main__':
     # print(model)
     total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(config)
-    print("\nTotal Number of Learnable Paramters (in M) : ",total_params/1000000)
+    print("\nTotal Number of Learnable Paramters (in M) : ",total_params/1e6)
     print('No of Gpus using to Train :  {} '.format(num_gpu))
     print(" Saving all Checkpoints in path : "+ output_path )
     optimizer = optim.Adam(model.parameters(), lr=learning_rate,
                            weight_decay=decay)
 
+
+    if dataset_name == 'anet':
+        train_dataset = spot_dataset.SPOTDataset(subset="train")
+        train_unlabel_dataset = spot_dataset.SPOTDatasetUnlabeled(subset="unlabel")
+        test_dataset = spot_dataset.SPOTDataset(subset="validation")
+    elif dataset_name == 'thumos':
+        from spot_lib.thumos_dataset import THUMOS_Dataset
+        train_dataset = THUMOS_Dataset(training=True, subset='train', labeled=True)
+        train_unlabel_dataset = THUMOS_Dataset(training=True, subset='train', unlabeled=True)
+        test_dataset = THUMOS_Dataset(training=False, subset='testing')
+
+
     print('train_loader')
-    train_loader = torch.utils.data.DataLoader(spot_dataset.SPOTDataset(subset="train"),
+    train_loader = torch.utils.data.DataLoader(train_dataset,
                                                batch_size=num_batch, shuffle=False,
                                                num_workers=1, pin_memory=False, drop_last=True)
 
     print('train_loader_pretrain')
     if config['pretraining']['unlabeled_pretrain']:
-        train_loader_pretrain = torch.utils.data.DataLoader(spot_dataset.SPOTDatasetUnlabeled(subset="unlabel"),
+        train_loader_pretrain = torch.utils.data.DataLoader(train_unlabel_dataset,
                                                #batch_size=num_batch, shuffle=True,
                                                batch_size=num_batch, shuffle=False,drop_last=True,
                                                         num_workers=1, pin_memory=False) # NOTE pretrain_unlabel: we see what happens when we pretrain with the unlabeled data
     else:
-        train_loader_pretrain = torch.utils.data.DataLoader(spot_dataset.SPOTDataset(subset="train"),
+        train_loader_pretrain = torch.utils.data.DataLoader(train_dataset,
                                              batch_size=num_batch, shuffle=False,
                                               num_workers=1, pin_memory=False, drop_last=True)
     
     if use_semi and unlabel_percent > 0.:
         print('train_loader_unlabel')
-        train_loader_unlabel = torch.utils.data.DataLoader(spot_dataset.SPOTDatasetUnlabeled(subset="unlabel"),
+        train_loader_unlabel = torch.utils.data.DataLoader(train_unlabel_dataset,
                                             #    batch_size=num_batch, shuffle=True,
                                                batch_size=min(max(round(num_batch*unlabel_percent/(4*(1.-unlabel_percent)))*4, 4), 24), shuffle=False,drop_last=True,
                                                num_workers=1, pin_memory=False)
@@ -911,7 +933,7 @@ if __name__ == '__main__':
         
     #breakpoint()
     print('test_loader')
-    test_loader = torch.utils.data.DataLoader(spot_dataset.SPOTDataset(subset="validation"),
+    test_loader = torch.utils.data.DataLoader(test_dataset,
                                               batch_size=num_batch, shuffle=False,
                                               num_workers=2, pin_memory=False, drop_last=True)
 
@@ -977,12 +999,14 @@ if __name__ == '__main__':
                 subprocess.run(["python", "eval.py"] + sys.argv[1:])
 
 
-
+    torch.cuda.empty_cache()
+    gc.collect()
+    print(torch.cuda.mem_get_info())
 
 
     end.record()
     torch.cuda.synchronize()
 
-    print("Total Time taken for Running "+str(epoch)+" epoch is :"+ str(start.elapsed_time(end)/1000) + " secs")  # milliseconds
+    print("Total Time taken for Running "+str(epoch)+" epoch is :"+ str(start.elapsed_time(end)/1e3) + " secs")  # milliseconds
 
 

@@ -4,6 +4,15 @@ import numpy as np
 import torch.nn.functional as F
 
 import pdb
+import sys
+import yaml
+from utils.arguments import handle_args, modify_config
+
+
+with open(sys.argv[1], 'r', encoding='utf-8') as f:
+        tmp = f.read()
+        config = modify_config(yaml.load(tmp, Loader=yaml.FullLoader), *handle_args(sys.argv))
+        temporal_scale = config['model']['temporal_scale']
 
 
 class FixedPositionalEncoding(nn.Module):
@@ -14,7 +23,7 @@ class FixedPositionalEncoding(nn.Module):
         position = torch.arange(0, max_length, dtype=torch.float).unsqueeze(1)
         div_term = torch.exp(
             torch.arange(0, embedding_dim, 2).float()
-            * (-torch.log(torch.tensor(10000.0)) / embedding_dim)
+            * (-torch.log(torch.tensor(temporal_scale ** 2)) / embedding_dim)
         )
         pe[:, 0::2] = torch.sin(position * div_term)
         pe[:, 1::2] = torch.cos(position * div_term)
@@ -74,7 +83,7 @@ class SnippetEmbedding(nn.Module):
         self.n_head = n_head # 1
         self.d_k = d_k # 256
         self.d_v = d_v # 256 , d_model : 256
-        self.pos_enc = LearnedPositionalEncoding(400,400,100)
+        self.pos_enc = LearnedPositionalEncoding(d_model,d_model,temporal_scale) # Ensure that this is replaced with feat_dim = config['model']['feat_dim'] or similar
         self.clip_order = clip_order
         self.w_qs = nn.Linear(d_model, n_head * d_k, bias=False).cuda()
         self.w_qs.requires_grad = True

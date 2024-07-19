@@ -1,5 +1,3 @@
-
-
 import os
 import math
 import numpy as np
@@ -22,6 +20,8 @@ from joblib import Parallel, delayed
 from spot_lib.tsne import viusalize
 import sys
 from utils.arguments import handle_args, modify_config
+
+import pdb
 
 with open(sys.argv[1], 'r', encoding='utf-8') as f:
         tmp = f.read()
@@ -65,13 +65,20 @@ if __name__ == '__main__':
     print("len(test_loader),", len(test_loader))
 
     # im_path = os.path.join(im_fig_path,"SOLO_PIC")
-    
+   
+    # the classes: key_list are the string names, val_list are the indexes 
     key_list = list(activity_dict.keys())
     val_list = list(activity_dict.values())
 
-    nms_thres = config['testing']['nms_thresh']
+    nms_thres = config['testing']['nms_thresh'] # 0.6 by default
     
     def save_plot(x,save_path):
+        """[TODO:description]
+
+        Args:
+            x ([TODO:parameter]): [TODO:description]
+            save_path ([TODO:parameter]): [TODO:description]
+        """
         fig = plt.figure()
         ax = plt.axes()
         fig = plt.figure()
@@ -87,8 +94,14 @@ if __name__ == '__main__':
         plt.savefig(save_path)
 
     def post_process_multi(detection_thread,get_infer_dict):
+        """[TODO:description]
+
+        Args:
+            detection_thread ([TODO:parameter]): [TODO:description]
+            get_infer_dict ([TODO:parameter]): [TODO:description]
+        """
         mode="semi"
-        infer_dict , label_dict = get_infer_dict()
+        infer_dict , label_dict = get_infer_dict() # infer_dict and label_dict both have the video name as keys; infer_dict has the information, label_dict has the string name of the class of the first annotation to appear.
         pred_data = pd.read_csv("spot_output_"+mode+".csv")
         pred_videos = list(pred_data.video_name.values[:])
         cls_data_score, cls_data_cls = {}, {}
@@ -100,7 +113,7 @@ if __name__ == '__main__':
                 cls_data_cls[vid] = best_cls["v_"+vid]["class"] 
 
         parallel = Parallel(n_jobs=15, prefer="processes")
-        detection = parallel(delayed(detection_thread)(vid, video_cls, infer_dict['v_'+vid], label_dict, pred_data,best_cls)
+        detection = parallel(delayed(detection_thread)(vid, video_cls, infer_dict['v_'+vid], label_dict, pred_data, best_cls)
                             for vid, video_cls in cls_data_cls.items())
         detection_dict = {}
         [detection_dict.update(d) for d in detection]
@@ -110,7 +123,7 @@ if __name__ == '__main__':
             json.dump(output_dict, out)
 
 
-
+    #breakpoint()
 
     
     file = "spot_output_"+mode+".csv"
@@ -128,13 +141,13 @@ if __name__ == '__main__':
         top_k_snip = config['testing']['top_k_snip']
         class_snip_thresh = config['testing']['class_thresh']
         mask_snip_thresh = config['testing']['mask_thresh']
-        tscale = config['model']['temporal_scale']
+        temporal_scale = config['model']['temporal_scale']
         full_label = True
         
 
         new_props = list()
 
-        for idx, input_data, input_data_big, input_data_small,f_mask in test_loader:
+        for idx, input_data, input_data_big, input_data_small,f_mask in test_loader: # Loads the features that get passed to the model, and loads the binary mask (no classes given, just the binary classes). 
             video_name = test_loader.dataset.subset_mask_list[idx[0]]
             vid_count+=1
             input_data = input_data.cuda()
@@ -145,9 +158,13 @@ if __name__ == '__main__':
 
             # forward pass
             top_br_pred, bottom_br_pred, feat = model(input_data.cuda())
-            ### global mask prediction ####
+            # - top_br_pred: [1, 201, 100]; aims to match a one-hot encode of the class at each time step
+            # - bottom_br_pred: [1, 100, 100]; binary mask for where actions occur
+            # - feat: [1, 400, 100]: Spot determines a feature for each of the temporal locations (the clips)
 
-            props = bottom_br_pred[0].detach().cpu().numpy()
+
+            ### global mask prediction ####
+            props = bottom_br_pred[0].detach().cpu().numpy() # The proposals for where actions occur
 
             ### classifier branch prediction ###
 
@@ -157,31 +174,30 @@ if __name__ == '__main__':
                 full_cls_score = best_cls[video_name]["score"]
 
 
-            soft_cas = torch.softmax(top_br_pred[0],dim=0) 
-            soft_cas_topk,soft_cas_topk_loc = torch.topk(soft_cas[:num_class],2,dim=0)
+            soft_cas = torch.softmax(top_br_pred[0],dim=0) # a "softmax" of the top branch; this makes the prediction closer to the one-hot. 
+            soft_cas_topk,soft_cas_topk_loc = torch.topk(soft_cas[:num_class],2,dim=0) # from top_branch, the top k=2 classes and their likelihood.
+            top_br_np = softmax(top_br_pred[0].detach().cpu().numpy(),axis=0)[:num_class] # softmax among the non-background classes 
+
+            label_pred = torch.softmax(torch.mean(top_br_pred[0][:num_class,:],dim=1),axis=0).detach().cpu().numpy() # The mean score for each class (shape [200])
+            vid_label_id = np.argmax(label_pred) # the whole-video max-predicted class
+            vid_label_sc = np.amax(label_pred) # the max score associated with that class
+            props_mod = props[props>0] # Never used
             top_br_np = softmax(top_br_pred[0].detach().cpu().numpy(),axis=0)[:num_class]
 
-            label_pred = torch.softmax(torch.mean(top_br_pred[0][:num_class,:],dim=1),axis=0).detach().cpu().numpy()
-            vid_label_id = np.argmax(label_pred)
-            vid_label_sc = np.amax(label_pred)
-            props_mod = props[props>0]
-            top_br_np = softmax(top_br_pred[0].detach().cpu().numpy(),axis=0)[:num_class]
-
-            top_br_mean = np.mean(top_br_np,axis=1)
-            top_br_mean_max = np.amax(top_br_np,axis=1)
-            top_br_mean_id = np.argmax(top_br_mean)
+            top_br_mean = np.mean(top_br_np,axis=1) # The mean score for each class after the softmax
+            top_br_mean_max = np.amax(top_br_np,axis=1) # the maximum of those mean scores (ie. the score leading to the most likely class, for the full video)
+            top_br_mean_id = np.argmax(top_br_mean) # the class of it
             
             
+            soft_cas_np = soft_cas[:num_class].detach().cpu().numpy() # soft_cas, but no background
 
-            soft_cas_np = soft_cas[:num_class].detach().cpu().numpy()
-            seg_score = np.zeros([tscale])
+
+            ### for each snippet (ie. temporal location), store the max score and predicted class for that snippet ####
+            seg_score = np.zeros([temporal_scale])
             seg_cls = []
-            seg_mask = np.zeros([tscale])
+            seg_mask = np.zeros([temporal_scale]) 
 
-            ### for each snippet, store the max score and class info ####
-
-            for j in range(tscale):
-                
+            for j in range(temporal_scale):
                 seg_score[j] =  np.amax(soft_cas_np[:,j])
                 seg_cls.append(np.argmax(soft_cas_np[:,j]))
 
@@ -189,12 +205,13 @@ if __name__ == '__main__':
 
             thres = class_snip_thresh
 
+            #breakpoint()
             cas_tuple = []
             for k in thres:
                 filt_seg_score = seg_score > k
                 integer_map1 = map(int,filt_seg_score)
                 filt_seg_score_int = list(integer_map1)
-                filt_seg_score_int = ndimage.binary_fill_holes(filt_seg_score_int).astype(int).tolist()
+                filt_seg_score_int = ndimage.binary_fill_holes(filt_seg_score_int).astype(int).tolist() # will be a 1 in locations where the score for a particular class exceeds a certain value.
                 if 1 in filt_seg_score_int:
                     start_pt1 = filt_seg_score_int.index(1)
                     end_pt1 = len(filt_seg_score_int) - 1 - filt_seg_score_int[::-1].index(1)
@@ -245,7 +262,7 @@ if __name__ == '__main__':
                         r = max((list(y) for (x,y) in itertools.groupby((enumerate(filtered_seq_int)),operator.itemgetter(1)) if x == 1), key=len)
                         start_pt = r[0][0]
                         end_pt = r[-1][0]
-                        if (end_pt - start_pt)/tscale > 0.02 : 
+                        if (end_pt - start_pt)/temporal_scale > 0.02 : 
                         #### get (start,end,cls_score,reg_score,label) for each top-k snip ####
 
                             score_ = max_score_np[locs]
@@ -255,8 +272,8 @@ if __name__ == '__main__':
                             label = key_list[val_list.index(lbl_id)]
                             vid_label = key_list[val_list.index(vid_label_id)]
                             score_shift = np.amax(soft_cas_np[vid_label_id,start_pt:end_pt])
-                            prop_start = start_pt1/tscale
-                            prop_end = end_pt1/tscale
+                            prop_start = start_pt1/temporal_scale
+                            prop_end = end_pt1/temporal_scale
                             if full_label:
                                 new_props.append([video_name, prop_start , prop_end , score_shift*reg_score, full_cls_score,full_cls])
                             else:
@@ -267,13 +284,14 @@ if __name__ == '__main__':
                                 end_m = cas_tuple[m][1]
                                 score_m = cas_tuple[m][2]
                                 reg_score = np.amax(seq[start_m:end_m])
-                                prop_start = start_m/tscale
-                                prop_end = end_m/tscale
+                                prop_start = start_m/temporal_scale
+                                prop_end = end_m/temporal_scale
                                 cls_score = score_m
                                 if full_label:
                                     new_props.append([video_name, prop_start,prop_end,reg_score,full_cls_score,full_cls])
                                 else:
                                     new_props.append([video_name, prop_start,prop_end,reg_score,cls_score,vid_label])
+
                                     
         ### filter duplicate proposals --> Less Time for Post-Processing #####
         new_props = np.stack(new_props)
@@ -289,6 +307,7 @@ if __name__ == '__main__':
 
     ###### Post-Process #####
     print("Start Post-Processing")
+    #breakpoint()
     post_process_multi(multithread_detection,get_infer_dict)
     print("End Post-Processing")
     
