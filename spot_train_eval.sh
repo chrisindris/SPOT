@@ -17,4 +17,4 @@ export CUDA_VISIBLE_DEVICES="$1"
 #{ time python eval.py "${@:3}" ; } 2>&1 | tee -a "output/experiments/${2}"
 
 python spot_inference.py "${@:3}"
-#python eval.py "${@:3}"
+python eval.py "${@:3}"

@@ -45,7 +45,7 @@ torch.backends.cudnn.benchmark = False
 #######################################################
 
 (a,o,n) = (np.logical_and, np.logical_or, np.logical_not) # for brevity
-size_one_holes = True
+size_one_holes = False
 
 if __name__ == '__main__':
     mode = "semi"  ## "semi", "semi_ema" ,""
@@ -153,7 +153,13 @@ if __name__ == '__main__':
         Returns:
             an array of tuples where for each p, we can list the contiguous sub-array (proposal) as arr[p[0], p[1]]
         """
-        return [p.span() for p in re.finditer('1+', str(arr).replace(' ', '').replace(',','')[1:-1])]
+        if size_one_holes:
+            return [p.span() for p in re.finditer('1+', str(arr).replace(' ', '').replace(',','')[1:-1])]
+        else:
+            start_pt1 = arr.index(1)
+            end_pt1 = len(arr) - 1 - arr[::-1].index(1) # Finds the index of the last "1" in the video.
+            return [(start_pt1, end_pt1)]
+
 
     #breakpoint()
 
@@ -179,181 +185,172 @@ if __name__ == '__main__':
 
         new_props = list()
 
-        with warnings.catch_warnings(record=True) as w:
-            warnings.simplefilter('always')
-            warningNum = len(w)
+        for idx, input_data, input_data_big, input_data_small,f_mask in test_loader: # Loads the features that get passed to the model, and loads the binary mask (no classes given, just the binary classes).
+           
+            if bool(re.search("[1].+[0].+[1]", str(np.array(f_mask[0]).astype(int).tolist()))):
+                pass #breakpoint()
 
-            for idx, input_data, input_data_big, input_data_small,f_mask in test_loader: # Loads the features that get passed to the model, and loads the binary mask (no classes given, just the binary classes).
-               
-                if bool(re.search("[1].+[0].+[1]", str(np.array(f_mask[0]).astype(int).tolist()))):
-                    pass #breakpoint()
+            #print("index", idx)
 
-                #print("index", idx)
+            video_name = test_loader.dataset.subset_mask_list[idx[0]]
+            vid_count+=1
+            input_data = input_data.cuda()
+            input_data_s = input_data_small.cuda()
+            input_data_b = input_data_big.cuda()
+            if not os.path.exists(output_path + "/fig/"+video_name):
+                os.makedirs(output_path + "/fig/"+video_name)
 
-                video_name = test_loader.dataset.subset_mask_list[idx[0]]
-                vid_count+=1
-                input_data = input_data.cuda()
-                input_data_s = input_data_small.cuda()
-                input_data_b = input_data_big.cuda()
-                if not os.path.exists(output_path + "/fig/"+video_name):
-                    os.makedirs(output_path + "/fig/"+video_name)
-
-                # forward pass
-                top_br_pred, bottom_br_pred, feat = model(input_data.cuda())
-                # - top_br_pred: [1, 201, 100]; aims to match a one-hot encode of the class at each time step
-                # - bottom_br_pred: [1, 100, 100]; binary mask for where actions occur
-                # - feat: [1, 400, 100]: Spot determines a feature for each of the temporal locations (the clips)
+            # forward pass
+            top_br_pred, bottom_br_pred, feat = model(input_data.cuda())
+            # - top_br_pred: [1, 201, 100]; aims to match a one-hot encode of the class at each time step
+            # - bottom_br_pred: [1, 100, 100]; binary mask for where actions occur
+            # - feat: [1, 400, 100]: Spot determines a feature for each of the temporal locations (the clips)
 
 
-                ### global mask prediction ####
-                props = bottom_br_pred[0].detach().cpu().numpy() # The proposals for where actions occur
+            ### global mask prediction ####
+            props = bottom_br_pred[0].detach().cpu().numpy() # The proposals for where actions occur
 
-                ### classifier branch prediction ###
+            ### classifier branch prediction ###
 
-                if full_label:
-                    best_cls = load_json("spot_best_score.json")
-                    full_cls = best_cls[video_name]["class"]
-                    full_cls_score = best_cls[video_name]["score"]
+            if full_label:
+                best_cls = load_json("spot_best_score.json")
+                full_cls = best_cls[video_name]["class"]
+                full_cls_score = best_cls[video_name]["score"]
 
 
-                soft_cas = torch.softmax(top_br_pred[0],dim=0) # a "softmax" of the top branch; this makes the prediction closer to the one-hot. 
-                soft_cas_topk,soft_cas_topk_loc = torch.topk(soft_cas[:num_class],2,dim=0) # from top_branch, the top k=2 classes and their likelihood. # NOTE: this is not used, I should make use of it for a mode in which we do top-2; note that I will need to keep the classes in mind.
-                top_br_np = softmax(top_br_pred[0].detach().cpu().numpy(),axis=0)[:num_class] # softmax among the non-background classes; np = numpy 
+            soft_cas = torch.softmax(top_br_pred[0],dim=0) # a "softmax" of the top branch; this makes the prediction closer to the one-hot. 
+            soft_cas_topk,soft_cas_topk_loc = torch.topk(soft_cas[:num_class],2,dim=0) # from top_branch, the top k=2 classes and their likelihood. # NOTE: this is not used, I should make use of it for a mode in which we do top-2; note that I will need to keep the classes in mind.
+            top_br_np = softmax(top_br_pred[0].detach().cpu().numpy(),axis=0)[:num_class] # softmax among the non-background classes; np = numpy 
 
-                # For those in this block, use :num_class since over the entire video, background is likely to be the most-predicted.
-                label_pred = torch.softmax(torch.mean(top_br_pred[0][:num_class,:],dim=1),axis=0).detach().cpu().numpy() # The mean score for each class across the whole video (shape [200])
-                vid_label_id = np.argmax(label_pred) # the whole-video max-predicted class
-                vid_label_sc = np.amax(label_pred) # the max score associated with that class; sc = score
-                props_mod = props[props>0] # Never used
-                top_br_np = softmax(top_br_pred[0].detach().cpu().numpy(),axis=0)[:num_class]
+            # For those in this block, use :num_class since over the entire video, background is likely to be the most-predicted.
+            label_pred = torch.softmax(torch.mean(top_br_pred[0][:num_class,:],dim=1),axis=0).detach().cpu().numpy() # The mean score for each class across the whole video (shape [200])
+            vid_label_id = np.argmax(label_pred) # the whole-video max-predicted class
+            vid_label_sc = np.amax(label_pred) # the max score associated with that class; sc = score
+            props_mod = props[props>0] # Never used
+            top_br_np = softmax(top_br_pred[0].detach().cpu().numpy(),axis=0)[:num_class]
 
-                top_br_mean = np.mean(top_br_np,axis=1) # The mean score for each class after the softmax
-                top_br_mean_max = np.amax(top_br_np,axis=1) # the maximum of those mean scores (ie. the score leading to the most likely class, for the full video)
-                top_br_mean_id = np.argmax(top_br_mean) # the class of it; id = index
+            top_br_mean = np.mean(top_br_np,axis=1) # The mean score for each class after the softmax
+            top_br_mean_max = np.amax(top_br_np,axis=1) # the maximum of those mean scores (ie. the score leading to the most likely class, for the full video)
+            top_br_mean_id = np.argmax(top_br_mean) # the class of it; id = index
+            
+            
+            soft_cas_np = soft_cas[:num_class].detach().cpu().numpy() # soft_cas, but no background
+
+
+            ### for each snippet (ie. temporal location), store the max score and predicted class for that snippet ####
+            seg_score = np.zeros([temporal_scale])
+            seg_cls = []
+            seg_mask = np.zeros([temporal_scale]) 
+            for j in range(temporal_scale):
+                seg_score[j] =  np.amax(soft_cas_np[:,j])
+                seg_cls.append(np.argmax(soft_cas_np[:,j]))
+
+            # seg_score[seg_score < class_thres] = 0
+
+            thres = class_snip_thresh
+
+            ### cas_tuple will contain (for the current video), the segment in which the model has detected an action with a confidence score exceeding the threshold.
+            cas_tuple = []
+            for k in thres:
+                filt_seg_score = seg_score > k
+                integer_map1 = map(int,filt_seg_score)
+                filt_seg_score_int = list(integer_map1) # or just do filt_seg_score_int = filt_seg_score.astype(int)
+                filt_seg_score_int = fill_holes(filt_seg_score_int)
+                # result: filt_seg_score_int is a list of length temporal_scale; at locations where the model's confidence exceeds the threshold, a 1 is placed in that location.
+                if 1 in filt_seg_score_int: 
+                    props_indices = find_proposals(filt_seg_score_int)
+                    #start_pt1 = filt_seg_score_int.index(1)
+                    #end_pt1 = len(filt_seg_score_int) - 1 - filt_seg_score_int[::-1].index(1) # Finds the index of the last "1" in the video.
+                    for (start_pt1, end_pt1) in props_indices:
+                        if end_pt1 - start_pt1 > 1: # A detected action of length 1 (ie. [...,0,0,1,0,0,...]) is ignored.
+                            scores = np.amax(seg_score[start_pt1:end_pt1])
+                            label = max(set(seg_cls[start_pt1:end_pt1]), key=seg_cls.count) # FIX: the label is chosen as the most frequent predicted label over the entire video. We might want to do it over the current annotation [start_pt1:end_pt1], or tie-break via mean confidence. -done, it does use the segment 
+                            cas_tuple.append([start_pt1,end_pt1,scores,label])
+
+            max_score, score_idx  = torch.max(soft_cas[:num_class],0) # NOTE: the same as seg_score and seg_cls, but in different formats (ie. numpy vs tensor)
+            soft_cas_np = soft_cas[:num_class].detach().cpu().numpy()
+            score_map = {}
+
+            top_np = top_br_pred[0][:num_class].detach().cpu().numpy()  
+            top_np_max = np.mean(top_np,axis=1)
+            max_score_np = max_score.detach().cpu().numpy()
+            score_idx = score_idx.detach().cpu().numpy()
+
+            for ids in range(len(score_idx)):
+                score_map[max_score_np[ids]]= score_idx[ids] # Dictionary of {confidence score: class}; confidence score is a float so unlikely to have write-overs.
+
+            ### indexes of top K scores ###
+            k = top_k_snip ## more fast inference; there are temporal_scale many snippets, we take the top k (default=10) of them
+            max_idx = np.argpartition(max_score_np, -k)[-k:] 
+            top_k_idx = max_idx[np.argsort(max_score_np[max_idx])][::-1].tolist() # The top snippet indexes, in sorted descending order according to their score.
+
+            for locs in top_k_idx:
+
+                seq = props[locs,:] # The 2D representation of the location, at a particular location
+                thres = mask_snip_thresh
                 
+                # --- mask_snip_thresh
+                for j in thres:
+                    filtered_seq = seq > j # filters based on the mask_snip_thresh
                 
-                soft_cas_np = soft_cas[:num_class].detach().cpu().numpy() # soft_cas, but no background
+                    integer_map = map(int,filtered_seq)
+                    filtered_seq_int = list(integer_map)
+                    filtered_seq_int2 = fill_holes(filtered_seq_int)
+                    
+                    if 1 in filtered_seq_int: # ensure that there exist a detection meeting the threshold
 
+                        #### getting start and end point of mask from mask branch ####
+                        props_indices = find_proposals(filtered_seq_int2)
 
-                ### for each snippet (ie. temporal location), store the max score and predicted class for that snippet ####
-                seg_score = np.zeros([temporal_scale])
-                seg_cls = []
-                seg_mask = np.zeros([temporal_scale]) 
-                for j in range(temporal_scale):
-                    seg_score[j] =  np.amax(soft_cas_np[:,j])
-                    seg_cls.append(np.argmax(soft_cas_np[:,j]))
-
-                # seg_score[seg_score < class_thres] = 0
-
-                thres = class_snip_thresh
-
-                ### cas_tuple will contain (for the current video), the segment in which the model has detected an action with a confidence score exceeding the threshold.
-                cas_tuple = []
-                for k in thres:
-                    filt_seg_score = seg_score > k
-                    integer_map1 = map(int,filt_seg_score)
-                    filt_seg_score_int = list(integer_map1) # or just do filt_seg_score_int = filt_seg_score.astype(int)
-                    filt_seg_score_int = fill_holes(filt_seg_score_int)
-                    # result: filt_seg_score_int is a list of length temporal_scale; at locations where the model's confidence exceeds the threshold, a 1 is placed in that location.
-                    if 1 in filt_seg_score_int: 
-                        props_indices = find_proposals(filt_seg_score_int)
-                        #start_pt1 = filt_seg_score_int.index(1)
-                        #end_pt1 = len(filt_seg_score_int) - 1 - filt_seg_score_int[::-1].index(1) # Finds the index of the last "1" in the video.
                         for (start_pt1, end_pt1) in props_indices:
-                            if end_pt1 - start_pt1 > 1: # A detected action of length 1 (ie. [...,0,0,1,0,0,...]) is ignored.
-                                scores = np.amax(seg_score[start_pt1:end_pt1])
-                                label = max(set(seg_cls[start_pt1:end_pt1]), key=seg_cls.count) # FIX: the label is chosen as the most frequent predicted label over the entire video. We might want to do it over the current annotation [start_pt1:end_pt1], or tie-break via mean confidence. -done, it does use the segment 
-                                cas_tuple.append([start_pt1,end_pt1,scores,label])
 
-                max_score, score_idx  = torch.max(soft_cas[:num_class],0) # NOTE: the same as seg_score and seg_cls, but in different formats (ie. numpy vs tensor)
-                soft_cas_np = soft_cas[:num_class].detach().cpu().numpy()
-                score_map = {}
+                            #start_pt1 = filtered_seq_int2.index(1)
+                            #end_pt1 = len(filtered_seq_int2) - 1 - filtered_seq_int2[::-1].index(1) 
+                            r = max((list(y) for (x,y) in itertools.groupby((enumerate(filtered_seq_int)),operator.itemgetter(1)) if x == 1), key=len) # [(ind, 1),...] for the indexes where a 1 is present;
+                            # NOTE: the above line selects only the longest action in the clip. 
+                            # > max((list(y) for (x,y) in itertools.groupby((enumerate([0,0,1,1,1,0,0,0,1,1,1,0,0,0])),operator.itemgetter(1)) if x == 1), key=len)
+                            # [(2,1), (3,1), (4,1)]
+                            start_pt1 = r[0][0]
+                            end_pt1 = r[-1][0]
+                            if (end_pt1 - start_pt1)/temporal_scale > 0.02 : 
+                            #### get (start,end,cls_score,reg_score,label) for each top-k snip ####
 
-                top_np = top_br_pred[0][:num_class].detach().cpu().numpy()  
-                top_np_max = np.mean(top_np,axis=1)
-                max_score_np = max_score.detach().cpu().numpy()
-                score_idx = score_idx.detach().cpu().numpy()
+                                score_ = max_score_np[locs] # among the max scores at each location, take that max score.
+                                cls_score = score_
+                                lbl_id = score_map[score_] # the class
+                                reg_score = np.mean(seq[start_pt1:end_pt1]) # NOTE: originally seq[start_pt+1:end_pt-1], but this may result in seq[start_pt1:end_pt-1] == [] (leading to a nan mean warning) 
+                                label = key_list[val_list.index(lbl_id)] # string label
+                                vid_label = key_list[val_list.index(vid_label_id)] # string label of the whole-label max-predicted class (ie. if the entire video had to have a single class)
+                                score_shift = np.amax(soft_cas_np[vid_label_id,start_pt1:end_pt1]) # the maximum score within the range of the action [start_pt:end_pt], assuming vid_label_id # NOTE: should probably use the predicted class for the segment, not for the whole video (something like using lbl_id rather than vid_label_id)
 
-                for ids in range(len(score_idx)):
-                    score_map[max_score_np[ids]]= score_idx[ids] # Dictionary of {confidence score: class}; confidence score is a float so unlikely to have write-overs.
+                                # NOTE: Over the next few lines I make the action take the label for between prop_start and prop_end. I might want to play around with full_label (and thence look at post_process_multi), and look at how to do the post-processing.
+                                action_label = np.argmax(torch.softmax(top_br_pred[0][:num_class, start_pt1:end_pt1], dim=0).cpu().numpy(), axis=0).tolist()
+                                action_label = max(action_label, key=action_label.count)
+                                action_score = np.mean(np.amax(torch.softmax(top_br_pred[0][:num_class, start_pt1:end_pt1], dim=0).cpu().numpy(), axis=0)).tolist()
 
-                ### indexes of top K scores ###
-                k = top_k_snip ## more fast inference; there are temporal_scale many snippets, we take the top k (default=10) of them
-                max_idx = np.argpartition(max_score_np, -k)[-k:] 
-                top_k_idx = max_idx[np.argsort(max_score_np[max_idx])][::-1].tolist() # The top snippet indexes, in sorted descending order according to their score.
+                                prop_start = start_pt1/temporal_scale # express as a proportion
+                                prop_end = end_pt1/temporal_scale # express as a proportion
 
-                for locs in top_k_idx:
-
-                    seq = props[locs,:] # The 2D representation of the location, at a particular location
-                    thres = mask_snip_thresh
-                    
-                    # --- mask_snip_thresh
-                    for j in thres:
-                        filtered_seq = seq > j # filters based on the mask_snip_thresh
-                    
-                        integer_map = map(int,filtered_seq)
-                        filtered_seq_int = list(integer_map)
-                        filtered_seq_int2 = fill_holes(filtered_seq_int)
-                        
-                        if 1 in filtered_seq_int: # ensure that there exist a detection meeting the threshold
-
-                            #### getting start and end point of mask from mask branch ####
-                            props_indices = find_proposals(filtered_seq_int2)
-
-                            for (start_pt1, end_pt1) in props_indices:
-
-                                #start_pt1 = filtered_seq_int2.index(1)
-                                #end_pt1 = len(filtered_seq_int2) - 1 - filtered_seq_int2[::-1].index(1) 
-                                r = max((list(y) for (x,y) in itertools.groupby((enumerate(filtered_seq_int)),operator.itemgetter(1)) if x == 1), key=len) # [(ind, 1),...] for the indexes where a 1 is present;
-                                # NOTE: the above line selects only the longest action in the clip. 
-                                # > max((list(y) for (x,y) in itertools.groupby((enumerate([0,0,1,1,1,0,0,0,1,1,1,0,0,0])),operator.itemgetter(1)) if x == 1), key=len)
-                                # [(2,1), (3,1), (4,1)]
-                                #start_pt = r[0][0]
-                                #end_pt = r[-1][0]
-                                if (end_pt1 - start_pt1)/temporal_scale > 0.02 : 
-                                #### get (start,end,cls_score,reg_score,label) for each top-k snip ####
-
-                                    score_ = max_score_np[locs] # among the max scores at each location, take that max score.
-                                    cls_score = score_
-                                    lbl_id = score_map[score_] # the class
-                                    reg_score = np.mean(seq[start_pt1:end_pt1]) # NOTE: originally seq[start_pt+1:end_pt-1], but this may result in seq[start_pt1:end_pt-1] == [] (leading to a nan mean warning) 
-                                    label = key_list[val_list.index(lbl_id)] # string label
-                                    vid_label = key_list[val_list.index(vid_label_id)] # string label of the whole-label max-predicted class (ie. if the entire video had to have a single class)
-                                    score_shift = np.amax(soft_cas_np[vid_label_id,start_pt1:end_pt1]) # the maximum score within the range of the action [start_pt:end_pt], assuming vid_label_id # NOTE: should probably use the predicted class for the segment, not for the whole video (something like using lbl_id rather than vid_label_id)
-
-                                    # NOTE: Over the next few lines I make the action take the label for between prop_start and prop_end. I might want to play around with full_label (and thence look at post_process_multi), and look at how to do the post-processing.
-                                    action_label = np.argmax(torch.softmax(top_br_pred[0][:num_class, start_pt1:end_pt1], dim=0).cpu().numpy(), axis=0).tolist()
-                                    action_label = max(action_label, key=action_label.count)
-                                    action_score = np.mean(np.amax(torch.softmax(top_br_pred[0][:num_class, start_pt1:end_pt1], dim=0).cpu().numpy(), axis=0)).tolist()
-
-                                    prop_start = start_pt1/temporal_scale # express as a proportion
-                                    prop_end = end_pt1/temporal_scale # express as a proportion
-
-                                    if len(w) != warningNum:
-                                        warningNum = len(w)
-                                        #print(idx)
-                                        breakpoint()
-
+                                if full_label:
+                                    new_props.append([video_name, prop_start , prop_end , score_shift*reg_score, full_cls_score,full_cls])
+                                    #new_props.append([video_name, prop_start , prop_end , score_shift*reg_score, action_score, action_label])
+                                else:
+                                    new_props.append([video_name, prop_start , prop_end , score_shift*reg_score, score_shift*cls_score, vid_label])     
+                               
+                                # add the proposals to the list of proposals.
+                                for m in range(len(cas_tuple)):
+                                    start_m = cas_tuple[m][0]
+                                    end_m = cas_tuple[m][1]
+                                    score_m = cas_tuple[m][2]
+                                    reg_score = np.amax(seq[start_m:end_m])
+                                    prop_start = start_m/temporal_scale
+                                    prop_end = end_m/temporal_scale
+                                    cls_score = score_m
                                     if full_label:
-                                        #new_props.append([video_name, prop_start , prop_end , score_shift*reg_score, full_cls_score,full_cls])
-                                        new_props.append([video_name, prop_start , prop_end , score_shift*reg_score, action_score, action_label])
+                                        new_props.append([video_name, prop_start,prop_end,reg_score,full_cls_score,full_cls])
+                                        #new_props.append([video_name, prop_start,prop_end,reg_score,action_score,action_label])
                                     else:
-                                        new_props.append([video_name, prop_start , prop_end , score_shift*reg_score, score_shift*cls_score, vid_label])     
-                                   
-                                    # add the proposals to the list of proposals.
-                                    for m in range(len(cas_tuple)):
-                                        start_m = cas_tuple[m][0]
-                                        end_m = cas_tuple[m][1]
-                                        score_m = cas_tuple[m][2]
-                                        reg_score = np.amax(seq[start_m:end_m])
-                                        prop_start = start_m/temporal_scale
-                                        prop_end = end_m/temporal_scale
-                                        cls_score = score_m
-                                        if full_label:
-                                            #new_props.append([video_name, prop_start,prop_end,reg_score,full_cls_score,full_cls])
-                                            new_props.append([video_name, prop_start,prop_end,reg_score,action_score,action_label])
-                                        else:
-                                            new_props.append([video_name, prop_start,prop_end,reg_score,cls_score,vid_label])
+                                        new_props.append([video_name, prop_start,prop_end,reg_score,cls_score,vid_label])
  
 
 
