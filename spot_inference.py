@@ -187,8 +187,8 @@ if __name__ == '__main__':
 
         for idx, input_data, input_data_big, input_data_small,f_mask in test_loader: # Loads the features that get passed to the model, and loads the binary mask (no classes given, just the binary classes).
            
-            if bool(re.search("[1].+[0].+[1]", str(np.array(f_mask[0]).astype(int).tolist()))):
-                pass #breakpoint()
+            #if bool(re.search("[1].+[0].+[1]", str(np.array(f_mask[0]).astype(int).tolist()))):
+            #    breakpoint()
 
             #print("index", idx)
 
@@ -223,7 +223,7 @@ if __name__ == '__main__':
             top_br_np = softmax(top_br_pred[0].detach().cpu().numpy(),axis=0)[:num_class] # softmax among the non-background classes; np = numpy 
 
             # For those in this block, use :num_class since over the entire video, background is likely to be the most-predicted.
-            label_pred = torch.softmax(torch.mean(top_br_pred[0][:num_class,:],dim=1),axis=0).detach().cpu().numpy() # The mean score for each class across the whole video (shape [200])
+            label_pred = torch.softmax(torch.mean(top_br_pred[0][:num_class,:],dim=1),axis=0).detach().cpu().numpy() # The mean score for each class across the whole video (shape [num_classes])
             vid_label_id = np.argmax(label_pred) # the whole-video max-predicted class
             vid_label_sc = np.amax(label_pred) # the max score associated with that class; sc = score
             props_mod = props[props>0] # Never used

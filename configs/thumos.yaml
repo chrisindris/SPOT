@@ -28,8 +28,8 @@ dataset:
 
 model:
   embedding_head: 4
-  feat_dim: 400
-  temporal_scale: 100 # TODO: we want the temporal scale to be about 300 to include almost all of the videos (although 100 is likely good enough), but we need to make sure the model can handle that. Might want to change all instances of 100 to self.temporal_scale
+  feat_dim: 320 # this is the internal feature width (d_model). NOTE: must divide 2*batch_size*(input feature size)
+  temporal_scale: 256 # TODO: we want the temporal scale to be about 300 to include almost all of the videos (although 100 is likely good enough), but we need to make sure the model can handle that. Might want to change all instances of 100 to self.temporal_scale
 
 pretraining:
   warmup_epoch: 30 # Default 30
@@ -37,7 +37,7 @@ pretraining:
   unlabeled_pretrain: False
 
 training:
-  batch_size: 1
+  batch_size: 20
   learning_rate: 0.0004
   weight_decay: 0.005
   alternate: True
@@ -46,9 +46,13 @@ training:
   checkpoint_path: "/root/models/SPOT/thumos_output/"
   random_seed: 1
   step: 10
-  gamma: 0.2 
+  gamma: 0.2
+  scheduler: False
   num_gpu: 1
   feature_path: "/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/"  #TODO: add the path to the features to be used; corresponds to video_data_path
+  loss_balance: 0.1
+  loss_balance_full: 0.5
+  regular_eval: False
 
 loss:
   lambda_1: 0.5
@@ -60,5 +64,5 @@ testing:
   class_thresh: [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
   top_k_snip: 10
   top_k: 500
-  nms_thresh: 0.6
+  nms_thresh: 0.4
   feature_path: "/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/" #TODO: add the path to the features to be used; corresponds to video_data_path

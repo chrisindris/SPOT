@@ -22,7 +22,7 @@ dataset:
 model:
   embedding_head: 4
   feat_dim: 400 # this is the internal feature width (d_model). NOTE: must divide 2*batch_size*(input feature size)
-  temporal_scale: 64 # Like feat_dim, this has been hardcoded in the repo and needs to be fixed.
+  temporal_scale: 100 # Like feat_dim, this has been hardcoded in the repo and needs to be fixed.
 
 pretraining:
   warmup_epoch: 30 # Default 30

@@ -17,6 +17,7 @@ with open(sys.argv[1], 'r', encoding='utf-8') as f:
         config = modify_config(yaml.load(tmp, Loader=yaml.FullLoader), *handle_args(sys.argv))
         temporal_scale = config['model']['temporal_scale']
         feat_dim = config['model']['feat_dim']
+        num_classes = config['dataset']['num_classes']
 
 
 class TemporalShift(nn.Module):
@@ -61,11 +62,11 @@ class TemporalShift(nn.Module):
             out = torch.zeros_like(x)
             out[:, :-1, :fold] = x[:, 1:, :fold]  # shift left
             out[:, 1:, fold: 2 * fold] = x[:, :-1, fold: 2 * fold]  # shift right
-            out[:, :, 2 * fold:200] = x[:, :, 2 * fold:200]  # not shift
+            out[:, :, 2 * fold:num_classes] = x[:, :, 2 * fold:num_classes]  # not shift
 
-            out[:, :-1, 200:200+fold] = x[:, 1:, 200:200+fold]  # shift left
-            out[:, 1:, 200+fold: 200+2 * fold] = x[:, :-1, 200+fold: 200+2 * fold]  # shift right
-            out[:, :, 200+2 * fold:] = x[:, :, 200 + 2 * fold:]  # not shift
+            out[:, :-1, num_classes:num_classes+fold] = x[:, 1:, num_classes:num_classes+fold]  # shift left
+            out[:, 1:, num_classes+fold: num_classes+2 * fold] = x[:, :-1, num_classes+fold: num_classes+2 * fold]  # shift right
+            out[:, :, num_classes+2 * fold:] = x[:, :, num_classes + 2 * fold:]  # not shift
             # out = torch.zeros_like(x)
             # out[:, :-1, forward] = x[:, 1:, forward]  # shift left
             # out[:, 1:, backward] = x[:, :-1, backward]  # shift right

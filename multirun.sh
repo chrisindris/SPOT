@@ -20,11 +20,11 @@ gpu=$1
 if (( gpu == 0 )); then
   output_pth="./output/"
 
-  ./spot_train_eval.sh "$gpu" THUMOS.txt ./configs/anet.yaml \
-    pretraining.warmup_epoch=6 \
-    pretraining.consecutive_warmup_epochs=6 \
-    training.max_epoch=6 \
-    training.consecutive_train_epochs=6 \
+  ./spot_train_eval.sh "$gpu" THUMOS.txt ./configs/thumos.yaml \
+    pretraining.warmup_epoch=1 \
+    pretraining.consecutive_warmup_epochs=1 \
+    training.max_epoch=1 \
+    training.consecutive_train_epochs=1 \
     dataset.training.output_path=$output_pth \
     dataset.testing.output_path=$output_pth \
     training.checkpoint_path=$output_pth
@@ -32,11 +32,11 @@ if (( gpu == 0 )); then
 else
   output_pth="./output_2/"
  
-  ./spot_train_eval.sh "$gpu" THUMOS.txt ./configs/anet.yaml \
-    pretraining.warmup_epoch=20 \
-    pretraining.consecutive_warmup_epochs=20 \
-    training.max_epoch=20 \
-    training.consecutive_train_epochs=20 \
+  ./spot_train_eval.sh "$gpu" THUMOS.txt ./configs/thumos.yaml \
+    pretraining.warmup_epoch=1 \
+    pretraining.consecutive_warmup_epochs=1 \
+    training.max_epoch=1 \
+    training.consecutive_train_epochs=1 \
     dataset.training.output_path=$output_pth \
     dataset.testing.output_path=$output_pth \
     training.checkpoint_path=$output_pth

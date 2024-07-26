@@ -14,6 +14,7 @@ with open(sys.argv[1], 'r', encoding='utf-8') as f:
         tmp = f.read()
         config = modify_config(yaml.load(tmp, Loader=yaml.FullLoader), *handle_args(sys.argv))
         temporal_scale = config['model']['temporal_scale']
+        num_classes = config['dataset']['num_classes']
 
 
 vid_info = config['dataset']['training']['video_info_path']
@@ -104,7 +105,7 @@ def IOU(s1, e1, s2, e2):
 
 
 
-def multithread_detection(video_name, video_cls, video_info, label_dict, pred_prop, best_cls, num_prop=200, topk = 2):
+def multithread_detection(video_name, video_cls, video_info, label_dict, pred_prop, best_cls, num_prop=num_classes, topk = 2):
     
     old_df = pred_prop[pred_prop.video_name == "v_"+video_name]
     # print(df)

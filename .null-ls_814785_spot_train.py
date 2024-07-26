@@ -33,7 +33,7 @@ import gc
 os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
 torch.cuda.empty_cache()
 gc.collect()
-#print(torch.cuda.mem_get_info())
+print(torch.cuda.mem_get_info())
 
 # TODO: num_workers and pretrain() warmup_epoch should be specifiable in the config file.
 # TODO: for the model, it would be nice to be able to control the size of it and output different feature vector sizes
@@ -955,8 +955,6 @@ if __name__ == '__main__':
     pretrain_epoch = 0 
     train_epoch = 0
 
-    #breakpoint()
-
     if not config["training"]["alternate"]:
         print("Pretraining Start")
         pretrain(train_loader_pretrain,model,optimizer)
@@ -1003,7 +1001,7 @@ if __name__ == '__main__':
 
     torch.cuda.empty_cache()
     gc.collect()
-    #print(torch.cuda.mem_get_info())
+    print(torch.cuda.mem_get_info())
 
 
     end.record()

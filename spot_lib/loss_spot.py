@@ -15,6 +15,7 @@ with open(sys.argv[1], 'r', encoding='utf-8') as f:
         tmp = f.read()
         config = modify_config(yaml.load(tmp, Loader=yaml.FullLoader), *handle_args(sys.argv))
         temporal_scale = config['model']['temporal_scale']
+        num_classes = config['dataset']['num_classes']
 
 
 ce = nn.CrossEntropyLoss()
@@ -75,9 +76,9 @@ class ACSL(nn.Module):
                 # print(cls)
                 cls_inds = torch.nonzero(labels == cls).squeeze(1)
                 # print(cls_inds.size())
-                if cls == 200:
+                if cls == num_classes:
                     # construct target vector for background samples
-                    target[cls_inds, 200] = 1
+                    target[cls_inds, num_classes] = 1
                     # for bg, set the weight of all classes to 1
                     weight_mask[cls_inds] = 0
 
@@ -117,7 +118,7 @@ class ACSL(nn.Module):
                     weight_mask[choose_bg_inds] = tmp_weight_mask
 
                     # Set the weight for bg to 1
-                    weight_mask[cls_inds, 200] = 1
+                    weight_mask[cls_inds, num_classes] = 1
                     
                 else:
                     # construct target vector for foreground samples
@@ -147,7 +148,6 @@ def top_lr_loss(target,pred):
     gt_action = target
     pred_action = pred
     topratio = 0.6
-    num_classes = 200
     alpha = 10
 
     pmask = (gt_action == 1).float()

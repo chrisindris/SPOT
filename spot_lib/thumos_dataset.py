@@ -242,6 +242,7 @@ class THUMOS_Dataset(Dataset):
                  training=True,
                  origin_ratio=0.5,
                  subset='train',
+                 mode='train',
                  unlabeled=False,
                  labeled=False):
 
@@ -252,7 +253,7 @@ class THUMOS_Dataset(Dataset):
         self.temporal_scale = config['model']['temporal_scale']
         self.temporal_gap = 1. / self.temporal_scale
         self.subset = subset
-        self.mode = subset
+        self.mode = mode
         self.class_to_idx = thumos_dict
 
         self.split = {'train': 'training', 'validation': 'testing', 'testing': 'testing'}[self.subset]
@@ -322,7 +323,7 @@ class THUMOS_Dataset(Dataset):
             df_info = pd.DataFrame(pd.read_csv(self.video_info_path)).values[:]
             video_infos = {}
             for info in df_info:
-                if self.subset in info[5] and not (self.unlabeled ^ ('unlabel' in info[5])):
+                if self.subset in info[5] and ((self.subset == 'testing') or (self.labeled and 'unlabel' not in info[5]) or (self.unlabeled and 'unlabel' in info[5])):
                     video_infos[info[0]] = {
                         'fps': info[1],
                         'sample_fps': info[2],

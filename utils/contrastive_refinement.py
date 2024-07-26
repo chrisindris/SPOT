@@ -6,6 +6,16 @@ from scipy import ndimage
 import kornia
 from torchvision.utils import save_image
 
+import yaml
+import sys
+from utils.arguments import handle_args, modify_config
+
+with open(sys.argv[1], 'r', encoding='utf-8') as f:
+        tmp = f.read()
+        config = modify_config(yaml.load(tmp, Loader=yaml.FullLoader), *handle_args(sys.argv))
+        temporal_scale = config['model']['temporal_scale']
+        num_classes = config['dataset']['num_classes']
+
 class SniCoLoss(nn.Module):
     def __init__(self):
         super(SniCoLoss, self).__init__()
@@ -24,9 +34,6 @@ class SniCoLoss(nn.Module):
         labels = torch.zeros(logits.shape[0], dtype=torch.long).cuda()
         loss = self.ce_criterion(logits, labels)
         # print(loss)
-
-
-
         return loss
 
     def forward(self, contrast_pairs):
@@ -68,10 +75,10 @@ def easy_snippets_mining(actionness, embeddings, k_easy=10):
     select_idx = torch.ones((actionness.size(0),actionness.size(2))).cuda()
     select_idx = F.dropout(select_idx,0.3)
     soft_action = actionness
-    fg_action_idx = torch.argmax(soft_action[:,:200,:],dim=1)
+    fg_action_idx = torch.argmax(soft_action[:,:num_classes,:],dim=1)
     fg_action_idx_mode, _ = torch.mode(fg_action_idx,dim=1)
     fg_action = torch.stack([actionness[i,fg_action_idx_mode[i],:] for i in range(actionness.size(0))],dim=0)
-    bg_action = actionness[:,200,:] 
+    bg_action = actionness[:,num_classes,:] 
     fg_action_drop = fg_action * select_idx
     bg_action_drop = bg_action * select_idx
     easy_act = select_topk_embeddings_top(fg_action_drop, embeddings, k_easy)
