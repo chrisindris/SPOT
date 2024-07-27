@@ -10,6 +10,8 @@ import yaml
 import sys
 from utils.arguments import handle_args, modify_config
 
+import pdb
+
 with open(sys.argv[1], 'r', encoding='utf-8') as f:
         tmp = f.read()
         config = modify_config(yaml.load(tmp, Loader=yaml.FullLoader), *handle_args(sys.argv))
@@ -29,6 +31,9 @@ def load_json(file):
 
 
 def get_infer_dict():
+
+    breakpoint()
+
     df = pd.read_csv(vid_info)
     json_data = load_json(vid_anno)
     database = json_data

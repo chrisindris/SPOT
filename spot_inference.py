@@ -13,7 +13,7 @@ import torch.nn.functional as F
 from collections import Counter
 import cv2
 import json
-from configs.dataset_class import activity_dict
+from configs.dataset_class import activity_dict, thumos_dict
 import yaml
 from utils.postprocess_utils import multithread_detection , get_infer_dict, load_json
 from joblib import Parallel, delayed
@@ -24,10 +24,16 @@ from utils.arguments import handle_args, modify_config
 import pdb
 import warnings
 import re
+from spot_lib.thumos_dataset import THUMOS_Dataset
 
 with open(sys.argv[1], 'r', encoding='utf-8') as f:
         tmp = f.read()
         config = modify_config(yaml.load(tmp, Loader=yaml.FullLoader), *handle_args(sys.argv))
+        dataset_name = config['dataset']['name']
+        nms_thres = config['testing']['nms_thresh'] # 0.6 by default
+        output_path = config['dataset']['testing']['output_path']
+        best_score = config['dataset']['testing']['best_score']
+
 print(config)
 
 
@@ -47,22 +53,116 @@ torch.backends.cudnn.benchmark = False
 (a,o,n) = (np.logical_and, np.logical_or, np.logical_not) # for brevity
 size_one_holes = False
 
+def save_plot(x,save_path):
+    """[TODO:description]
+
+    Args:
+        x ([TODO:parameter]): [TODO:description]
+        save_path ([TODO:parameter]): [TODO:description]
+    """
+    fig = plt.figure()
+    ax = plt.axes()
+    fig = plt.figure()
+    ax = plt.axes()
+    plt.grid(False)
+    plt.plot(x,color='red', linewidth=8);
+    plt.xlim(0, 100)
+    plt.ylim(0, 1);
+    plt.xticks([])
+    plt.yticks([])
+    fig = plt.gcf()
+    fig.set_size_inches(25.5, 2.5)
+    plt.savefig(save_path)
+
+def post_process_multi(detection_thread,get_infer_dict):
+    """[TODO:description]
+
+    Args:
+        detection_thread ([TODO:parameter]): [TODO:description]
+        get_infer_dict ([TODO:parameter]): [TODO:description]
+    """
+    #breakpoint()
+
+    mode="semi"
+    infer_dict , label_dict = get_infer_dict() # infer_dict and label_dict both have the video name as keys; infer_dict has the information, label_dict has the string name of the class of the first annotation to appear.
+    pred_data = pd.read_csv("spot_output_"+mode+".csv")
+    pred_videos = list(pred_data.video_name.values[:])
+    cls_data_score, cls_data_cls = {}, {}
+    best_cls = load_json(best_score)
+    
+    for idx, vid in enumerate(infer_dict.keys()):
+        if vid in pred_videos:
+            vid = vid[2:] 
+            cls_data_cls[vid] = best_cls["v_"+vid]["class"] 
+
+    parallel = Parallel(n_jobs=1, prefer="processes") # n_jobs=15
+    detection = parallel(delayed(detection_thread)(vid, video_cls, infer_dict['v_'+vid], label_dict, pred_data, best_cls)
+                        for vid, video_cls in cls_data_cls.items())
+    detection_dict = {}
+    [detection_dict.update(d) for d in detection]
+    output_dict = {"version": "ANET v1.3, SPOT", "results": detection_dict, "external_data": {}}
+
+    with open(output_path + '/detection_result_nms{}.json'.format(nms_thres), "w") as out:
+        json.dump(output_dict, out, indent=4)
+
+
+def fill_holes(arr):
+    """given a binary array, fill size-one holes (ie. ...1,0,1,... -> ...1,1,1,...) and return a copy.
+
+    Args:
+        arr (array): binary array
+
+    Returns:
+        array
+    """
+    if size_one_holes:
+        arr_prev = [0] + arr[:-1]
+        arr_next = arr[1:] + [0]
+        return o(arr, a(n(arr), a(arr_prev, arr_next))).astype(int).tolist()
+    else:
+        return ndimage.binary_fill_holes(arr).astype(int).tolist() # will be a 1 in locations where the score for a particular class exceeds a certain value. # FIX: in the default setting, this fills all input holes and prevents multiple actions from being possible.
+
+
+def find_proposals(arr):
+    """given a binary array (action/no action), get a list of the (start,end) indices for that action.
+
+    Args:
+        arr (array): binary array of proposals.
+
+    Returns:
+        an array of tuples where for each p, we can list the contiguous sub-array (proposal) as arr[p[0], p[1]]
+    """
+    if size_one_holes:
+        return [p.span() for p in re.finditer('1+', str(arr).replace(' ', '').replace(',','')[1:-1])]
+    else:
+        start_pt1 = arr.index(1)
+        end_pt1 = len(arr) - 1 - arr[::-1].index(1) # Finds the index of the last "1" in the video.
+        return [(start_pt1, end_pt1)]
+
+
 if __name__ == '__main__':
-    mode = "semi"  ## "semi", "semi_ema" ,""
-    output_path = config['dataset']['testing']['output_path']
+    mode = "semi"  ## "semi", "semi_ema" ,"" 
     # im_fig_path = config['testing']['fig_path']
     is_postprocess = True
     if not os.path.exists(output_path + "/results"):
         os.makedirs(output_path + "/results")
-    ### Load Model ###
+
+    if dataset_name == 'anet': 
+        dataset = spot_dataset.SPOTDataset(subset='validation', mode='inference')
+        class_dictionary = activity_dict
+    elif dataset_name == 'thumos':
+        dataset = THUMOS_Dataset(training=False, subset='testing', mode='inference')
+        class_dictionary = thumos_dict 
+
     model = SPOT()
     model = torch.nn.DataParallel(model, device_ids=[0]).cuda() # NOTE GPU: This works with an arbitrary CUDA_VISIBLE_DEVICES=X (as long as X is 1 GPU). To make this work with more, change it to range(config['training']['num_gpus'])
+
     ### Load Checkpoint ###
     checkpoint = torch.load(output_path + "/SPOT_best_semi.pth.tar")
     model.load_state_dict(checkpoint['state_dict'])
     model.eval()
     ### Load Dataloader ###
-    test_loader = torch.utils.data.DataLoader(spot_dataset.SPOTDataset(subset='validation', mode='inference'), # to get validation set (which is /data/i5O/ActivityNet1.3/test/): subset='validation', mode='inference'
+    test_loader = torch.utils.data.DataLoader(dataset, # to get validation set (which is /data/i5O/ActivityNet1.3/test/): subset='validation', mode='inference'
                                               batch_size=1, shuffle=False,
                                               num_workers=8, pin_memory=True, drop_last=False)
 
@@ -71,96 +171,9 @@ if __name__ == '__main__':
     # im_path = os.path.join(im_fig_path,"SOLO_PIC")
    
     # the classes: key_list are the string names, val_list are the indexes 
-    key_list = list(activity_dict.keys())
-    val_list = list(activity_dict.values())
-
-    nms_thres = config['testing']['nms_thresh'] # 0.6 by default
+    key_list = list(class_dictionary.keys())
+    val_list = list(class_dictionary.values()) 
     
-    def save_plot(x,save_path):
-        """[TODO:description]
-
-        Args:
-            x ([TODO:parameter]): [TODO:description]
-            save_path ([TODO:parameter]): [TODO:description]
-        """
-        fig = plt.figure()
-        ax = plt.axes()
-        fig = plt.figure()
-        ax = plt.axes()
-        plt.grid(False)
-        plt.plot(x,color='red', linewidth=8);
-        plt.xlim(0, 100)
-        plt.ylim(0, 1);
-        plt.xticks([])
-        plt.yticks([])
-        fig = plt.gcf()
-        fig.set_size_inches(25.5, 2.5)
-        plt.savefig(save_path)
-
-    def post_process_multi(detection_thread,get_infer_dict):
-        """[TODO:description]
-
-        Args:
-            detection_thread ([TODO:parameter]): [TODO:description]
-            get_infer_dict ([TODO:parameter]): [TODO:description]
-        """
-        mode="semi"
-        infer_dict , label_dict = get_infer_dict() # infer_dict and label_dict both have the video name as keys; infer_dict has the information, label_dict has the string name of the class of the first annotation to appear.
-        pred_data = pd.read_csv("spot_output_"+mode+".csv")
-        pred_videos = list(pred_data.video_name.values[:])
-        cls_data_score, cls_data_cls = {}, {}
-        best_cls = load_json("spot_best_score.json")
-        
-        for idx, vid in enumerate(infer_dict.keys()):
-            if vid in pred_videos:
-                vid = vid[2:] 
-                cls_data_cls[vid] = best_cls["v_"+vid]["class"] 
-
-        parallel = Parallel(n_jobs=15, prefer="processes")
-        detection = parallel(delayed(detection_thread)(vid, video_cls, infer_dict['v_'+vid], label_dict, pred_data, best_cls)
-                            for vid, video_cls in cls_data_cls.items())
-        detection_dict = {}
-        [detection_dict.update(d) for d in detection]
-        output_dict = {"version": "ANET v1.3, SPOT", "results": detection_dict, "external_data": {}}
-
-        with open(output_path + '/detection_result_nms{}.json'.format(nms_thres), "w") as out:
-            json.dump(output_dict, out)
-
-
-    def fill_holes(arr):
-        """given a binary array, fill size-one holes (ie. ...1,0,1,... -> ...1,1,1,...) and return a copy.
-
-        Args:
-            arr (array): binary array
-
-        Returns:
-            array
-        """
-        if size_one_holes:
-            arr_prev = [0] + arr[:-1]
-            arr_next = arr[1:] + [0]
-            return o(arr, a(n(arr), a(arr_prev, arr_next))).astype(int).tolist()
-        else:
-            return ndimage.binary_fill_holes(arr).astype(int).tolist() # will be a 1 in locations where the score for a particular class exceeds a certain value. # FIX: in the default setting, this fills all input holes and prevents multiple actions from being possible.
-
-
-    def find_proposals(arr):
-        """given a binary array (action/no action), get a list of the (start,end) indices for that action.
-
-        Args:
-            arr (array): binary array of proposals.
-
-        Returns:
-            an array of tuples where for each p, we can list the contiguous sub-array (proposal) as arr[p[0], p[1]]
-        """
-        if size_one_holes:
-            return [p.span() for p in re.finditer('1+', str(arr).replace(' ', '').replace(',','')[1:-1])]
-        else:
-            start_pt1 = arr.index(1)
-            end_pt1 = len(arr) - 1 - arr[::-1].index(1) # Finds the index of the last "1" in the video.
-            return [(start_pt1, end_pt1)]
-
-
     #breakpoint()
 
     
@@ -213,7 +226,8 @@ if __name__ == '__main__':
             ### classifier branch prediction ###
 
             if full_label:
-                best_cls = load_json("spot_best_score.json")
+                #breakpoint()
+                best_cls = load_json(best_score)
                 full_cls = best_cls[video_name]["class"]
                 full_cls_score = best_cls[video_name]["score"]
 

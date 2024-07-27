@@ -46,7 +46,7 @@ else:
 if dataset_name == 'anet':
     train_dataset = spot_dataset.SPOTDataset(subset="train")
     train_unlabel_dataset = spot_dataset.SPOTDatasetUnlabeled(subset="unlabel")
-    test_dataset = spot_dataset.SPOTDataset(subset="validation")
+    test_dataset = spot_dataset.SPOTDataset(subset='validation')
 elif dataset_name == 'thumos':
     from spot_lib.thumos_dataset import THUMOS_Dataset
     train_dataset = THUMOS_Dataset(training=True, subset='train', labeled=True)

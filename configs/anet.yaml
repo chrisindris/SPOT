@@ -18,6 +18,7 @@ dataset:
     output_path: '/root/models/SPOT/output/'
     unlabel_percent: 0.9 # Never used
     use_semi: True
+    best_score: "spot_best_score.json"
 
 model:
   embedding_head: 4

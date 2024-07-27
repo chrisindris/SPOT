@@ -265,6 +265,7 @@ class THUMOS_Dataset(Dataset):
         self.npy_data_path = config[self.split]['feature_path'] 
  
         self.video_infos = self.get_video_info()
+        self.subset_mask_list = list(self.video_infos.keys())
         self.video_annos = self.get_video_anno()
         self.data_dict = self.load_video_data()
         self.clip_length = config['dataset'][self.split]['clip_length']

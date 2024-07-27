@@ -1,0 +1,1650 @@
+{
+    "video_test_0000896": {
+        "class": "HighJump",
+        "score": 1.0
+    },
+    "video_test_0000897": {
+        "class": "CricketBowling",
+        "score": 1.0
+    },
+    "video_test_0000950": {
+        "class": "HammerThrow",
+        "score": 1.0
+    },
+    "video_test_0001079": {
+        "class": "LongJump",
+        "score": 1.0
+    },
+    "video_test_0001078": {
+        "class": "VolleyballSpiking",
+        "score": 1.0
+    },
+    "video_test_0000179": {
+        "class": "BasketballDunk",
+        "score": 1.0
+    },
+    "video_test_0000173": {
+        "class": "CliffDiving",
+        "score": 1.0
+    },
+    "video_test_0001072": {
+        "class": "HammerThrow",
+        "score": 1.0
+    },
+    "video_test_0001075": {
+        "class": "Billiards",
+        "score": 1.0
+    },
+    "video_test_0001076": {
+        "class": "CliffDiving",
+        "score": 1.0
+    },
+    "video_test_0000007": {
+        "class": "JavelinThrow",
+        "score": 1.0
+    },
+    "video_test_0000006": {
+        "class": "VolleyballSpiking",
+        "score": 1.0
+    },
+    "video_test_0000556": {
+        "class": "Billiards",
+        "score": 1.0
+    },
+    "video_test_0000558": {
+        "class": "Billiards",
+        "score": 1.0
+    },
+    "video_test_0001324": {
+        "class": "BaseballPitch",
+        "score": 1.0
+    },
+    "video_validation_0000950": {
+        "class": "ThrowDiscus",
+        "score": 1.0
+    },
+    "video_test_0001209": {
+        "class": "JavelinThrow",
+        "score": 1.0
+    },
+    "video_test_0001202": {
+        "class": "VolleyballSpiking",
+        "score": 1.0
+    },
+    "video_test_0001201": {
+        "class": "PoleVault",
+        "score": 1.0
+    },
+    "video_test_0001207": {
+        "class": "PoleVault",
+        "score": 1.0
+    },
+    "video_test_0001409": {
+        "class": "SoccerPenalty",
+        "score": 1.0
+    },
+    "video_test_0000671": {
+        "class": "ThrowDiscus",
+        "score": 1.0
+    },
+    "video_test_0000672": {
+        "class": "FrisbeeCatch",
+        "score": 1.0
+    },
+    "video_test_0000673": {
+        "class": "CliffDiving",
+        "score": 1.0
+    },
+    "video_test_0000131": {
+        "class": "CliffDiving",
+        "score": 1.0
+    },
+    "video_test_0000073": {
+        "class": "ThrowDiscus",
+        "score": 1.0
+    },
+    "video_test_0001276": {
+        "class": "CricketShot",
+        "score": 1.0
+    },
+    "video_test_0001270": {
+        "class": "CleanAndJerk",
+        "score": 1.0
+    },
+    "video_test_0001194": {
+        "class": "CricketShot",
+        "score": 1.0
+    },
+    "video_test_0001195": {
+        "class": "JavelinThrow",
+        "score": 1.0
+    },
+    "video_validation_0000270": {
+        "class": "FrisbeeCatch",
+        "score": 1.0
+    },
+    "video_test_0000004": {
+        "class": "CricketShot",
+        "score": 1.0
+    },
+    "video_validation_0000178": {
+        "class": "CricketBowling",
+        "score": 1.0
+    },
+    "video_validation_0000179": {
+        "class": "CricketBowling",
+        "score": 1.0
+    },
+    "video_test_0000285": {
+        "class": "CliffDiving",
+        "score": 1.0
+    },
+    "video_validation_0000175": {
+        "class": "CricketBowling",
+        "score": 1.0
+    },
+    "video_validation_0000176": {
+        "class": "CricketBowling",
+        "score": 1.0
+    },
+    "video_validation_0000177": {
+        "class": "CricketBowling",
+        "score": 1.0
+    },
+    "video_validation_0000170": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_validation_0000171": {
+        "class": "CricketBowling",
+        "score": 1.0
+    },
+    "video_validation_0000172": {
+        "class": "CricketBowling",
+        "score": 1.0
+    },
+    "video_validation_0000173": {
+        "class": "CricketBowling",
+        "score": 1.0
+    },
+    "video_validation_0000670": {
+        "class": "PoleVault",
+        "score": 1.0
+    },
+    "video_test_0000211": {
+        "class": "VolleyballSpiking",
+        "score": 1.0
+    },
+    "video_test_0000357": {
+        "class": "CliffDiving",
+        "score": 1.0
+    },
+    "video_test_0000355": {
+        "class": "LongJump",
+        "score": 1.0
+    },
+    "video_test_0000353": {
+        "class": "CricketShot",
+        "score": 1.0
+    },
+    "video_validation_0000368": {
+        "class": "HighJump",
+        "score": 1.0
+    },
+    "video_validation_0000417": {
+        "class": "JavelinThrow",
+        "score": 1.0
+    },
+    "video_validation_0000416": {
+        "class": "JavelinThrow",
+        "score": 1.0
+    },
+    "video_validation_0000415": {
+        "class": "JavelinThrow",
+        "score": 1.0
+    },
+    "video_validation_0000414": {
+        "class": "JavelinThrow",
+        "score": 1.0
+    },
+    "video_validation_0000413": {
+        "class": "JavelinThrow",
+        "score": 1.0
+    },
+    "video_validation_0000412": {
+        "class": "JavelinThrow",
+        "score": 1.0
+    },
+    "video_validation_0000411": {
+        "class": "JavelinThrow",
+        "score": 1.0
+    },
+    "video_test_0000854": {
+        "class": "Shotput",
+        "score": 1.0
+    },
+    "video_validation_0000419": {
+        "class": "JavelinThrow",
+        "score": 1.0
+    },
+    "video_validation_0000418": {
+        "class": "JavelinThrow",
+        "score": 1.0
+    },
+    "video_test_0000039": {
+        "class": "TennisSwing",
+        "score": 1.0
+    },
+    "video_validation_0000488": {
+        "class": "LongJump",
+        "score": 1.0
+    },
+    "video_test_0000756": {
+        "class": "TennisSwing",
+        "score": 1.0
+    },
+    "video_test_0000450": {
+        "class": "VolleyballSpiking",
+        "score": 1.0
+    },
+    "video_validation_0000485": {
+        "class": "LongJump",
+        "score": 1.0
+    },
+    "video_validation_0000486": {
+        "class": "LongJump",
+        "score": 1.0
+    },
+    "video_validation_0000487": {
+        "class": "LongJump",
+        "score": 1.0
+    },
+    "video_validation_0000481": {
+        "class": "LongJump",
+        "score": 1.0
+    },
+    "video_validation_0000482": {
+        "class": "LongJump",
+        "score": 1.0
+    },
+    "video_validation_0000483": {
+        "class": "LongJump",
+        "score": 1.0
+    },
+    "video_test_0000045": {
+        "class": "Shotput",
+        "score": 1.0
+    },
+    "video_validation_0000990": {
+        "class": "VolleyballSpiking",
+        "score": 1.0
+    },
+    "video_test_0001531": {
+        "class": "TennisSwing",
+        "score": 1.0
+    },
+    "video_test_0001532": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_validation_0000362": {
+        "class": "HighJump",
+        "score": 1.0
+    },
+    "video_test_0001080": {
+        "class": "ThrowDiscus",
+        "score": 1.0
+    },
+    "video_test_0001081": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_test_0000622": {
+        "class": "CricketShot",
+        "score": 1.0
+    },
+    "video_test_0001325": {
+        "class": "CricketShot",
+        "score": 1.0
+    },
+    "video_test_0001495": {
+        "class": "LongJump",
+        "score": 1.0
+    },
+    "video_test_0000624": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_validation_0000901": {
+        "class": "BasketballDunk",
+        "score": 1.0
+    },
+    "video_validation_0000903": {
+        "class": "BasketballDunk",
+        "score": 1.0
+    },
+    "video_validation_0000902": {
+        "class": "BasketballDunk",
+        "score": 1.0
+    },
+    "video_validation_0000905": {
+        "class": "BasketballDunk",
+        "score": 1.0
+    },
+    "video_validation_0000904": {
+        "class": "BasketballDunk",
+        "score": 1.0
+    },
+    "video_validation_0000907": {
+        "class": "BasketballDunk",
+        "score": 1.0
+    },
+    "video_validation_0000906": {
+        "class": "BasketballDunk",
+        "score": 1.0
+    },
+    "video_validation_0000909": {
+        "class": "BasketballDunk",
+        "score": 1.0
+    },
+    "video_validation_0000908": {
+        "class": "BasketballDunk",
+        "score": 1.0
+    },
+    "video_test_0001039": {
+        "class": "Shotput",
+        "score": 1.0
+    },
+    "video_test_0001038": {
+        "class": "BaseballPitch",
+        "score": 1.0
+    },
+    "video_validation_0000860": {
+        "class": "SoccerPenalty",
+        "score": 1.0
+    },
+    "video_test_0001391": {
+        "class": "JavelinThrow",
+        "score": 1.0
+    },
+    "video_test_0001146": {
+        "class": "Billiards",
+        "score": 1.0
+    },
+    "video_test_0001247": {
+        "class": "Billiards",
+        "score": 1.0
+    },
+    "video_test_0000626": {
+        "class": "PoleVault",
+        "score": 1.0
+    },
+    "video_test_0000839": {
+        "class": "HighJump",
+        "score": 1.0
+    },
+    "video_test_0000771": {
+        "class": "Billiards",
+        "score": 1.0
+    },
+    "video_validation_0000690": {
+        "class": "BaseballPitch",
+        "score": 1.0
+    },
+    "video_validation_0000288": {
+        "class": "GolfSwing",
+        "score": 1.0
+    },
+    "video_validation_0000289": {
+        "class": "GolfSwing",
+        "score": 1.0
+    },
+    "video_validation_0000282": {
+        "class": "GolfSwing",
+        "score": 1.0
+    },
+    "video_validation_0000283": {
+        "class": "GolfSwing",
+        "score": 1.0
+    },
+    "video_validation_0000281": {
+        "class": "GolfSwing",
+        "score": 1.0
+    },
+    "video_validation_0000286": {
+        "class": "GolfSwing",
+        "score": 1.0
+    },
+    "video_validation_0000287": {
+        "class": "GolfSwing",
+        "score": 1.0
+    },
+    "video_validation_0000284": {
+        "class": "GolfSwing",
+        "score": 1.0
+    },
+    "video_validation_0000285": {
+        "class": "GolfSwing",
+        "score": 1.0
+    },
+    "video_validation_0000057": {
+        "class": "Billiards",
+        "score": 1.0
+    },
+    "video_test_0000762": {
+        "class": "VolleyballSpiking",
+        "score": 1.0
+    },
+    "video_test_0000814": {
+        "class": "ThrowDiscus",
+        "score": 1.0
+    },
+    "video_test_0000767": {
+        "class": "BaseballPitch",
+        "score": 1.0
+    },
+    "video_test_0000765": {
+        "class": "Shotput",
+        "score": 1.0
+    },
+    "video_test_0000718": {
+        "class": "BasketballDunk",
+        "score": 1.0
+    },
+    "video_test_0000716": {
+        "class": "BasketballDunk",
+        "score": 1.0
+    },
+    "video_test_0000242": {
+        "class": "LongJump",
+        "score": 1.0
+    },
+    "video_test_0000367": {
+        "class": "Shotput",
+        "score": 1.0
+    },
+    "video_test_0000085": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_test_0000887": {
+        "class": "HighJump",
+        "score": 1.0
+    },
+    "video_test_0000882": {
+        "class": "HammerThrow",
+        "score": 1.0
+    },
+    "video_test_0000964": {
+        "class": "BaseballPitch",
+        "score": 1.0
+    },
+    "video_test_0000062": {
+        "class": "LongJump",
+        "score": 1.0
+    },
+    "video_test_0001040": {
+        "class": "Shotput",
+        "score": 1.0
+    },
+    "video_test_0000569": {
+        "class": "CricketShot",
+        "score": 1.0
+    },
+    "video_test_0000405": {
+        "class": "CricketShot",
+        "score": 1.0
+    },
+    "video_test_0000560": {
+        "class": "BasketballDunk",
+        "score": 1.0
+    },
+    "video_validation_0000949": {
+        "class": "ThrowDiscus",
+        "score": 1.0
+    },
+    "video_validation_0000948": {
+        "class": "ThrowDiscus",
+        "score": 1.0
+    },
+    "video_validation_0000945": {
+        "class": "ThrowDiscus",
+        "score": 1.0
+    },
+    "video_validation_0000944": {
+        "class": "ThrowDiscus",
+        "score": 1.0
+    },
+    "video_validation_0000947": {
+        "class": "ThrowDiscus",
+        "score": 1.0
+    },
+    "video_validation_0000946": {
+        "class": "ThrowDiscus",
+        "score": 1.0
+    },
+    "video_validation_0000941": {
+        "class": "ThrowDiscus",
+        "score": 1.0
+    },
+    "video_validation_0000940": {
+        "class": "TennisSwing",
+        "score": 1.0
+    },
+    "video_validation_0000190": {
+        "class": "CricketBowling",
+        "score": 1.0
+    },
+    "video_validation_0000942": {
+        "class": "ThrowDiscus",
+        "score": 1.0
+    },
+    "video_test_0001219": {
+        "class": "LongJump",
+        "score": 1.0
+    },
+    "video_test_0000611": {
+        "class": "GolfSwing",
+        "score": 1.0
+    },
+    "video_test_0000617": {
+        "class": "CleanAndJerk",
+        "score": 1.0
+    },
+    "video_test_0000615": {
+        "class": "VolleyballSpiking",
+        "score": 1.0
+    },
+    "video_validation_0000938": {
+        "class": "TennisSwing",
+        "score": 1.0
+    },
+    "video_validation_0000939": {
+        "class": "TennisSwing",
+        "score": 1.0
+    },
+    "video_test_0000665": {
+        "class": "PoleVault",
+        "score": 1.0
+    },
+    "video_test_0000664": {
+        "class": "BaseballPitch",
+        "score": 1.0
+    },
+    "video_validation_0000931": {
+        "class": "TennisSwing",
+        "score": 1.0
+    },
+    "video_validation_0000932": {
+        "class": "TennisSwing",
+        "score": 1.0
+    },
+    "video_validation_0000933": {
+        "class": "TennisSwing",
+        "score": 1.0
+    },
+    "video_validation_0000934": {
+        "class": "TennisSwing",
+        "score": 1.0
+    },
+    "video_validation_0000935": {
+        "class": "TennisSwing",
+        "score": 1.0
+    },
+    "video_validation_0000936": {
+        "class": "TennisSwing",
+        "score": 1.0
+    },
+    "video_validation_0000937": {
+        "class": "TennisSwing",
+        "score": 1.0
+    },
+    "video_validation_0000857": {
+        "class": "SoccerPenalty",
+        "score": 1.0
+    },
+    "video_test_0001134": {
+        "class": "CliffDiving",
+        "score": 1.0
+    },
+    "video_test_0001135": {
+        "class": "FrisbeeCatch",
+        "score": 1.0
+    },
+    "video_test_0001182": {
+        "class": "BaseballPitch",
+        "score": 1.0
+    },
+    "video_validation_0000790": {
+        "class": "Shotput",
+        "score": 1.0
+    },
+    "video_validation_0000910": {
+        "class": "BasketballDunk",
+        "score": 1.0
+    },
+    "video_validation_0000169": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_validation_0000168": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_validation_0000167": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_validation_0000166": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_validation_0000165": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_validation_0000164": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_validation_0000163": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_validation_0000162": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_validation_0000161": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_validation_0000160": {
+        "class": "CleanAndJerk",
+        "score": 1.0
+    },
+    "video_validation_0000989": {
+        "class": "VolleyballSpiking",
+        "score": 1.0
+    },
+    "video_validation_0000988": {
+        "class": "VolleyballSpiking",
+        "score": 1.0
+    },
+    "video_validation_0000981": {
+        "class": "VolleyballSpiking",
+        "score": 1.0
+    },
+    "video_validation_0000983": {
+        "class": "VolleyballSpiking",
+        "score": 1.0
+    },
+    "video_validation_0000982": {
+        "class": "VolleyballSpiking",
+        "score": 1.0
+    },
+    "video_validation_0000985": {
+        "class": "VolleyballSpiking",
+        "score": 1.0
+    },
+    "video_validation_0000984": {
+        "class": "VolleyballSpiking",
+        "score": 1.0
+    },
+    "video_validation_0000987": {
+        "class": "VolleyballSpiking",
+        "score": 1.0
+    },
+    "video_validation_0000986": {
+        "class": "VolleyballSpiking",
+        "score": 1.0
+    },
+    "video_test_0000847": {
+        "class": "GolfSwing",
+        "score": 1.0
+    },
+    "video_test_0000846": {
+        "class": "Shotput",
+        "score": 1.0
+    },
+    "video_test_0000844": {
+        "class": "CliffDiving",
+        "score": 1.0
+    },
+    "video_validation_0000420": {
+        "class": "JavelinThrow",
+        "score": 1.0
+    },
+    "video_test_0000026": {
+        "class": "TennisSwing",
+        "score": 1.0
+    },
+    "video_test_0000437": {
+        "class": "CliffDiving",
+        "score": 1.0
+    },
+    "video_test_0000724": {
+        "class": "CliffDiving",
+        "score": 1.0
+    },
+    "video_test_0000723": {
+        "class": "VolleyballSpiking",
+        "score": 1.0
+    },
+    "video_test_0000448": {
+        "class": "CricketShot",
+        "score": 1.0
+    },
+    "video_test_0000444": {
+        "class": "PoleVault",
+        "score": 1.0
+    },
+    "video_test_0000443": {
+        "class": "HammerThrow",
+        "score": 1.0
+    },
+    "video_test_0000442": {
+        "class": "HighJump",
+        "score": 1.0
+    },
+    "video_validation_0000490": {
+        "class": "LongJump",
+        "score": 1.0
+    },
+    "video_test_0001527": {
+        "class": "Shotput",
+        "score": 1.0
+    },
+    "video_test_0001522": {
+        "class": "TennisSwing",
+        "score": 1.0
+    },
+    "video_test_0001319": {
+        "class": "VolleyballSpiking",
+        "score": 1.0
+    },
+    "video_test_0001314": {
+        "class": "JavelinThrow",
+        "score": 1.0
+    },
+    "video_test_0001098": {
+        "class": "HighJump",
+        "score": 1.0
+    },
+    "video_test_0001008": {
+        "class": "HighJump",
+        "score": 1.0
+    },
+    "video_test_0001558": {
+        "class": "CliffDiving",
+        "score": 1.0
+    },
+    "video_test_0000538": {
+        "class": "HighJump",
+        "score": 1.0
+    },
+    "video_test_0001556": {
+        "class": "SoccerPenalty",
+        "score": 1.0
+    },
+    "video_test_0000113": {
+        "class": "GolfSwing",
+        "score": 1.0
+    },
+    "video_test_0001389": {
+        "class": "TennisSwing",
+        "score": 1.0
+    },
+    "video_test_0001369": {
+        "class": "LongJump",
+        "score": 1.0
+    },
+    "video_test_0001255": {
+        "class": "JavelinThrow",
+        "score": 1.0
+    },
+    "video_test_0001257": {
+        "class": "BasketballDunk",
+        "score": 1.0
+    },
+    "video_test_0000028": {
+        "class": "GolfSwing",
+        "score": 1.0
+    },
+    "video_validation_0000202": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_validation_0000203": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_validation_0000201": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_validation_0000206": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_validation_0000207": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_validation_0000204": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_validation_0000205": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_validation_0000208": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_validation_0000209": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_test_0001174": {
+        "class": "ThrowDiscus",
+        "score": 1.0
+    },
+    "video_test_0001512": {
+        "class": "FrisbeeCatch",
+        "score": 1.0
+    },
+    "video_validation_0000187": {
+        "class": "CricketBowling",
+        "score": 1.0
+    },
+    "video_validation_0000290": {
+        "class": "GolfSwing",
+        "score": 1.0
+    },
+    "video_validation_0000059": {
+        "class": "Billiards",
+        "score": 1.0
+    },
+    "video_validation_0000058": {
+        "class": "Billiards",
+        "score": 1.0
+    },
+    "video_test_0000807": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_validation_0000056": {
+        "class": "Billiards",
+        "score": 1.0
+    },
+    "video_validation_0000055": {
+        "class": "Billiards",
+        "score": 1.0
+    },
+    "video_validation_0000054": {
+        "class": "Billiards",
+        "score": 1.0
+    },
+    "video_validation_0000053": {
+        "class": "Billiards",
+        "score": 1.0
+    },
+    "video_validation_0000052": {
+        "class": "Billiards",
+        "score": 1.0
+    },
+    "video_validation_0000051": {
+        "class": "Billiards",
+        "score": 1.0
+    },
+    "video_test_0000278": {
+        "class": "CliffDiving",
+        "score": 1.0
+    },
+    "video_test_0000273": {
+        "class": "CricketShot",
+        "score": 1.0
+    },
+    "video_test_0000374": {
+        "class": "TennisSwing",
+        "score": 1.0
+    },
+    "video_test_0000372": {
+        "class": "HammerThrow",
+        "score": 1.0
+    },
+    "video_test_0000379": {
+        "class": "LongJump",
+        "score": 1.0
+    },
+    "video_test_0000873": {
+        "class": "BaseballPitch",
+        "score": 1.0
+    },
+    "video_test_0000051": {
+        "class": "Billiards",
+        "score": 1.0
+    },
+    "video_validation_0000370": {
+        "class": "HighJump",
+        "score": 1.0
+    },
+    "video_test_0000058": {
+        "class": "CleanAndJerk",
+        "score": 1.0
+    },
+    "video_test_0000504": {
+        "class": "CleanAndJerk",
+        "score": 1.0
+    },
+    "video_test_0000505": {
+        "class": "CleanAndJerk",
+        "score": 1.0
+    },
+    "video_test_0000577": {
+        "class": "Billiards",
+        "score": 1.0
+    },
+    "video_validation_0000181": {
+        "class": "CricketBowling",
+        "score": 1.0
+    },
+    "video_validation_0000180": {
+        "class": "CricketBowling",
+        "score": 1.0
+    },
+    "video_validation_0000183": {
+        "class": "CricketBowling",
+        "score": 1.0
+    },
+    "video_validation_0000182": {
+        "class": "CricketShot",
+        "score": 1.0
+    },
+    "video_validation_0000185": {
+        "class": "CricketShot",
+        "score": 1.0
+    },
+    "video_validation_0000184": {
+        "class": "CricketBowling",
+        "score": 1.0
+    },
+    "video_test_0001459": {
+        "class": "LongJump",
+        "score": 1.0
+    },
+    "video_validation_0000186": {
+        "class": "CricketShot",
+        "score": 1.0
+    },
+    "video_validation_0000189": {
+        "class": "CricketBowling",
+        "score": 1.0
+    },
+    "video_validation_0000188": {
+        "class": "CricketBowling",
+        "score": 1.0
+    },
+    "video_test_0001452": {
+        "class": "VolleyballSpiking",
+        "score": 1.0
+    },
+    "video_test_0000188": {
+        "class": "HighJump",
+        "score": 1.0
+    },
+    "video_test_0000591": {
+        "class": "SoccerPenalty",
+        "score": 1.0
+    },
+    "video_test_0000593": {
+        "class": "Shotput",
+        "score": 1.0
+    },
+    "video_test_0000601": {
+        "class": "BasketballDunk",
+        "score": 1.0
+    },
+    "video_test_0000602": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_test_0001229": {
+        "class": "HammerThrow",
+        "score": 1.0
+    },
+    "video_test_0001223": {
+        "class": "ThrowDiscus",
+        "score": 1.0
+    },
+    "video_test_0001358": {
+        "class": "CricketShot",
+        "score": 1.0
+    },
+    "video_test_0000698": {
+        "class": "CleanAndJerk",
+        "score": 1.0
+    },
+    "video_test_0001058": {
+        "class": "HammerThrow",
+        "score": 1.0
+    },
+    "video_test_0000989": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_test_0000987": {
+        "class": "ThrowDiscus",
+        "score": 1.0
+    },
+    "video_test_0000981": {
+        "class": "CricketBowling",
+        "score": 1.0
+    },
+    "video_test_0000714": {
+        "class": "BaseballPitch",
+        "score": 1.0
+    },
+    "video_validation_0000174": {
+        "class": "CricketBowling",
+        "score": 1.0
+    },
+    "video_test_0001129": {
+        "class": "Shotput",
+        "score": 1.0
+    },
+    "video_test_0001123": {
+        "class": "PoleVault",
+        "score": 1.0
+    },
+    "video_test_0001127": {
+        "class": "GolfSwing",
+        "score": 1.0
+    },
+    "video_validation_0000787": {
+        "class": "Shotput",
+        "score": 1.0
+    },
+    "video_validation_0000786": {
+        "class": "ThrowDiscus",
+        "score": 1.0
+    },
+    "video_validation_0000785": {
+        "class": "Shotput",
+        "score": 1.0
+    },
+    "video_validation_0000784": {
+        "class": "Shotput",
+        "score": 1.0
+    },
+    "video_validation_0000783": {
+        "class": "Shotput",
+        "score": 1.0
+    },
+    "video_validation_0000782": {
+        "class": "Shotput",
+        "score": 1.0
+    },
+    "video_validation_0000781": {
+        "class": "Shotput",
+        "score": 1.0
+    },
+    "video_validation_0000789": {
+        "class": "Shotput",
+        "score": 1.0
+    },
+    "video_validation_0000788": {
+        "class": "Shotput",
+        "score": 1.0
+    },
+    "video_validation_0000152": {
+        "class": "CleanAndJerk",
+        "score": 1.0
+    },
+    "video_validation_0000153": {
+        "class": "CleanAndJerk",
+        "score": 1.0
+    },
+    "video_validation_0000151": {
+        "class": "CleanAndJerk",
+        "score": 1.0
+    },
+    "video_validation_0000156": {
+        "class": "CleanAndJerk",
+        "score": 1.0
+    },
+    "video_validation_0000157": {
+        "class": "CleanAndJerk",
+        "score": 1.0
+    },
+    "video_validation_0000154": {
+        "class": "CleanAndJerk",
+        "score": 1.0
+    },
+    "video_validation_0000155": {
+        "class": "CleanAndJerk",
+        "score": 1.0
+    },
+    "video_validation_0000158": {
+        "class": "CleanAndJerk",
+        "score": 1.0
+    },
+    "video_validation_0000159": {
+        "class": "CleanAndJerk",
+        "score": 1.0
+    },
+    "video_test_0000238": {
+        "class": "GolfSwing",
+        "score": 1.0
+    },
+    "video_test_0000691": {
+        "class": "Shotput",
+        "score": 1.0
+    },
+    "video_test_0000429": {
+        "class": "VolleyballSpiking",
+        "score": 1.0
+    },
+    "video_test_0000785": {
+        "class": "CliffDiving",
+        "score": 1.0
+    },
+    "video_test_0000786": {
+        "class": "CricketShot",
+        "score": 1.0
+    },
+    "video_test_0000392": {
+        "class": "CricketShot",
+        "score": 1.0
+    },
+    "video_test_0000423": {
+        "class": "TennisSwing",
+        "score": 1.0
+    },
+    "video_test_0000426": {
+        "class": "VolleyballSpiking",
+        "score": 1.0
+    },
+    "video_test_0000737": {
+        "class": "CleanAndJerk",
+        "score": 1.0
+    },
+    "video_test_0000308": {
+        "class": "HighJump",
+        "score": 1.0
+    },
+    "video_test_0000730": {
+        "class": "CliffDiving",
+        "score": 1.0
+    },
+    "video_test_0001313": {
+        "class": "CricketShot",
+        "score": 1.0
+    },
+    "video_validation_0000320": {
+        "class": "HammerThrow",
+        "score": 1.0
+    },
+    "video_test_0000940": {
+        "class": "CliffDiving",
+        "score": 1.0
+    },
+    "video_test_0000946": {
+        "class": "BaseballPitch",
+        "score": 1.0
+    },
+    "video_test_0001066": {
+        "class": "Shotput",
+        "score": 1.0
+    },
+    "video_test_0001064": {
+        "class": "BasketballDunk",
+        "score": 1.0
+    },
+    "video_test_0001549": {
+        "class": "FrisbeeCatch",
+        "score": 1.0
+    },
+    "video_test_0000011": {
+        "class": "Shotput",
+        "score": 1.0
+    },
+    "video_test_0000541": {
+        "class": "SoccerPenalty",
+        "score": 1.0
+    },
+    "video_test_0000549": {
+        "class": "CricketShot",
+        "score": 1.0
+    },
+    "video_test_0001463": {
+        "class": "VolleyballSpiking",
+        "score": 1.0
+    },
+    "video_test_0001460": {
+        "class": "CricketShot",
+        "score": 1.0
+    },
+    "video_test_0001468": {
+        "class": "CleanAndJerk",
+        "score": 1.0
+    },
+    "video_test_0001268": {
+        "class": "Shotput",
+        "score": 1.0
+    },
+    "video_test_0001307": {
+        "class": "CleanAndJerk",
+        "score": 1.0
+    },
+    "video_test_0001309": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_test_0001267": {
+        "class": "Billiards",
+        "score": 1.0
+    },
+    "video_test_0001281": {
+        "class": "LongJump",
+        "score": 1.0
+    },
+    "video_validation_0000210": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_test_0001114": {
+        "class": "Shotput",
+        "score": 1.0
+    },
+    "video_test_0001118": {
+        "class": "SoccerPenalty",
+        "score": 1.0
+    },
+    "video_test_0001164": {
+        "class": "HammerThrow",
+        "score": 1.0
+    },
+    "video_test_0001163": {
+        "class": "GolfSwing",
+        "score": 1.0
+    },
+    "video_test_0001162": {
+        "class": "PoleVault",
+        "score": 1.0
+    },
+    "video_test_0001168": {
+        "class": "TennisSwing",
+        "score": 1.0
+    },
+    "video_validation_0000261": {
+        "class": "FrisbeeCatch",
+        "score": 1.0
+    },
+    "video_validation_0000262": {
+        "class": "FrisbeeCatch",
+        "score": 1.0
+    },
+    "video_validation_0000263": {
+        "class": "FrisbeeCatch",
+        "score": 1.0
+    },
+    "video_validation_0000264": {
+        "class": "FrisbeeCatch",
+        "score": 1.0
+    },
+    "video_validation_0000265": {
+        "class": "FrisbeeCatch",
+        "score": 1.0
+    },
+    "video_validation_0000266": {
+        "class": "BaseballPitch",
+        "score": 1.0
+    },
+    "video_validation_0000267": {
+        "class": "FrisbeeCatch",
+        "score": 1.0
+    },
+    "video_validation_0000268": {
+        "class": "FrisbeeCatch",
+        "score": 1.0
+    },
+    "video_validation_0000269": {
+        "class": "FrisbeeCatch",
+        "score": 1.0
+    },
+    "video_validation_0000060": {
+        "class": "Billiards",
+        "score": 1.0
+    },
+    "video_test_0000292": {
+        "class": "SoccerPenalty",
+        "score": 1.0
+    },
+    "video_test_0000293": {
+        "class": "JavelinThrow",
+        "score": 1.0
+    },
+    "video_validation_0000668": {
+        "class": "PoleVault",
+        "score": 1.0
+    },
+    "video_validation_0000669": {
+        "class": "PoleVault",
+        "score": 1.0
+    },
+    "video_validation_0000664": {
+        "class": "PoleVault",
+        "score": 1.0
+    },
+    "video_validation_0000665": {
+        "class": "LongJump",
+        "score": 1.0
+    },
+    "video_validation_0000666": {
+        "class": "PoleVault",
+        "score": 1.0
+    },
+    "video_validation_0000667": {
+        "class": "PoleVault",
+        "score": 1.0
+    },
+    "video_validation_0000661": {
+        "class": "PoleVault",
+        "score": 1.0
+    },
+    "video_validation_0000662": {
+        "class": "PoleVault",
+        "score": 1.0
+    },
+    "video_validation_0000663": {
+        "class": "PoleVault",
+        "score": 1.0
+    },
+    "video_test_0000864": {
+        "class": "JavelinThrow",
+        "score": 1.0
+    },
+    "video_validation_0000369": {
+        "class": "HighJump",
+        "score": 1.0
+    },
+    "video_test_0000903": {
+        "class": "BasketballDunk",
+        "score": 1.0
+    },
+    "video_validation_0000365": {
+        "class": "HighJump",
+        "score": 1.0
+    },
+    "video_validation_0000364": {
+        "class": "HighJump",
+        "score": 1.0
+    },
+    "video_validation_0000367": {
+        "class": "HighJump",
+        "score": 1.0
+    },
+    "video_validation_0000366": {
+        "class": "HighJump",
+        "score": 1.0
+    },
+    "video_validation_0000361": {
+        "class": "HighJump",
+        "score": 1.0
+    },
+    "video_test_0000046": {
+        "class": "GolfSwing",
+        "score": 1.0
+    },
+    "video_validation_0000363": {
+        "class": "HighJump",
+        "score": 1.0
+    },
+    "video_validation_0000489": {
+        "class": "LongJump",
+        "score": 1.0
+    },
+    "video_test_0000464": {
+        "class": "PoleVault",
+        "score": 1.0
+    },
+    "video_test_0000461": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_validation_0000484": {
+        "class": "LongJump",
+        "score": 1.0
+    },
+    "video_test_0001446": {
+        "class": "JavelinThrow",
+        "score": 1.0
+    },
+    "video_test_0001447": {
+        "class": "BaseballPitch",
+        "score": 1.0
+    },
+    "video_test_0001508": {
+        "class": "FrisbeeCatch",
+        "score": 1.0
+    },
+    "video_validation_0000318": {
+        "class": "HammerThrow",
+        "score": 1.0
+    },
+    "video_validation_0000319": {
+        "class": "HammerThrow",
+        "score": 1.0
+    },
+    "video_validation_0000311": {
+        "class": "HammerThrow",
+        "score": 1.0
+    },
+    "video_validation_0000312": {
+        "class": "HammerThrow",
+        "score": 1.0
+    },
+    "video_validation_0000313": {
+        "class": "HammerThrow",
+        "score": 1.0
+    },
+    "video_validation_0000314": {
+        "class": "HammerThrow",
+        "score": 1.0
+    },
+    "video_validation_0000315": {
+        "class": "HammerThrow",
+        "score": 1.0
+    },
+    "video_validation_0000316": {
+        "class": "HammerThrow",
+        "score": 1.0
+    },
+    "video_validation_0000317": {
+        "class": "HammerThrow",
+        "score": 1.0
+    },
+    "video_test_0001484": {
+        "class": "SoccerPenalty",
+        "score": 1.0
+    },
+    "video_test_0000635": {
+        "class": "CleanAndJerk",
+        "score": 1.0
+    },
+    "video_test_0001339": {
+        "class": "CliffDiving",
+        "score": 1.0
+    },
+    "video_test_0000324": {
+        "class": "BaseballPitch",
+        "score": 1.0
+    },
+    "video_test_0001483": {
+        "class": "CleanAndJerk",
+        "score": 1.0
+    },
+    "video_test_0000689": {
+        "class": "SoccerPenalty",
+        "score": 1.0
+    },
+    "video_validation_0000856": {
+        "class": "SoccerPenalty",
+        "score": 1.0
+    },
+    "video_validation_0000855": {
+        "class": "SoccerPenalty",
+        "score": 1.0
+    },
+    "video_validation_0000854": {
+        "class": "SoccerPenalty",
+        "score": 1.0
+    },
+    "video_validation_0000853": {
+        "class": "SoccerPenalty",
+        "score": 1.0
+    },
+    "video_validation_0000852": {
+        "class": "SoccerPenalty",
+        "score": 1.0
+    },
+    "video_validation_0000851": {
+        "class": "SoccerPenalty",
+        "score": 1.0
+    },
+    "video_test_0001431": {
+        "class": "HammerThrow",
+        "score": 1.0
+    },
+    "video_test_0000129": {
+        "class": "Shotput",
+        "score": 1.0
+    },
+    "video_test_0001433": {
+        "class": "FrisbeeCatch",
+        "score": 1.0
+    },
+    "video_test_0001343": {
+        "class": "BasketballDunk",
+        "score": 1.0
+    },
+    "video_validation_0000859": {
+        "class": "SoccerPenalty",
+        "score": 1.0
+    },
+    "video_validation_0000858": {
+        "class": "SoccerPenalty",
+        "score": 1.0
+    },
+    "video_test_0000413": {
+        "class": "FrisbeeCatch",
+        "score": 1.0
+    },
+    "video_test_0000991": {
+        "class": "SoccerPenalty",
+        "score": 1.0
+    },
+    "video_test_0001159": {
+        "class": "JavelinThrow",
+        "score": 1.0
+    },
+    "video_test_0001153": {
+        "class": "SoccerPenalty",
+        "score": 1.0
+    },
+    "video_test_0001235": {
+        "class": "PoleVault",
+        "score": 1.0
+    },
+    "video_validation_0000943": {
+        "class": "ThrowDiscus",
+        "score": 1.0
+    },
+    "video_test_0000740": {
+        "class": "CleanAndJerk",
+        "score": 1.0
+    },
+    "video_test_0000220": {
+        "class": "HighJump",
+        "score": 1.0
+    },
+    "video_validation_0000688": {
+        "class": "BaseballPitch",
+        "score": 1.0
+    },
+    "video_validation_0000689": {
+        "class": "BaseballPitch",
+        "score": 1.0
+    },
+    "video_validation_0000686": {
+        "class": "BaseballPitch",
+        "score": 1.0
+    },
+    "video_validation_0000687": {
+        "class": "BaseballPitch",
+        "score": 1.0
+    },
+    "video_validation_0000684": {
+        "class": "BaseballPitch",
+        "score": 1.0
+    },
+    "video_validation_0000685": {
+        "class": "BaseballPitch",
+        "score": 1.0
+    },
+    "video_validation_0000682": {
+        "class": "BaseballPitch",
+        "score": 1.0
+    },
+    "video_validation_0000683": {
+        "class": "BaseballPitch",
+        "score": 1.0
+    },
+    "video_validation_0000681": {
+        "class": "BaseballPitch",
+        "score": 1.0
+    },
+    "video_test_0000796": {
+        "class": "CricketShot",
+        "score": 1.0
+    },
+    "video_test_0000793": {
+        "class": "PoleVault",
+        "score": 1.0
+    },
+    "video_test_0000412": {
+        "class": "Billiards",
+        "score": 1.0
+    },
+    "video_test_0000798": {
+        "class": "CricketShot",
+        "score": 1.0
+    },
+    "video_test_0000701": {
+        "class": "SoccerPenalty",
+        "score": 1.0
+    },
+    "video_test_0000250": {
+        "class": "BasketballDunk",
+        "score": 1.0
+    },
+    "video_test_0000254": {
+        "class": "Diving",
+        "score": 1.0
+    },
+    "video_test_0000319": {
+        "class": "ThrowDiscus",
+        "score": 1.0
+    },
+    "video_test_0000270": {
+        "class": "HammerThrow",
+        "score": 1.0
+    },
+    "video_test_0001496": {
+        "class": "CricketShot",
+        "score": 1.0
+    }
+}

@@ -25,6 +25,7 @@ dataset:
     crop_size: 96 # for AFSD
     clip_length: 256 # for AFSD
     clip_stride: 128 # for AFSD
+    best_score: "thumos_best_score.json"
 
 model:
   embedding_head: 4
