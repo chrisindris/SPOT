@@ -292,3 +292,183 @@ test_loader
 training: len(train_loader) 1
 training: len(train_loader_pretrain) 1
 training: len(test_loader) 10
+(48505618432, 84987740160)
+{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
+loading video frame data ...
+loading video frame data ...
+loading video frame data ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 7
+batch_size 20
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 1
+training: len(train_loader_pretrain) 1
+training: len(test_loader) 10
+(48505618432, 84987740160)
+{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
+loading video frame data ...
+loading video frame data ...
+loading video frame data ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 7
+batch_size 20
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 1
+training: len(train_loader_pretrain) 1
+training: len(test_loader) 10
+(48505618432, 84987740160)
+{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
+loading video frame data ...
+loading video frame data ...
+loading video frame data ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 7
+batch_size 20
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 1
+training: len(train_loader_pretrain) 1
+training: len(test_loader) 10
+(48505618432, 84987740160)
+{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
+loading video frame data ...
+loading video frame data ...
+loading video frame data ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 7
+batch_size 20
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 1
+training: len(train_loader_pretrain) 1
+training: len(test_loader) 10
+(48505618432, 84987740160)
+{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
+loading video frame data ...
+loading video frame data ...
+loading video frame data ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 7
+batch_size 20
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 1
+training: len(train_loader_pretrain) 1
+training: len(test_loader) 10
+(48505618432, 84987740160)
+{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
+loading video frame data ...
+loading video frame data ...
+loading video frame data ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 7
+batch_size 20
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 1
+training: len(train_loader_pretrain) 1
+training: len(test_loader) 10
+(48505618432, 84987740160)
+{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
+loading video frame data ...
+loading video frame data ...
+loading video frame data ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 7
+batch_size 20
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 1
+training: len(train_loader_pretrain) 1
+training: len(test_loader) 10
+(61826727936, 84987740160)
+{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
+loading video frame data ...
+loading video frame data ...
+loading video frame data ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 7
+batch_size 20
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 1
+training: len(train_loader_pretrain) 1
+training: len(test_loader) 10
+(61826727936, 84987740160)
+{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
+loading video frame data ...
+loading video frame data ...
+loading video frame data ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 7
+batch_size 20
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 1
+training: len(train_loader_pretrain) 1
+training: len(test_loader) 10
+(61826727936, 84987740160)
+{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
+loading video frame data ...
+loading video frame data ...
+loading video frame data ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 7
+batch_size 20
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 1
+training: len(train_loader_pretrain) 1
+training: len(test_loader) 10
+(61826727936, 84987740160)
+{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
+loading video frame data ...
+loading video frame data ...
+loading video frame data ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 7
+batch_size 20
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 1
+training: len(train_loader_pretrain) 1
+training: len(test_loader) 10
+(48914563072, 84987740160)
+{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
+loading video frame data ...
+loading video frame data ...
+loading video frame data ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 7
+batch_size 20
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 1
+training: len(train_loader_pretrain) 1
+training: len(test_loader) 10

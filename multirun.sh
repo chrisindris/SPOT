@@ -32,7 +32,7 @@ if (( gpu == 0 )); then
 else
   output_pth="./output_2/"
  
-  ./spot_train_eval.sh "$gpu" ANET.txt ./configs/anet.yaml \
+  ./spot_train_eval.sh "$gpu" THUMOS_2.txt ./configs/thumos.yaml \
     pretraining.warmup_epoch=10 \
     pretraining.consecutive_warmup_epochs=10 \
     training.max_epoch=10 \

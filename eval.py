@@ -31,15 +31,16 @@ output_path = config['dataset']['testing']['output_path']
 nms_thresh = config['testing']['nms_thresh']
 
 if dataset_name == 'anet':
-    Detection = ANETdetection
-elif dataset_name == 'thumos':
-    Detection = THUMOSdetection
-
-# from evaluation.eval_proposal import ANETproposal
-detection = Detection(
+    detection = ANETdetection(
     ground_truth_filename="./evaluation/activity_net_1_3_new.json",
     prediction_filename=os.path.join(output_path, "detection_result_nms{}.json".format(nms_thresh)),
     subset='validation', verbose=False, check_status=False)
+elif dataset_name == 'thumos':
+    detection = THUMOSdetection(
+    ground_truth_filename="./data/thumos_annotations/test_Annotation_ours.csv",
+    prediction_filename=os.path.join(output_path, "detection_result_nms{}.json".format(nms_thresh)),
+    subset='testing', verbose=False, check_status=False)
+
 detection.evaluate()
 
 mAP_at_tIoU = [f'mAP@{t:.2f} {mAP*100:.3f}' for t, mAP in zip(detection.tiou_thresholds, detection.mAP)]

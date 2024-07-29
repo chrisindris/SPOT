@@ -16,7 +16,7 @@ warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
 pred_data = pd.read_csv("spot_output_semi.csv")
 pred_videos = list(pred_data.video_name.values[:])
 
-
+"""
 class Detection:
     GROUND_TRUTH_FIELDS = ['database']
     # GROUND_TRUTH_FIELDS = ['database', 'taxonomy', 'version']
@@ -61,7 +61,7 @@ class Detection:
 
     def evaluate(self):
         raise NotImplementedError("Subclasses of Detection should implement evaluate")
-
+"""
 
 # --------------------------------------------------------------------------------------
 
@@ -129,40 +129,14 @@ class THUMOSdetection(object):
         activity_index : dict
             Dictionary containing class index.
         """
-        with open(ground_truth_filename, 'r') as fobj:
-            data = json.load(fobj)
-        # Checking format
-        if not all([field in data.keys() for field in self.gt_fields]):
-            raise IOError('Please input a valid ground truth file.')
 
-        # Read ground truth data.
-        activity_index, cidx = {}, 0
-        video_lst, t_start_lst, t_end_lst, label_lst = [], [], [], []
-        for videoid, v in data['database'].items():
-            # print(videoid, pred_videos[2:])
-            if "v_"+videoid in pred_videos:
-                
-                # print(v)
-                if self.subset != v['subset']:
-                    continue
-                if videoid in self.blocked_videos:
-                    continue
-                for ann in v['annotations']:
-                    if ann['label'] not in activity_index:
-                        activity_index[ann['label']] = cidx
-                        cidx += 1
-                    video_lst.append(videoid)
-                    t_start_lst.append(float(ann['segment'][0]))
-                    t_end_lst.append(float(ann['segment'][1]))
-                    label_lst.append(activity_index[ann['label']])
+        data = pd.read_csv(ground_truth_filename)
 
-        ground_truth = pd.DataFrame({'video-id': video_lst,
-                                     't-start': t_start_lst,
-                                     't-end': t_end_lst,
-                                     'label': label_lst})
-        if self.verbose:
-            print(activity_index)
-        return ground_truth, activity_index
+        ground_truth = data[['video', 'start', 'end', 'type']]
+        ground_truth.columns = ['video-id', 't-start', 't-end', 'label']
+        ground_truth.loc[:, 'label'] = ground_truth.apply(lambda r: thumos_dict[r['label']], axis=1).values
+
+        return ground_truth, thumos_dict
 
     def _import_prediction(self, prediction_filename):
         """Reads prediction file, checks if it is well formatted, and returns
@@ -225,20 +199,20 @@ class THUMOSdetection(object):
     def wrapper_compute_average_precision(self):
         """Computes average precision for each class in the subset.
         """
-        ap = np.zeros((len(self.tiou_thresholds), len(self.activity_index)))
+        ap = np.zeros((len(self.tiou_thresholds), len(self.thumos_index)))
 
         # Adaptation to query faster
         ground_truth_by_label = self.ground_truth.groupby('label') # video-id, t-start, t-end, label - the ground truth actions  
         prediction_by_label = self.prediction.groupby('label') # video-id, t-start, t-end, label, score - the prediction actions
 
-        results = Parallel(n_jobs=len(self.activity_index))(
+        results = Parallel(n_jobs=1)(#len(self.thumos_index))(
                     delayed(compute_average_precision_detection)(
                         ground_truth=ground_truth_by_label.get_group(cidx).reset_index(drop=True),
                         prediction=self._get_predictions_with_label(prediction_by_label, label_name, cidx),
                         tiou_thresholds=self.tiou_thresholds,
-                    ) for label_name, cidx in self.activity_index.items())
+                    ) for label_name, cidx in self.thumos_index.items())
 
-        for i, cidx in enumerate(self.activity_index.values()):
+        for i, cidx in enumerate(self.thumos_index.values()):
             ap[:,cidx] = results[i]
 
         return ap
@@ -431,7 +405,7 @@ class ANETdetection(object):
         ground_truth_by_label = self.ground_truth.groupby('label') # video-id, t-start, t-end, label - the ground truth actions
         prediction_by_label = self.prediction.groupby('label') # video-id, t-start, t-end, label, score - the prediction actions
 
-        results = Parallel(n_jobs=1)(#len(self.activity_index))(
+        results = Parallel(n_jobs=len(self.activity_index))(
                     delayed(compute_average_precision_detection)(
                         ground_truth=ground_truth_by_label.get_group(cidx).reset_index(drop=True),
                         prediction=self._get_predictions_with_label(prediction_by_label, label_name, cidx),
@@ -483,7 +457,7 @@ def compute_average_precision_detection(ground_truth, prediction, tiou_threshold
         Average precision score.
     """
 
-    breakpoint()
+    #breakpoint()
 
     ap = np.zeros(len(tiou_thresholds))
     if prediction.empty:
