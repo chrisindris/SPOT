@@ -18,6 +18,7 @@ dataset:
     video_info_path: "data/thumos_annotations/test_video_info_new.csv" # from AFSD 
     video_info_path_unlabeled: "./data/activitynet_annotations/"
     video_anno_path: "data/thumos_annotations/test_Annotation_ours.csv" # from AFSD
+    video_anno_path_json: "data/thumos_annotations/thumos_anno_action.json"
     num_frame: 16
     output_path: '/root/models/SPOT/thumos_output/'
     unlabel_percent: 0.9

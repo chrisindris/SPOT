@@ -14,6 +14,7 @@ dataset:
     video_info_path: "./data/activitynet_annotations/video_info_new.csv"
     video_info_path_unlabeled: "./data/activitynet_annotations/"
     video_anno_path: "./data/activitynet_annotations/anet_anno_action.json"
+    video_anno_path_json: "./data/activitynet_annotations/anet_anno_action.json"
     num_frame: 16 # the number of frames in the snippet. The paper seems to think that the clips are equidistant; they seem to be 3 apart.
     output_path: '/root/models/SPOT/output/'
     unlabel_percent: 0.9 # Never used

@@ -137,30 +137,34 @@ def compute_average_precision_detection(ground_truth, prediction, tiou_threshold
         try:
             # Check if there is at least one ground truth in the video associated.
             ground_truth_videoid = ground_truth_gbvn.get_group(this_pred['video-name'])
+            if len(ground_truth_videoid) > 1:
+                breakpoint()
         except Exception as e:
-            fp[:, idx] = 1
+            fp[:, idx] = 1 # a false positive, since there is a prediction by the model but no action in the ground truth.
             continue
 
         this_gt = ground_truth_videoid.reset_index()
-        tiou_arr = segment_iou(this_pred[['t-start', 't-end']].values,
+        tiou_arr = segment_iou(this_pred[['t-start', 't-end']].values, # this_pred is a single prediction, but this_gt could be more than one (equal to the number of gt actions in the video)
                                this_gt[['t-start', 't-end']].values)
         # We would like to retrieve the predictions with highest tiou score.
         tiou_sorted_idx = tiou_arr.argsort()[::-1]
         for tidx, tiou_thr in enumerate(tiou_thresholds):
             for jdx in tiou_sorted_idx:
                 if tiou_arr[jdx] < tiou_thr:
-                    fp[tidx, idx] = 1
-                    break
-                if lock_gt[tidx, gt_id_to_index[this_gt.loc[jdx]['gt-id']]] >= 0:
+                    fp[tidx, idx] = 1 # scored as a false positive if the prediction is made but does not meet the iou requirements (not enough overlap)
+                    break # break rather than continue, since the next overlap of a predicted action will be no bigger than the current one.
+                if lock_gt[tidx, gt_id_to_index[this_gt.loc[jdx]['gt-id']]] >= 0: # if it has already been given an index (ie. no longer the default of -1)
                     continue
                 # Assign as true positive after the filters above.
                 tp[tidx, idx] = 1
-                lock_gt[tidx, gt_id_to_index[this_gt.loc[jdx]['gt-id']]] = idx
+                lock_gt[tidx, gt_id_to_index[this_gt.loc[jdx]['gt-id']]] = idx # assuming the IoU requirement is met, the action at an IoU gets a class index.
                 break
 
             if fp[tidx, idx] == 0 and tp[tidx, idx] == 0:
                 fp[tidx, idx] = 1
 
+    # --- computations for ap --
+    # we make them cumulative down the axis, since the IoUs are subsets (significant at IoU=0.95 => significant at IoU=0.9...)
     tp_cumsum = np.cumsum(tp, axis=1).astype(np.float)
     fp_cumsum = np.cumsum(fp, axis=1).astype(np.float)
     recall_cumsum = tp_cumsum / npos
@@ -168,6 +172,6 @@ def compute_average_precision_detection(ground_truth, prediction, tiou_threshold
     precision_cumsum = recall_cumsum * npos / (recall_cumsum * npos + fp_cumsum)
     
     for tidx in range(len(tiou_thresholds)):
-        ap[tidx] = interpolated_prec_rec(precision_cumsum[tidx,:], recall_cumsum[tidx,:])
+        ap[tidx] = interpolated_prec_rec(precision_cumsum[tidx,:], recall_cumsum[tidx,:]) # the final average precision calculation
 
     return ap

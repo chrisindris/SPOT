@@ -6,7 +6,6 @@ import torch.nn.parallel
 import itertools,operator
 # from gsm_lib import opts
 from spot_model import SPOT
-import spot_lib.spot_dataloader as spot_dataset
 from scipy import ndimage
 from scipy.special import softmax
 import torch.nn.functional as F
@@ -24,7 +23,6 @@ from utils.arguments import handle_args, modify_config
 import pdb
 import warnings
 import re
-from spot_lib.thumos_dataset import THUMOS_Dataset
 
 with open(sys.argv[1], 'r', encoding='utf-8') as f:
         tmp = f.read()
@@ -90,17 +88,23 @@ def post_process_multi(detection_thread,get_infer_dict):
     cls_data_score, cls_data_cls = {}, {}
     best_cls = load_json(best_score)
     
+    #breakpoint()
+
     for idx, vid in enumerate(infer_dict.keys()):
         if vid in pred_videos:
-            vid = vid[2:] 
-            cls_data_cls[vid] = best_cls["v_"+vid]["class"] 
+            if dataset_name == 'anet':
+                vid = vid[2:] 
+                cls_data_cls[vid] = best_cls["v_"+vid]["class"]
+            else:
+                cls_data_cls[vid] = best_cls[vid]["class"]
 
-    parallel = Parallel(n_jobs=1, prefer="processes") # n_jobs=15
-    detection = parallel(delayed(detection_thread)(vid, video_cls, infer_dict['v_'+vid], label_dict, pred_data, best_cls)
+
+    parallel = Parallel(n_jobs=15, prefer="processes") # n_jobs=15
+    detection = parallel(delayed(detection_thread)(vid, video_cls, infer_dict['v_'+vid if dataset_name == 'anet' else vid], label_dict, pred_data, best_cls)
                         for vid, video_cls in cls_data_cls.items())
     detection_dict = {}
     [detection_dict.update(d) for d in detection]
-    output_dict = {"version": "ANET v1.3, SPOT", "results": detection_dict, "external_data": {}}
+    output_dict = {"version": dataset_name, "results": detection_dict, "external_data": {}}
 
     with open(output_path + '/detection_result_nms{}.json'.format(nms_thres), "w") as out:
         json.dump(output_dict, out, indent=4)
@@ -147,10 +151,12 @@ if __name__ == '__main__':
     if not os.path.exists(output_path + "/results"):
         os.makedirs(output_path + "/results")
 
-    if dataset_name == 'anet': 
+    if dataset_name == 'anet':
+        import spot_lib.spot_dataloader as spot_dataset
         dataset = spot_dataset.SPOTDataset(subset='validation', mode='inference')
         class_dictionary = activity_dict
     elif dataset_name == 'thumos':
+        from spot_lib.thumos_dataset import THUMOS_Dataset
         dataset = THUMOS_Dataset(training=False, subset='testing', mode='inference')
         class_dictionary = thumos_dict 
 

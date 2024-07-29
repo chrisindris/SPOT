@@ -1,0 +1,692 @@
+(42195288064, 84987740160)
+{'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'video_anno_path_json': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'best_score': 'spot_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 400, 'temporal_scale': 100}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 25, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1, 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
+Loading train Video Information ...
+Loading unlabel Video Information ...
+Loading validation Video Information ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 295
+batch_size 25
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 31
+training: len(train_loader_pretrain) 31
+training: len(test_loader) 154
+(42195288064, 84987740160)
+{'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'video_anno_path_json': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'best_score': 'spot_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 400, 'temporal_scale': 100}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 25, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1, 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
+Loading train Video Information ...
+Loading unlabel Video Information ...
+Loading validation Video Information ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 295
+batch_size 25
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 31
+training: len(train_loader_pretrain) 31
+training: len(test_loader) 154
+(42195288064, 84987740160)
+{'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'video_anno_path_json': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'best_score': 'spot_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 400, 'temporal_scale': 100}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 25, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1, 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
+Loading train Video Information ...
+Loading unlabel Video Information ...
+Loading validation Video Information ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 295
+batch_size 25
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 31
+training: len(train_loader_pretrain) 31
+training: len(test_loader) 154
+{'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'video_anno_path_json': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'best_score': 'spot_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 400, 'temporal_scale': 100}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 25, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1, 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
+
+Total Number of Learnable Paramters (in M) :  6.67706
+No of Gpus using to Train :  1 
+ Saving all Checkpoints in path : ./output_2/
+Loading train Video Information ...
+  0% 0/9649 [00:00<?, ?it/s]  7% 687/9649 [00:00<00:01, 6866.78it/s] 14% 1374/9649 [00:00<00:01, 6366.02it/s] 21% 2014/9649 [00:00<00:01, 5855.60it/s] 27% 2604/9649 [00:00<00:01, 5365.80it/s] 33% 3147/9649 [00:00<00:01, 5209.42it/s] 38% 3671/9649 [00:00<00:01, 5144.09it/s] 43% 4187/9649 [00:00<00:01, 5118.66it/s] 49% 4700/9649 [00:00<00:00, 5063.39it/s] 54% 5207/9649 [00:00<00:00, 5021.70it/s] 59% 5711/9649 [00:01<00:00, 5024.27it/s] 64% 6214/9649 [00:01<00:00, 5014.22it/s] 70% 6716/9649 [00:01<00:00, 4902.67it/s] 75% 7207/9649 [00:01<00:00, 4784.63it/s] 80% 7687/9649 [00:01<00:00, 4713.68it/s] 85% 8159/9649 [00:01<00:00, 4664.51it/s] 89% 8626/9649 [00:01<00:00, 4133.95it/s] 94% 9050/9649 [00:01<00:00, 3974.18it/s] 98% 9501/9649 [00:01<00:00, 4115.86it/s]100% 9649/9649 [00:02<00:00, 4806.79it/s]
+Loading unlabel Video Information ...
+  0% 0/8683 [00:00<?, ?it/s]  7% 629/8683 [00:00<00:01, 6283.37it/s] 14% 1258/8683 [00:00<00:01, 6010.47it/s] 21% 1860/8683 [00:00<00:01, 5847.11it/s] 28% 2446/8683 [00:00<00:01, 5630.91it/s] 35% 3011/8683 [00:00<00:01, 5416.50it/s] 41% 3554/8683 [00:00<00:00, 5273.55it/s] 47% 4083/8683 [00:00<00:00, 5126.08it/s] 53% 4597/8683 [00:00<00:00, 4958.65it/s] 59% 5094/8683 [00:00<00:00, 4816.20it/s] 64% 5577/8683 [00:01<00:00, 4676.46it/s] 70% 6046/8683 [00:01<00:00, 4515.79it/s] 75% 6499/8683 [00:01<00:00, 4395.65it/s] 80% 6939/8683 [00:01<00:00, 4288.54it/s] 85% 7368/8683 [00:01<00:00, 4098.88it/s] 90% 7779/8683 [00:01<00:00, 3950.38it/s] 94% 8175/8683 [00:01<00:00, 3851.77it/s] 99% 8561/8683 [00:01<00:00, 3738.63it/s]100% 8683/8683 [00:01<00:00, 4552.72it/s]
+Loading validation Video Information ...
+  0% 0/4728 [00:00<?, ?it/s] 11% 501/4728 [00:00<00:00, 4997.97it/s] 21% 1001/4728 [00:00<00:00, 4908.09it/s] 32% 1492/4728 [00:00<00:00, 4772.28it/s] 42% 1970/4728 [00:00<00:00, 4635.29it/s] 52% 2435/4728 [00:00<00:00, 4541.24it/s] 61% 2890/4728 [00:00<00:00, 4419.46it/s] 70% 3333/4728 [00:00<00:00, 4309.72it/s] 80% 3765/4728 [00:00<00:00, 4098.32it/s] 88% 4177/4728 [00:00<00:00, 4058.03it/s] 97% 4584/4728 [00:01<00:00, 4009.97it/s]100% 4728/4728 [00:01<00:00, 4274.79it/s]train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 295
+test_loader
+training: len(train_loader) 31
+training: len(train_loader_pretrain) 31
+training: len(test_loader) 154
+0
+
+n_iter  0 : loss (0.252486) + tot_loss (0.983506) + tot_loss_crop (0.931003) + loss_clip_order (0.753156) = final_loss = 2.920150
+n_iter  1 : loss (0.241867) + tot_loss (1.006305) + tot_loss_crop (0.938694) + loss_clip_order (0.693148) = final_loss = 2.880014
+n_iter  2 : loss (0.231241) + tot_loss (0.999687) + tot_loss_crop (0.930777) + loss_clip_order (0.693146) = final_loss = 2.854852
+n_iter  3 : loss (0.221724) + tot_loss (0.994355) + tot_loss_crop (0.929548) + loss_clip_order (0.693148) = final_loss = 2.838776
+n_iter  4 : loss (0.214860) + tot_loss (0.992174) + tot_loss_crop (0.927699) + loss_clip_order (0.693148) = final_loss = 2.827880
+n_iter  5 : loss (0.202377) + tot_loss (0.996904) + tot_loss_crop (0.922552) + loss_clip_order (0.693148) = final_loss = 2.814981
+n_iter  6 : loss (0.194659) + tot_loss (0.983168) + tot_loss_crop (0.914930) + loss_clip_order (0.693180) = final_loss = 2.785937
+n_iter  7 : loss (0.189335) + tot_loss (0.959285) + tot_loss_crop (0.909226) + loss_clip_order (0.693148) = final_loss = 2.750994
+n_iter  8 : loss (0.189643) + tot_loss (0.965837) + tot_loss_crop (0.902700) + loss_clip_order (0.693145) = final_loss = 2.751325
+n_iter  9 : loss (0.174083) + tot_loss (0.947306) + tot_loss_crop (0.892514) + loss_clip_order (0.693164) = final_loss = 2.707067
+n_iter 10 : loss (0.172563) + tot_loss (0.947590) + tot_loss_crop (0.885319) + loss_clip_order (0.693265) = final_loss = 2.698737
+n_iter 11 : loss (0.170301) + tot_loss (0.923735) + tot_loss_crop (0.877513) + loss_clip_order (0.693415) = final_loss = 2.664964
+n_iter 12 : loss (0.176808) + tot_loss (0.920550) + tot_loss_crop (0.865618) + loss_clip_order (0.692784) = final_loss = 2.655760
+n_iter 13 : loss (0.176353) + tot_loss (0.908678) + tot_loss_crop (0.865734) + loss_clip_order (0.692993) = final_loss = 2.643758
+n_iter 14 : loss (0.170984) + tot_loss (0.897950) + tot_loss_crop (0.863128) + loss_clip_order (0.694317) = final_loss = 2.626378
+n_iter 15 : loss (0.183598) + tot_loss (0.888520) + tot_loss_crop (0.856339) + loss_clip_order (0.692960) = final_loss = 2.621418
+n_iter 16 : loss (0.186292) + tot_loss (0.878402) + tot_loss_crop (0.848924) + loss_clip_order (0.696335) = final_loss = 2.609953
+n_iter 17 : loss (0.178368) + tot_loss (0.873377) + tot_loss_crop (0.854327) + loss_clip_order (0.692553) = final_loss = 2.598624
+n_iter 18 : loss (0.176461) + tot_loss (0.873269) + tot_loss_crop (0.849854) + loss_clip_order (0.694588) = final_loss = 2.594172
+n_iter 19 : loss (0.169463) + tot_loss (0.859426) + tot_loss_crop (0.850118) + loss_clip_order (0.692463) = final_loss = 2.571470
+n_iter 20 : loss (0.166995) + tot_loss (0.871674) + tot_loss_crop (0.850994) + loss_clip_order (0.690671) = final_loss = 2.580335
+n_iter 21 : loss (0.157911) + tot_loss (0.891159) + tot_loss_crop (0.857948) + loss_clip_order (0.695728) = final_loss = 2.602746
+n_iter 22 : loss (0.170572) + tot_loss (0.867857) + tot_loss_crop (0.848420) + loss_clip_order (0.693006) = final_loss = 2.579854
+n_iter 23 : loss (0.166059) + tot_loss (0.869421) + tot_loss_crop (0.849963) + loss_clip_order (0.699021) = final_loss = 2.584464
+n_iter 24 : loss (0.171569) + tot_loss (0.853810) + tot_loss_crop (0.841402) + loss_clip_order (0.693183) = final_loss = 2.559965
+n_iter 25 : loss (0.167830) + tot_loss (0.854781) + tot_loss_crop (0.842401) + loss_clip_order (0.691199) = final_loss = 2.556211
+n_iter 26 : loss (0.168736) + tot_loss (0.859771) + tot_loss_crop (0.847118) + loss_clip_order (0.693295) = final_loss = 2.568920
+n_iter 27 : loss (0.159794) + tot_loss (0.860398) + tot_loss_crop (0.849542) + loss_clip_order (0.691535) = final_loss = 2.561269
+n_iter 28 : loss (0.160151) + tot_loss (0.833470) + tot_loss_crop (0.840257) + loss_clip_order (0.692481) = final_loss = 2.526359
+n_iter 29 : loss (0.164448) + tot_loss (0.860547) + tot_loss_crop (0.843037) + loss_clip_order (0.692216) = final_loss = 2.560247
+n_iter 30 : loss (0.164839) + tot_loss (0.855442) + tot_loss_crop (0.839226) + loss_clip_order (0.692675) = final_loss = 2.552182
+[Pretraining Epoch 000] Total-Loss 0.86 =  F-Loss 0.86 + Clip-Loss 0.69 (train)
+/root/models/venv_SPOT/lib/python3.8/site-packages/torch/nn/_reduction.py:42: UserWarning: size_average and reduce args will be deprecated, please use reduction='none' instead.
+  warnings.warn(warning.format(ret))
+n_iter  0 : loss (0.169196) + tot_loss (0.844119) + tot_loss_crop (0.838349) + loss_clip_order (0.693792) = final_loss = 2.545457
+n_iter  1 : loss (0.163030) + tot_loss (0.862284) + tot_loss_crop (0.839972) + loss_clip_order (0.692171) = final_loss = 2.557457
+n_iter  2 : loss (0.166252) + tot_loss (0.846599) + tot_loss_crop (0.840316) + loss_clip_order (0.691991) = final_loss = 2.545157
+n_iter  3 : loss (0.179040) + tot_loss (0.835819) + tot_loss_crop (0.827569) + loss_clip_order (0.692299) = final_loss = 2.534727
+n_iter  4 : loss (0.170608) + tot_loss (0.829391) + tot_loss_crop (0.834473) + loss_clip_order (0.694001) = final_loss = 2.528474
+n_iter  5 : loss (0.174910) + tot_loss (0.832395) + tot_loss_crop (0.832654) + loss_clip_order (0.691777) = final_loss = 2.531737
+n_iter  6 : loss (0.160463) + tot_loss (0.830220) + tot_loss_crop (0.833236) + loss_clip_order (0.694748) = final_loss = 2.518668
+n_iter  7 : loss (0.154420) + tot_loss (0.810992) + tot_loss_crop (0.834967) + loss_clip_order (0.692456) = final_loss = 2.492835
+n_iter  8 : loss (0.161912) + tot_loss (0.825238) + tot_loss_crop (0.831014) + loss_clip_order (0.693770) = final_loss = 2.511933
+n_iter  9 : loss (0.170203) + tot_loss (0.815245) + tot_loss_crop (0.827758) + loss_clip_order (0.693274) = final_loss = 2.506481
+n_iter 10 : loss (0.160163) + tot_loss (0.828072) + tot_loss_crop (0.831305) + loss_clip_order (0.692277) = final_loss = 2.511818
+n_iter 11 : loss (0.169667) + tot_loss (0.810550) + tot_loss_crop (0.821699) + loss_clip_order (0.690816) = final_loss = 2.492732
+n_iter 12 : loss (0.169033) + tot_loss (0.819571) + tot_loss_crop (0.827603) + loss_clip_order (0.688883) = final_loss = 2.505090
+n_iter 13 : loss (0.174975) + tot_loss (0.818528) + tot_loss_crop (0.821750) + loss_clip_order (0.690002) = final_loss = 2.505255
+n_iter 14 : loss (0.175903) + tot_loss (0.820583) + tot_loss_crop (0.821880) + loss_clip_order (0.685812) = final_loss = 2.504178
+n_iter 15 : loss (0.170568) + tot_loss (0.819013) + tot_loss_crop (0.824929) + loss_clip_order (0.674513) = final_loss = 2.489022
+n_iter 16 : loss (0.178115) + tot_loss (0.814883) + tot_loss_crop (0.822161) + loss_clip_order (0.667385) = final_loss = 2.482544
+n_iter 17 : loss (0.187524) + tot_loss (0.814692) + tot_loss_crop (0.828465) + loss_clip_order (0.743694) = final_loss = 2.574375
+n_iter 18 : loss (0.163797) + tot_loss (0.822214) + tot_loss_crop (0.825655) + loss_clip_order (0.686955) = final_loss = 2.498621
+n_iter 19 : loss (0.175253) + tot_loss (0.825172) + tot_loss_crop (0.828456) + loss_clip_order (0.692958) = final_loss = 2.521838
+n_iter 20 : loss (0.191447) + tot_loss (0.851202) + tot_loss_crop (0.836754) + loss_clip_order (0.693125) = final_loss = 2.572527
+n_iter 21 : loss (0.194730) + tot_loss (0.882319) + tot_loss_crop (0.848220) + loss_clip_order (0.693165) = final_loss = 2.618433
+n_iter 22 : loss (0.184712) + tot_loss (0.866501) + tot_loss_crop (0.844447) + loss_clip_order (0.693255) = final_loss = 2.588915
+n_iter 23 : loss (0.156445) + tot_loss (0.877677) + tot_loss_crop (0.850551) + loss_clip_order (0.693146) = final_loss = 2.577818
+n_iter 24 : loss (0.159856) + tot_loss (0.861854) + tot_loss_crop (0.845716) + loss_clip_order (0.692993) = final_loss = 2.560419
+n_iter 25 : loss (0.164504) + tot_loss (0.869090) + tot_loss_crop (0.843941) + loss_clip_order (0.692868) = final_loss = 2.570403
+n_iter 26 : loss (0.152942) + tot_loss (0.867425) + tot_loss_crop (0.844826) + loss_clip_order (0.693135) = final_loss = 2.558327
+n_iter 27 : loss (0.162254) + tot_loss (0.862029) + tot_loss_crop (0.841807) + loss_clip_order (0.693153) = final_loss = 2.559243
+n_iter 28 : loss (0.161728) + tot_loss (0.832323) + tot_loss_crop (0.829300) + loss_clip_order (0.693268) = final_loss = 2.516620
+n_iter 29 : loss (0.160221) + tot_loss (0.846604) + tot_loss_crop (0.833959) + loss_clip_order (0.692881) = final_loss = 2.533665
+n_iter 30 : loss (0.173565) + tot_loss (0.831749) + tot_loss_crop (0.824670) + loss_clip_order (0.690468) = final_loss = 2.520452
+[Pretraining Epoch 001] Total-Loss 0.83 =  F-Loss 0.83 + Clip-Loss 0.69 (train)
+n_iter  0 : loss (0.174074) + tot_loss (0.813799) + tot_loss_crop (0.817514) + loss_clip_order (0.690329) = final_loss = 2.495716
+n_iter  1 : loss (0.175022) + tot_loss (0.826236) + tot_loss_crop (0.814757) + loss_clip_order (0.689278) = final_loss = 2.505293
+n_iter  2 : loss (0.169271) + tot_loss (0.808735) + tot_loss_crop (0.811818) + loss_clip_order (0.687693) = final_loss = 2.477517
+n_iter  3 : loss (0.168844) + tot_loss (0.799552) + tot_loss_crop (0.810473) + loss_clip_order (0.680516) = final_loss = 2.459385
+n_iter  4 : loss (0.168920) + tot_loss (0.796527) + tot_loss_crop (0.809626) + loss_clip_order (0.644401) = final_loss = 2.419475
+n_iter  5 : loss (0.186980) + tot_loss (0.804421) + tot_loss_crop (0.806828) + loss_clip_order (0.788477) = final_loss = 2.586707
+n_iter  6 : loss (0.166947) + tot_loss (0.805203) + tot_loss_crop (0.802065) + loss_clip_order (0.690778) = final_loss = 2.464992
+n_iter  7 : loss (0.156742) + tot_loss (0.805588) + tot_loss_crop (0.811098) + loss_clip_order (0.689865) = final_loss = 2.463293
+n_iter  8 : loss (0.168334) + tot_loss (0.837763) + tot_loss_crop (0.815442) + loss_clip_order (0.692446) = final_loss = 2.513986
+n_iter  9 : loss (0.153711) + tot_loss (0.846188) + tot_loss_crop (0.825847) + loss_clip_order (0.692780) = final_loss = 2.518526
+n_iter 10 : loss (0.164600) + tot_loss (0.868483) + tot_loss_crop (0.824760) + loss_clip_order (0.692415) = final_loss = 2.550258
+n_iter 11 : loss (0.161545) + tot_loss (0.863517) + tot_loss_crop (0.827370) + loss_clip_order (0.693289) = final_loss = 2.545722
+n_iter 12 : loss (0.165863) + tot_loss (0.879331) + tot_loss_crop (0.824953) + loss_clip_order (0.692849) = final_loss = 2.562996
+n_iter 13 : loss (0.159203) + tot_loss (0.882569) + tot_loss_crop (0.828402) + loss_clip_order (0.692594) = final_loss = 2.562767
+n_iter 14 : loss (0.148567) + tot_loss (0.884718) + tot_loss_crop (0.827314) + loss_clip_order (0.692941) = final_loss = 2.553541
+n_iter 15 : loss (0.171957) + tot_loss (0.878422) + tot_loss_crop (0.820246) + loss_clip_order (0.692984) = final_loss = 2.563609
+n_iter 16 : loss (0.156678) + tot_loss (0.875546) + tot_loss_crop (0.818955) + loss_clip_order (0.692539) = final_loss = 2.543718
+n_iter 17 : loss (0.162893) + tot_loss (0.868108) + tot_loss_crop (0.813250) + loss_clip_order (0.693582) = final_loss = 2.537833
+n_iter 18 : loss (0.160638) + tot_loss (0.862372) + tot_loss_crop (0.810557) + loss_clip_order (0.692074) = final_loss = 2.525641
+n_iter 19 : loss (0.173823) + tot_loss (0.840331) + tot_loss_crop (0.802863) + loss_clip_order (0.692689) = final_loss = 2.509707
+n_iter 20 : loss (0.163868) + tot_loss (0.843511) + tot_loss_crop (0.799691) + loss_clip_order (0.691664) = final_loss = 2.498734
+n_iter 21 : loss (0.158708) + tot_loss (0.854911) + tot_loss_crop (0.798852) + loss_clip_order (0.690328) = final_loss = 2.502799
+n_iter 22 : loss (0.160060) + tot_loss (0.823978) + tot_loss_crop (0.796334) + loss_clip_order (0.690457) = final_loss = 2.470829
+n_iter 23 : loss (0.163475) + tot_loss (0.821740) + tot_loss_crop (0.793919) + loss_clip_order (0.688460) = final_loss = 2.467594
+n_iter 24 : loss (0.158609) + tot_loss (0.798709) + tot_loss_crop (0.788235) + loss_clip_order (0.689505) = final_loss = 2.435058
+n_iter 25 : loss (0.167777) + tot_loss (0.797847) + tot_loss_crop (0.787400) + loss_clip_order (0.690266) = final_loss = 2.443290
+n_iter 26 : loss (0.170278) + tot_loss (0.794528) + tot_loss_crop (0.782774) + loss_clip_order (0.681299) = final_loss = 2.428880
+n_iter 27 : loss (0.158211) + tot_loss (0.790729) + tot_loss_crop (0.788423) + loss_clip_order (0.676304) = final_loss = 2.413667
+n_iter 28 : loss (0.171740) + tot_loss (0.762807) + tot_loss_crop (0.786755) + loss_clip_order (0.670890) = final_loss = 2.392192
+n_iter 29 : loss (0.171824) + tot_loss (0.783467) + tot_loss_crop (0.789132) + loss_clip_order (0.656467) = final_loss = 2.400890
+n_iter 30 : loss (0.180254) + tot_loss (0.777661) + tot_loss_crop (0.789692) + loss_clip_order (0.628488) = final_loss = 2.376095
+[Pretraining Epoch 002] Total-Loss 0.78 =  F-Loss 0.78 + Clip-Loss 0.63 (train)
+n_iter  0 : loss (0.185888) + tot_loss (0.771627) + tot_loss_crop (0.793803) + loss_clip_order (0.684844) = final_loss = 2.436161
+n_iter  1 : loss (0.168677) + tot_loss (0.788272) + tot_loss_crop (0.785232) + loss_clip_order (0.639174) = final_loss = 2.381355
+n_iter  2 : loss (0.170250) + tot_loss (0.780602) + tot_loss_crop (0.774840) + loss_clip_order (0.667768) = final_loss = 2.393461
+n_iter  3 : loss (0.157910) + tot_loss (0.780491) + tot_loss_crop (0.778353) + loss_clip_order (0.677867) = final_loss = 2.394622
+n_iter  4 : loss (0.157751) + tot_loss (0.784358) + tot_loss_crop (0.775722) + loss_clip_order (0.680465) = final_loss = 2.398296
+n_iter  5 : loss (0.155816) + tot_loss (0.793803) + tot_loss_crop (0.777298) + loss_clip_order (0.680221) = final_loss = 2.407138
+n_iter  6 : loss (0.160766) + tot_loss (0.792399) + tot_loss_crop (0.774867) + loss_clip_order (0.675782) = final_loss = 2.403815
+n_iter  7 : loss (0.154203) + tot_loss (0.776449) + tot_loss_crop (0.775772) + loss_clip_order (0.682037) = final_loss = 2.388461
+n_iter  8 : loss (0.160877) + tot_loss (0.788061) + tot_loss_crop (0.770896) + loss_clip_order (0.679971) = final_loss = 2.399804
+n_iter  9 : loss (0.175303) + tot_loss (0.779776) + tot_loss_crop (0.763129) + loss_clip_order (0.675749) = final_loss = 2.393956
+n_iter 10 : loss (0.157501) + tot_loss (0.788472) + tot_loss_crop (0.772107) + loss_clip_order (0.669930) = final_loss = 2.388010
+n_iter 11 : loss (0.158943) + tot_loss (0.771678) + tot_loss_crop (0.765613) + loss_clip_order (0.662191) = final_loss = 2.358425
+n_iter 12 : loss (0.170921) + tot_loss (0.778121) + tot_loss_crop (0.762391) + loss_clip_order (0.654391) = final_loss = 2.365824
+n_iter 13 : loss (0.155412) + tot_loss (0.773206) + tot_loss_crop (0.769434) + loss_clip_order (0.650863) = final_loss = 2.348915
+n_iter 14 : loss (0.160366) + tot_loss (0.770768) + tot_loss_crop (0.764154) + loss_clip_order (0.635345) = final_loss = 2.330633
+n_iter 15 : loss (0.168207) + tot_loss (0.762419) + tot_loss_crop (0.763008) + loss_clip_order (0.617619) = final_loss = 2.311253
+n_iter 16 : loss (0.166874) + tot_loss (0.754969) + tot_loss_crop (0.760399) + loss_clip_order (0.600640) = final_loss = 2.282883
+n_iter 17 : loss (0.155102) + tot_loss (0.749678) + tot_loss_crop (0.773982) + loss_clip_order (0.568447) = final_loss = 2.247209
+n_iter 18 : loss (0.172269) + tot_loss (0.746673) + tot_loss_crop (0.763921) + loss_clip_order (0.535419) = final_loss = 2.218282
+n_iter 19 : loss (0.172448) + tot_loss (0.735683) + tot_loss_crop (0.767171) + loss_clip_order (0.524199) = final_loss = 2.199500
+n_iter 20 : loss (0.177886) + tot_loss (0.744504) + tot_loss_crop (0.762603) + loss_clip_order (0.533385) = final_loss = 2.218379
+n_iter 21 : loss (0.164870) + tot_loss (0.762368) + tot_loss_crop (0.769484) + loss_clip_order (0.476413) = final_loss = 2.173135
+n_iter 22 : loss (0.158085) + tot_loss (0.744341) + tot_loss_crop (0.771394) + loss_clip_order (0.459259) = final_loss = 2.133079
+n_iter 23 : loss (0.167046) + tot_loss (0.746444) + tot_loss_crop (0.766720) + loss_clip_order (0.455579) = final_loss = 2.135788
+n_iter 24 : loss (0.162846) + tot_loss (0.736943) + tot_loss_crop (0.766107) + loss_clip_order (0.443490) = final_loss = 2.109385
+n_iter 25 : loss (0.166241) + tot_loss (0.740728) + tot_loss_crop (0.765210) + loss_clip_order (0.422241) = final_loss = 2.094419
+n_iter 26 : loss (0.170543) + tot_loss (0.745736) + tot_loss_crop (0.767214) + loss_clip_order (0.440581) = final_loss = 2.124074
+n_iter 27 : loss (0.166722) + tot_loss (0.749016) + tot_loss_crop (0.761224) + loss_clip_order (0.442008) = final_loss = 2.118970
+n_iter 28 : loss (0.173743) + tot_loss (0.724366) + tot_loss_crop (0.757823) + loss_clip_order (0.431272) = final_loss = 2.087203
+n_iter 29 : loss (0.164907) + tot_loss (0.747749) + tot_loss_crop (0.763041) + loss_clip_order (0.418973) = final_loss = 2.094671
+n_iter 30 : loss (0.164572) + tot_loss (0.742515) + tot_loss_crop (0.753214) + loss_clip_order (0.436234) = final_loss = 2.096534
+[Pretraining Epoch 003] Total-Loss 0.74 =  F-Loss 0.74 + Clip-Loss 0.44 (train)
+n_iter  0 : loss (0.167262) + tot_loss (0.733823) + tot_loss_crop (0.751830) + loss_clip_order (0.429764) = final_loss = 2.082678
+n_iter  1 : loss (0.171731) + tot_loss (0.751824) + tot_loss_crop (0.754392) + loss_clip_order (0.425453) = final_loss = 2.103400
+n_iter  2 : loss (0.166770) + tot_loss (0.738237) + tot_loss_crop (0.755141) + loss_clip_order (0.409472) = final_loss = 2.069619
+n_iter  3 : loss (0.169879) + tot_loss (0.729570) + tot_loss_crop (0.751089) + loss_clip_order (0.401246) = final_loss = 2.051785
+n_iter  4 : loss (0.155748) + tot_loss (0.724326) + tot_loss_crop (0.765650) + loss_clip_order (0.391936) = final_loss = 2.037660
+n_iter  5 : loss (0.161763) + tot_loss (0.726909) + tot_loss_crop (0.760169) + loss_clip_order (0.378002) = final_loss = 2.026844
+n_iter  6 : loss (0.162646) + tot_loss (0.726042) + tot_loss_crop (0.757418) + loss_clip_order (0.381359) = final_loss = 2.027465
+n_iter  7 : loss (0.151638) + tot_loss (0.710600) + tot_loss_crop (0.760423) + loss_clip_order (0.379823) = final_loss = 2.002483
+n_iter  8 : loss (0.158883) + tot_loss (0.722086) + tot_loss_crop (0.749923) + loss_clip_order (0.383611) = final_loss = 2.014504
+n_iter  9 : loss (0.158891) + tot_loss (0.716044) + tot_loss_crop (0.753401) + loss_clip_order (0.390626) = final_loss = 2.018963
+n_iter 10 : loss (0.160076) + tot_loss (0.729166) + tot_loss_crop (0.746370) + loss_clip_order (0.382501) = final_loss = 2.018114
+n_iter 11 : loss (0.166133) + tot_loss (0.715573) + tot_loss_crop (0.742279) + loss_clip_order (0.383980) = final_loss = 2.007965
+n_iter 12 : loss (0.171275) + tot_loss (0.725638) + tot_loss_crop (0.741995) + loss_clip_order (0.387455) = final_loss = 2.026362
+n_iter 13 : loss (0.162866) + tot_loss (0.724015) + tot_loss_crop (0.746518) + loss_clip_order (0.372067) = final_loss = 2.005465
+n_iter 14 : loss (0.163132) + tot_loss (0.726259) + tot_loss_crop (0.746588) + loss_clip_order (0.367284) = final_loss = 2.003263
+n_iter 15 : loss (0.151643) + tot_loss (0.722618) + tot_loss_crop (0.754628) + loss_clip_order (0.363803) = final_loss = 1.992692
+n_iter 16 : loss (0.169951) + tot_loss (0.719531) + tot_loss_crop (0.742028) + loss_clip_order (0.362193) = final_loss = 1.993703
+n_iter 17 : loss (0.159408) + tot_loss (0.717546) + tot_loss_crop (0.746104) + loss_clip_order (0.385673) = final_loss = 2.008732
+n_iter 18 : loss (0.159312) + tot_loss (0.717053) + tot_loss_crop (0.740980) + loss_clip_order (0.361198) = final_loss = 1.978543
+n_iter 19 : loss (0.163526) + tot_loss (0.706050) + tot_loss_crop (0.735174) + loss_clip_order (0.372824) = final_loss = 1.977573
+n_iter 20 : loss (0.169556) + tot_loss (0.714518) + tot_loss_crop (0.731635) + loss_clip_order (0.380945) = final_loss = 1.996654
+n_iter 21 : loss (0.166426) + tot_loss (0.731606) + tot_loss_crop (0.735827) + loss_clip_order (0.373710) = final_loss = 2.007570
+n_iter 22 : loss (0.162164) + tot_loss (0.713118) + tot_loss_crop (0.736892) + loss_clip_order (0.377113) = final_loss = 1.989286
+n_iter 23 : loss (0.159299) + tot_loss (0.714508) + tot_loss_crop (0.737774) + loss_clip_order (0.359582) = final_loss = 1.971163
+n_iter 24 : loss (0.156271) + tot_loss (0.705001) + tot_loss_crop (0.739977) + loss_clip_order (0.356767) = final_loss = 1.958015
+n_iter 25 : loss (0.146816) + tot_loss (0.708148) + tot_loss_crop (0.740906) + loss_clip_order (0.348345) = final_loss = 1.944213
+n_iter 26 : loss (0.172070) + tot_loss (0.713527) + tot_loss_crop (0.726128) + loss_clip_order (0.367974) = final_loss = 1.979699
+n_iter 27 : loss (0.164102) + tot_loss (0.717774) + tot_loss_crop (0.736089) + loss_clip_order (0.352618) = final_loss = 1.970582
+n_iter 28 : loss (0.153820) + tot_loss (0.695431) + tot_loss_crop (0.736477) + loss_clip_order (0.349105) = final_loss = 1.934833
+n_iter 29 : loss (0.164871) + tot_loss (0.718975) + tot_loss_crop (0.735607) + loss_clip_order (0.359466) = final_loss = 1.978919
+n_iter 30 : loss (0.154761) + tot_loss (0.714684) + tot_loss_crop (0.733433) + loss_clip_order (0.346601) = final_loss = 1.949479
+[Pretraining Epoch 004] Total-Loss 0.71 =  F-Loss 0.71 + Clip-Loss 0.35 (train)
+n_iter  0 : loss (0.157478) + tot_loss (0.707500) + tot_loss_crop (0.734769) + loss_clip_order (0.350566) = final_loss = 1.950312
+n_iter  1 : loss (0.158392) + tot_loss (0.726200) + tot_loss_crop (0.729889) + loss_clip_order (0.356579) = final_loss = 1.971060
+n_iter  2 : loss (0.166881) + tot_loss (0.713695) + tot_loss_crop (0.724488) + loss_clip_order (0.351365) = final_loss = 1.956428
+n_iter  3 : loss (0.162422) + tot_loss (0.705570) + tot_loss_crop (0.728951) + loss_clip_order (0.343322) = final_loss = 1.940265
+n_iter  4 : loss (0.156627) + tot_loss (0.700553) + tot_loss_crop (0.729859) + loss_clip_order (0.343464) = final_loss = 1.930503
+n_iter  5 : loss (0.171294) + tot_loss (0.702680) + tot_loss_crop (0.719422) + loss_clip_order (0.344026) = final_loss = 1.937422
+n_iter  6 : loss (0.161106) + tot_loss (0.700837) + tot_loss_crop (0.726046) + loss_clip_order (0.356366) = final_loss = 1.944355
+n_iter  7 : loss (0.161324) + tot_loss (0.685054) + tot_loss_crop (0.722458) + loss_clip_order (0.338766) = final_loss = 1.907602
+n_iter  8 : loss (0.164655) + tot_loss (0.695684) + tot_loss_crop (0.722855) + loss_clip_order (0.350562) = final_loss = 1.933755
+n_iter  9 : loss (0.161722) + tot_loss (0.689692) + tot_loss_crop (0.722887) + loss_clip_order (0.348821) = final_loss = 1.923123
+n_iter 10 : loss (0.170286) + tot_loss (0.702141) + tot_loss_crop (0.718755) + loss_clip_order (0.346551) = final_loss = 1.937734
+n_iter 11 : loss (0.169212) + tot_loss (0.689292) + tot_loss_crop (0.708188) + loss_clip_order (0.351412) = final_loss = 1.918105
+n_iter 12 : loss (0.168699) + tot_loss (0.699617) + tot_loss_crop (0.716402) + loss_clip_order (0.354833) = final_loss = 1.939551
+n_iter 13 : loss (0.153813) + tot_loss (0.698029) + tot_loss_crop (0.722872) + loss_clip_order (0.336850) = final_loss = 1.911563
+n_iter 14 : loss (0.162209) + tot_loss (0.700834) + tot_loss_crop (0.718635) + loss_clip_order (0.337514) = final_loss = 1.919192
+n_iter 15 : loss (0.169458) + tot_loss (0.697795) + tot_loss_crop (0.713917) + loss_clip_order (0.343575) = final_loss = 1.924745
+n_iter 16 : loss (0.160856) + tot_loss (0.695230) + tot_loss_crop (0.719241) + loss_clip_order (0.338745) = final_loss = 1.914072
+n_iter 17 : loss (0.156179) + tot_loss (0.693793) + tot_loss_crop (0.719343) + loss_clip_order (0.347304) = final_loss = 1.916619
+n_iter 18 : loss (0.169502) + tot_loss (0.693722) + tot_loss_crop (0.710512) + loss_clip_order (0.341003) = final_loss = 1.914738
+n_iter 19 : loss (0.149126) + tot_loss (0.682803) + tot_loss_crop (0.716237) + loss_clip_order (0.338860) = final_loss = 1.887026
+n_iter 20 : loss (0.161390) + tot_loss (0.691009) + tot_loss_crop (0.713616) + loss_clip_order (0.344441) = final_loss = 1.910455
+n_iter 21 : loss (0.153663) + tot_loss (0.707295) + tot_loss_crop (0.710103) + loss_clip_order (0.337312) = final_loss = 1.908374
+n_iter 22 : loss (0.159089) + tot_loss (0.689109) + tot_loss_crop (0.709865) + loss_clip_order (0.353405) = final_loss = 1.911468
+n_iter 23 : loss (0.164757) + tot_loss (0.690616) + tot_loss_crop (0.709636) + loss_clip_order (0.336523) = final_loss = 1.901531
+n_iter 24 : loss (0.164450) + tot_loss (0.680970) + tot_loss_crop (0.708420) + loss_clip_order (0.339639) = final_loss = 1.893478
+n_iter 25 : loss (0.161103) + tot_loss (0.684256) + tot_loss_crop (0.706962) + loss_clip_order (0.342953) = final_loss = 1.895274
+n_iter 26 : loss (0.159258) + tot_loss (0.688764) + tot_loss_crop (0.710286) + loss_clip_order (0.340695) = final_loss = 1.899002
+n_iter 27 : loss (0.158722) + tot_loss (0.692683) + tot_loss_crop (0.706911) + loss_clip_order (0.337161) = final_loss = 1.895478
+n_iter 28 : loss (0.170528) + tot_loss (0.671044) + tot_loss_crop (0.698274) + loss_clip_order (0.340434) = final_loss = 1.880281
+n_iter 29 : loss (0.161759) + tot_loss (0.693443) + tot_loss_crop (0.707862) + loss_clip_order (0.333924) = final_loss = 1.896988
+n_iter 30 : loss (0.161672) + tot_loss (0.688749) + tot_loss_crop (0.702574) + loss_clip_order (0.329591) = final_loss = 1.882586
+[Pretraining Epoch 005] Total-Loss 0.69 =  F-Loss 0.69 + Clip-Loss 0.33 (train)
+n_iter  0 : loss (0.159785) + tot_loss (0.681371) + tot_loss_crop (0.702610) + loss_clip_order (0.342893) = final_loss = 1.886658
+n_iter  1 : loss (0.162684) + tot_loss (0.699624) + tot_loss_crop (0.699654) + loss_clip_order (0.340796) = final_loss = 1.902759
+n_iter  2 : loss (0.159466) + tot_loss (0.687303) + tot_loss_crop (0.701381) + loss_clip_order (0.332143) = final_loss = 1.880294
+n_iter  3 : loss (0.153660) + tot_loss (0.679895) + tot_loss_crop (0.703587) + loss_clip_order (0.336263) = final_loss = 1.873403
+n_iter  4 : loss (0.166424) + tot_loss (0.675749) + tot_loss_crop (0.698181) + loss_clip_order (0.334818) = final_loss = 1.875172
+n_iter  5 : loss (0.163695) + tot_loss (0.678699) + tot_loss_crop (0.697633) + loss_clip_order (0.326464) = final_loss = 1.866491
+n_iter  6 : loss (0.149492) + tot_loss (0.677499) + tot_loss_crop (0.702717) + loss_clip_order (0.340669) = final_loss = 1.870376
+n_iter  7 : loss (0.170404) + tot_loss (0.662440) + tot_loss_crop (0.686382) + loss_clip_order (0.330624) = final_loss = 1.849850
+n_iter  8 : loss (0.153396) + tot_loss (0.672674) + tot_loss_crop (0.694296) + loss_clip_order (0.335898) = final_loss = 1.856263
+n_iter  9 : loss (0.157613) + tot_loss (0.666798) + tot_loss_crop (0.693439) + loss_clip_order (0.336546) = final_loss = 1.854396
+n_iter 10 : loss (0.149071) + tot_loss (0.678221) + tot_loss_crop (0.694760) + loss_clip_order (0.324166) = final_loss = 1.846218
+n_iter 11 : loss (0.171514) + tot_loss (0.665627) + tot_loss_crop (0.683766) + loss_clip_order (0.335696) = final_loss = 1.856603
+n_iter 12 : loss (0.169592) + tot_loss (0.675595) + tot_loss_crop (0.684433) + loss_clip_order (0.334773) = final_loss = 1.864394
+n_iter 13 : loss (0.159902) + tot_loss (0.674159) + tot_loss_crop (0.688955) + loss_clip_order (0.325410) = final_loss = 1.848427
+n_iter 14 : loss (0.164347) + tot_loss (0.676910) + tot_loss_crop (0.686738) + loss_clip_order (0.323614) = final_loss = 1.851608
+n_iter 15 : loss (0.165223) + tot_loss (0.673450) + tot_loss_crop (0.685277) + loss_clip_order (0.335168) = final_loss = 1.859117
+n_iter 16 : loss (0.167186) + tot_loss (0.671170) + tot_loss_crop (0.681953) + loss_clip_order (0.327863) = final_loss = 1.848173
+n_iter 17 : loss (0.164421) + tot_loss (0.669266) + tot_loss_crop (0.683363) + loss_clip_order (0.336486) = final_loss = 1.853536
+n_iter 18 : loss (0.163720) + tot_loss (0.669319) + tot_loss_crop (0.679757) + loss_clip_order (0.329480) = final_loss = 1.842277
+n_iter 19 : loss (0.164616) + tot_loss (0.658574) + tot_loss_crop (0.679549) + loss_clip_order (0.345374) = final_loss = 1.848113
+n_iter 20 : loss (0.162116) + tot_loss (0.666364) + tot_loss_crop (0.682445) + loss_clip_order (0.338544) = final_loss = 1.849469
+n_iter 21 : loss (0.167140) + tot_loss (0.682006) + tot_loss_crop (0.678082) + loss_clip_order (0.327105) = final_loss = 1.854333
+n_iter 22 : loss (0.150599) + tot_loss (0.664393) + tot_loss_crop (0.684035) + loss_clip_order (0.347363) = final_loss = 1.846389
+n_iter 23 : loss (0.167901) + tot_loss (0.666017) + tot_loss_crop (0.677837) + loss_clip_order (0.327669) = final_loss = 1.839425
+n_iter 24 : loss (0.149354) + tot_loss (0.656767) + tot_loss_crop (0.679420) + loss_clip_order (0.329662) = final_loss = 1.815202
+n_iter 25 : loss (0.161307) + tot_loss (0.660586) + tot_loss_crop (0.674078) + loss_clip_order (0.329327) = final_loss = 1.825297
+n_iter 26 : loss (0.162112) + tot_loss (0.665212) + tot_loss_crop (0.675913) + loss_clip_order (0.332116) = final_loss = 1.835353
+n_iter 27 : loss (0.153174) + tot_loss (0.669742) + tot_loss_crop (0.676502) + loss_clip_order (0.326827) = final_loss = 1.826245
+n_iter 28 : loss (0.161162) + tot_loss (0.648927) + tot_loss_crop (0.671723) + loss_clip_order (0.331451) = final_loss = 1.813264
+n_iter 29 : loss (0.145109) + tot_loss (0.670568) + tot_loss_crop (0.677337) + loss_clip_order (0.324818) = final_loss = 1.817832
+n_iter 30 : loss (0.156615) + tot_loss (0.665715) + tot_loss_crop (0.670622) + loss_clip_order (0.322620) = final_loss = 1.815572
+[Pretraining Epoch 006] Total-Loss 0.67 =  F-Loss 0.67 + Clip-Loss 0.32 (train)
+n_iter  0 : loss (0.160720) + tot_loss (0.658421) + tot_loss_crop (0.672132) + loss_clip_order (0.327708) = final_loss = 1.818981
+n_iter  1 : loss (0.158875) + tot_loss (0.676591) + tot_loss_crop (0.671639) + loss_clip_order (0.329167) = final_loss = 1.836271
+n_iter  2 : loss (0.159585) + tot_loss (0.665008) + tot_loss_crop (0.664599) + loss_clip_order (0.324365) = final_loss = 1.813556
+n_iter  3 : loss (0.158375) + tot_loss (0.658385) + tot_loss_crop (0.666969) + loss_clip_order (0.325208) = final_loss = 1.808936
+n_iter  4 : loss (0.168167) + tot_loss (0.654522) + tot_loss_crop (0.660026) + loss_clip_order (0.323178) = final_loss = 1.805894
+n_iter  5 : loss (0.156724) + tot_loss (0.657203) + tot_loss_crop (0.665390) + loss_clip_order (0.315435) = final_loss = 1.794752
+n_iter  6 : loss (0.153888) + tot_loss (0.655275) + tot_loss_crop (0.664201) + loss_clip_order (0.328928) = final_loss = 1.802292
+n_iter  7 : loss (0.162217) + tot_loss (0.639448) + tot_loss_crop (0.661764) + loss_clip_order (0.321068) = final_loss = 1.784498
+n_iter  8 : loss (0.162646) + tot_loss (0.648925) + tot_loss_crop (0.660795) + loss_clip_order (0.326963) = final_loss = 1.799330
+n_iter  9 : loss (0.165932) + tot_loss (0.643388) + tot_loss_crop (0.654362) + loss_clip_order (0.326504) = final_loss = 1.790185
+n_iter 10 : loss (0.156380) + tot_loss (0.655265) + tot_loss_crop (0.660906) + loss_clip_order (0.319405) = final_loss = 1.791956
+n_iter 11 : loss (0.159655) + tot_loss (0.643326) + tot_loss_crop (0.657997) + loss_clip_order (0.319605) = final_loss = 1.780584
+n_iter 12 : loss (0.183701) + tot_loss (0.653421) + tot_loss_crop (0.646494) + loss_clip_order (0.330189) = final_loss = 1.813804
+n_iter 13 : loss (0.166779) + tot_loss (0.651440) + tot_loss_crop (0.650287) + loss_clip_order (0.321619) = final_loss = 1.790125
+n_iter 14 : loss (0.157757) + tot_loss (0.653848) + tot_loss_crop (0.661741) + loss_clip_order (0.324388) = final_loss = 1.797735
+n_iter 15 : loss (0.146850) + tot_loss (0.650681) + tot_loss_crop (0.659475) + loss_clip_order (0.318454) = final_loss = 1.775460
+n_iter 16 : loss (0.163405) + tot_loss (0.649265) + tot_loss_crop (0.651080) + loss_clip_order (0.315934) = final_loss = 1.779684
+n_iter 17 : loss (0.165356) + tot_loss (0.648026) + tot_loss_crop (0.646952) + loss_clip_order (0.326586) = final_loss = 1.786920
+n_iter 18 : loss (0.162344) + tot_loss (0.648495) + tot_loss_crop (0.649313) + loss_clip_order (0.318884) = final_loss = 1.779035
+n_iter 19 : loss (0.150199) + tot_loss (0.637402) + tot_loss_crop (0.650776) + loss_clip_order (0.318231) = final_loss = 1.756608
+n_iter 20 : loss (0.153552) + tot_loss (0.644875) + tot_loss_crop (0.650600) + loss_clip_order (0.324348) = final_loss = 1.773375
+n_iter 21 : loss (0.158623) + tot_loss (0.660011) + tot_loss_crop (0.648046) + loss_clip_order (0.320757) = final_loss = 1.787438
+n_iter 22 : loss (0.165600) + tot_loss (0.642258) + tot_loss_crop (0.642740) + loss_clip_order (0.336278) = final_loss = 1.786876
+n_iter 23 : loss (0.161011) + tot_loss (0.644362) + tot_loss_crop (0.646074) + loss_clip_order (0.317779) = final_loss = 1.769226
+n_iter 24 : loss (0.169908) + tot_loss (0.635331) + tot_loss_crop (0.635242) + loss_clip_order (0.319247) = final_loss = 1.759728
+n_iter 25 : loss (0.159718) + tot_loss (0.638980) + tot_loss_crop (0.641994) + loss_clip_order (0.311791) = final_loss = 1.752483
+n_iter 26 : loss (0.163939) + tot_loss (0.642928) + tot_loss_crop (0.638999) + loss_clip_order (0.320172) = final_loss = 1.766037
+n_iter 27 : loss (0.163430) + tot_loss (0.646457) + tot_loss_crop (0.639008) + loss_clip_order (0.312895) = final_loss = 1.761790
+n_iter 28 : loss (0.168637) + tot_loss (0.625851) + tot_loss_crop (0.631935) + loss_clip_order (0.316781) = final_loss = 1.743203
+n_iter 29 : loss (0.167409) + tot_loss (0.646451) + tot_loss_crop (0.635195) + loss_clip_order (0.316047) = final_loss = 1.765102
+n_iter 30 : loss (0.166795) + tot_loss (0.642331) + tot_loss_crop (0.633299) + loss_clip_order (0.313306) = final_loss = 1.755730
+[Pretraining Epoch 007] Total-Loss 0.64 =  F-Loss 0.64 + Clip-Loss 0.31 (train)
+n_iter  0 : loss (0.167067) + tot_loss (0.635413) + tot_loss_crop (0.633507) + loss_clip_order (0.321291) = final_loss = 1.757278
+n_iter  1 : loss (0.164158) + tot_loss (0.653338) + tot_loss_crop (0.636434) + loss_clip_order (0.315300) = final_loss = 1.769230
+n_iter  2 : loss (0.159040) + tot_loss (0.642136) + tot_loss_crop (0.635560) + loss_clip_order (0.312689) = final_loss = 1.749424
+n_iter  3 : loss (0.161137) + tot_loss (0.635341) + tot_loss_crop (0.631105) + loss_clip_order (0.315995) = final_loss = 1.743579
+n_iter  4 : loss (0.175420) + tot_loss (0.631716) + tot_loss_crop (0.624522) + loss_clip_order (0.319834) = final_loss = 1.751492
+n_iter  5 : loss (0.155017) + tot_loss (0.633972) + tot_loss_crop (0.629661) + loss_clip_order (0.311085) = final_loss = 1.729735
+n_iter  6 : loss (0.160159) + tot_loss (0.632023) + tot_loss_crop (0.626229) + loss_clip_order (0.324454) = final_loss = 1.742865
+n_iter  7 : loss (0.172574) + tot_loss (0.617197) + tot_loss_crop (0.622933) + loss_clip_order (0.321075) = final_loss = 1.733779
+n_iter  8 : loss (0.158480) + tot_loss (0.627313) + tot_loss_crop (0.628367) + loss_clip_order (0.321424) = final_loss = 1.735584
+n_iter  9 : loss (0.154889) + tot_loss (0.622740) + tot_loss_crop (0.626315) + loss_clip_order (0.314712) = final_loss = 1.718655
+n_iter 10 : loss (0.162295) + tot_loss (0.634329) + tot_loss_crop (0.624156) + loss_clip_order (0.310111) = final_loss = 1.730892
+n_iter 11 : loss (0.159611) + tot_loss (0.622749) + tot_loss_crop (0.623149) + loss_clip_order (0.314854) = final_loss = 1.720363
+n_iter 12 : loss (0.162150) + tot_loss (0.631632) + tot_loss_crop (0.619486) + loss_clip_order (0.311583) = final_loss = 1.724851
+n_iter 13 : loss (0.160941) + tot_loss (0.629610) + tot_loss_crop (0.617093) + loss_clip_order (0.310273) = final_loss = 1.717917
+n_iter 14 : loss (0.169403) + tot_loss (0.631698) + tot_loss_crop (0.614234) + loss_clip_order (0.321917) = final_loss = 1.737252
+n_iter 15 : loss (0.157677) + tot_loss (0.628661) + tot_loss_crop (0.618718) + loss_clip_order (0.318663) = final_loss = 1.723719
+n_iter 16 : loss (0.151869) + tot_loss (0.628611) + tot_loss_crop (0.621061) + loss_clip_order (0.308105) = final_loss = 1.709646
+n_iter 17 : loss (0.169119) + tot_loss (0.627761) + tot_loss_crop (0.610453) + loss_clip_order (0.333530) = final_loss = 1.740864
+n_iter 18 : loss (0.160388) + tot_loss (0.627364) + tot_loss_crop (0.611374) + loss_clip_order (0.317389) = final_loss = 1.716515
+n_iter 19 : loss (0.166523) + tot_loss (0.614470) + tot_loss_crop (0.608177) + loss_clip_order (0.319692) = final_loss = 1.708862
+n_iter 20 : loss (0.163839) + tot_loss (0.620448) + tot_loss_crop (0.609755) + loss_clip_order (0.317513) = final_loss = 1.711555
+n_iter 21 : loss (0.175582) + tot_loss (0.635469) + tot_loss_crop (0.606744) + loss_clip_order (0.319424) = final_loss = 1.737219
+n_iter 22 : loss (0.163447) + tot_loss (0.618888) + tot_loss_crop (0.606860) + loss_clip_order (0.320049) = final_loss = 1.709243
+n_iter 23 : loss (0.165581) + tot_loss (0.622126) + tot_loss_crop (0.605738) + loss_clip_order (0.313885) = final_loss = 1.707331
+n_iter 24 : loss (0.156460) + tot_loss (0.613876) + tot_loss_crop (0.607437) + loss_clip_order (0.314293) = final_loss = 1.692065
+n_iter 25 : loss (0.159300) + tot_loss (0.617149) + tot_loss_crop (0.607381) + loss_clip_order (0.307508) = final_loss = 1.691338
+n_iter 26 : loss (0.161353) + tot_loss (0.620020) + tot_loss_crop (0.604423) + loss_clip_order (0.310195) = final_loss = 1.695991
+n_iter 27 : loss (0.153422) + tot_loss (0.622955) + tot_loss_crop (0.606412) + loss_clip_order (0.305243) = final_loss = 1.688031
+n_iter 28 : loss (0.161343) + tot_loss (0.602659) + tot_loss_crop (0.603341) + loss_clip_order (0.306680) = final_loss = 1.674023
+n_iter 29 : loss (0.155535) + tot_loss (0.622748) + tot_loss_crop (0.603605) + loss_clip_order (0.312280) = final_loss = 1.694167
+n_iter 30 : loss (0.173983) + tot_loss (0.619790) + tot_loss_crop (0.595371) + loss_clip_order (0.308732) = final_loss = 1.697877
+[Pretraining Epoch 008] Total-Loss 0.62 =  F-Loss 0.62 + Clip-Loss 0.31 (train)
+n_iter  0 : loss (0.159284) + tot_loss (0.613498) + tot_loss_crop (0.599728) + loss_clip_order (0.305745) = final_loss = 1.678254
+n_iter  1 : loss (0.158188) + tot_loss (0.631025) + tot_loss_crop (0.599412) + loss_clip_order (0.309055) = final_loss = 1.697681
+n_iter  2 : loss (0.159934) + tot_loss (0.619380) + tot_loss_crop (0.595867) + loss_clip_order (0.304185) = final_loss = 1.679367
+n_iter  3 : loss (0.171337) + tot_loss (0.611946) + tot_loss_crop (0.594516) + loss_clip_order (0.311637) = final_loss = 1.689437
+n_iter  4 : loss (0.159842) + tot_loss (0.607772) + tot_loss_crop (0.595649) + loss_clip_order (0.309802) = final_loss = 1.673064
+n_iter  5 : loss (0.161054) + tot_loss (0.610878) + tot_loss_crop (0.590737) + loss_clip_order (0.303695) = final_loss = 1.666364
+n_iter  6 : loss (0.167828) + tot_loss (0.609370) + tot_loss_crop (0.588948) + loss_clip_order (0.315900) = final_loss = 1.682047
+n_iter  7 : loss (0.160607) + tot_loss (0.594915) + tot_loss_crop (0.590369) + loss_clip_order (0.307585) = final_loss = 1.653476
+n_iter  8 : loss (0.164145) + tot_loss (0.604105) + tot_loss_crop (0.588749) + loss_clip_order (0.310549) = final_loss = 1.667548
+n_iter  9 : loss (0.164228) + tot_loss (0.598901) + tot_loss_crop (0.588211) + loss_clip_order (0.313085) = final_loss = 1.664425
+n_iter 10 : loss (0.150735) + tot_loss (0.609190) + tot_loss_crop (0.588578) + loss_clip_order (0.300082) = final_loss = 1.648586
+n_iter 11 : loss (0.161929) + tot_loss (0.597963) + tot_loss_crop (0.582726) + loss_clip_order (0.304910) = final_loss = 1.647528
+n_iter 12 : loss (0.164158) + tot_loss (0.606728) + tot_loss_crop (0.583903) + loss_clip_order (0.301307) = final_loss = 1.656096
+n_iter 13 : loss (0.161837) + tot_loss (0.605302) + tot_loss_crop (0.582061) + loss_clip_order (0.301913) = final_loss = 1.651112
+n_iter 14 : loss (0.161254) + tot_loss (0.607845) + tot_loss_crop (0.583117) + loss_clip_order (0.298440) = final_loss = 1.650655
+n_iter 15 : loss (0.160743) + tot_loss (0.604725) + tot_loss_crop (0.582508) + loss_clip_order (0.308985) = final_loss = 1.656961
+n_iter 16 : loss (0.163733) + tot_loss (0.602846) + tot_loss_crop (0.580016) + loss_clip_order (0.306747) = final_loss = 1.653341
+n_iter 17 : loss (0.167438) + tot_loss (0.600261) + tot_loss_crop (0.580149) + loss_clip_order (0.313661) = final_loss = 1.661509
+n_iter 18 : loss (0.158322) + tot_loss (0.600548) + tot_loss_crop (0.576323) + loss_clip_order (0.306678) = final_loss = 1.641871
+n_iter 19 : loss (0.158025) + tot_loss (0.589562) + tot_loss_crop (0.577126) + loss_clip_order (0.313712) = final_loss = 1.638425
+n_iter 20 : loss (0.160794) + tot_loss (0.597138) + tot_loss_crop (0.574427) + loss_clip_order (0.306391) = final_loss = 1.638751
+n_iter 21 : loss (0.155713) + tot_loss (0.611331) + tot_loss_crop (0.577263) + loss_clip_order (0.305105) = final_loss = 1.649411
+n_iter 22 : loss (0.161755) + tot_loss (0.594092) + tot_loss_crop (0.573542) + loss_clip_order (0.325515) = final_loss = 1.654904
+n_iter 23 : loss (0.162688) + tot_loss (0.595758) + tot_loss_crop (0.573476) + loss_clip_order (0.302833) = final_loss = 1.634754
+n_iter 24 : loss (0.169943) + tot_loss (0.587369) + tot_loss_crop (0.566570) + loss_clip_order (0.300996) = final_loss = 1.624877
+n_iter 25 : loss (0.166224) + tot_loss (0.591189) + tot_loss_crop (0.567968) + loss_clip_order (0.310392) = final_loss = 1.635773
+n_iter 26 : loss (0.167808) + tot_loss (0.594226) + tot_loss_crop (0.567307) + loss_clip_order (0.308636) = final_loss = 1.637977
+n_iter 27 : loss (0.161808) + tot_loss (0.597811) + tot_loss_crop (0.567004) + loss_clip_order (0.298729) = final_loss = 1.625351
+n_iter 28 : loss (0.147504) + tot_loss (0.578231) + tot_loss_crop (0.569586) + loss_clip_order (0.299299) = final_loss = 1.594620
+n_iter 29 : loss (0.171726) + tot_loss (0.596803) + tot_loss_crop (0.565042) + loss_clip_order (0.302826) = final_loss = 1.636397
+n_iter 30 : loss (0.168172) + tot_loss (0.593744) + tot_loss_crop (0.561760) + loss_clip_order (0.302741) = final_loss = 1.626417
+[Pretraining Epoch 009] Total-Loss 0.59 =  F-Loss 0.59 + Clip-Loss 0.30 (train)
+training epoch 0
+use Semi !!!
+[Iteration 000] Total-Loss 6.19 = T-Loss 5.47 + B-Loss 0.72 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 5.19 = T-Loss 4.48 + B-Loss 0.70 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 5.11 = T-Loss 4.42 + B-Loss 0.69 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 5.11 = T-Loss 4.43 + B-Loss 0.68 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 000] Total-Loss 5.11 = T-Loss 4.43 + B-Loss 0.68 (train)[0m
+[Epoch 000] Total-Loss 4.95 = T-Loss 4.29 + B-Loss 0.65  (val)
+training epoch 1
+use Semi !!!
+[Iteration 000] Total-Loss 4.40 = T-Loss 3.71 + B-Loss 0.69 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 4.62 = T-Loss 3.95 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 4.64 = T-Loss 3.97 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 4.67 = T-Loss 4.00 + B-Loss 0.67 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 001] Total-Loss 4.67 = T-Loss 4.00 + B-Loss 0.67 (train)[0m
+[Epoch 001] Total-Loss 4.65 = T-Loss 4.00 + B-Loss 0.64  (val)
+training epoch 2
+use Semi !!!
+[Iteration 000] Total-Loss 3.87 = T-Loss 3.18 + B-Loss 0.69 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 4.08 = T-Loss 3.42 + B-Loss 0.65 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 4.07 = T-Loss 3.42 + B-Loss 0.65 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 4.01 = T-Loss 3.36 + B-Loss 0.65 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 002] Total-Loss 4.01 = T-Loss 3.36 + B-Loss 0.65 (train)[0m
+[Epoch 002] Total-Loss 4.16 = T-Loss 3.53 + B-Loss 0.64  (val)
+training epoch 3
+use Semi !!!
+[Iteration 000] Total-Loss 3.11 = T-Loss 2.42 + B-Loss 0.69 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 3.30 = T-Loss 2.65 + B-Loss 0.65 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 3.31 = T-Loss 2.66 + B-Loss 0.64 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 3.30 = T-Loss 2.66 + B-Loss 0.64 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 003] Total-Loss 3.30 = T-Loss 2.66 + B-Loss 0.64 (train)[0m
+[Epoch 003] Total-Loss 3.64 = T-Loss 3.00 + B-Loss 0.63  (val)
+training epoch 4
+use Semi !!!
+[Iteration 000] Total-Loss 2.61 = T-Loss 1.96 + B-Loss 0.66 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.86 = T-Loss 2.23 + B-Loss 0.63 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.90 = T-Loss 2.27 + B-Loss 0.63 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.92 = T-Loss 2.29 + B-Loss 0.63 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 004] Total-Loss 2.92 = T-Loss 2.29 + B-Loss 0.63 (train)[0m
+[Epoch 004] Total-Loss 3.48 = T-Loss 2.86 + B-Loss 0.63  (val)
+training epoch 5
+use Semi !!!
+[Iteration 000] Total-Loss 2.50 = T-Loss 1.84 + B-Loss 0.66 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.70 = T-Loss 2.07 + B-Loss 0.62 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.71 = T-Loss 2.08 + B-Loss 0.63 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.73 = T-Loss 2.10 + B-Loss 0.63 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 005] Total-Loss 2.73 = T-Loss 2.10 + B-Loss 0.63 (train)[0m
+[Epoch 005] Total-Loss 3.39 = T-Loss 2.76 + B-Loss 0.63  (val)
+training epoch 6
+use Semi !!!
+[Iteration 000] Total-Loss 2.36 = T-Loss 1.71 + B-Loss 0.65 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.56 = T-Loss 1.95 + B-Loss 0.62 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.59 = T-Loss 1.96 + B-Loss 0.62 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.62 = T-Loss 2.00 + B-Loss 0.62 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 006] Total-Loss 2.62 = T-Loss 2.00 + B-Loss 0.62 (train)[0m
+[Epoch 006] Total-Loss 3.41 = T-Loss 2.78 + B-Loss 0.63  (val)
+training epoch 7
+use Semi !!!
+[Iteration 000] Total-Loss 2.38 = T-Loss 1.72 + B-Loss 0.65 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.54 = T-Loss 1.92 + B-Loss 0.62 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.53 = T-Loss 1.91 + B-Loss 0.62 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.54 = T-Loss 1.92 + B-Loss 0.62 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 007] Total-Loss 2.54 = T-Loss 1.92 + B-Loss 0.62 (train)[0m
+[Epoch 007] Total-Loss 3.37 = T-Loss 2.74 + B-Loss 0.63  (val)
+training epoch 8
+use Semi !!!
+[Iteration 000] Total-Loss 2.31 = T-Loss 1.67 + B-Loss 0.64 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.48 = T-Loss 1.87 + B-Loss 0.61 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.46 = T-Loss 1.84 + B-Loss 0.61 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.46 = T-Loss 1.84 + B-Loss 0.62 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 008] Total-Loss 2.46 = T-Loss 1.84 + B-Loss 0.62 (train)[0m
+[Epoch 008] Total-Loss 3.34 = T-Loss 2.72 + B-Loss 0.63  (val)
+training epoch 9
+use Semi !!!
+[Iteration 000] Total-Loss 2.19 = T-Loss 1.55 + B-Loss 0.64 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 010] Total-Loss 2.42 = T-Loss 1.81 + B-Loss 0.61 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 020] Total-Loss 2.42 = T-Loss 1.81 + B-Loss 0.62 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[Iteration 030] Total-Loss 2.45 = T-Loss 1.83 + B-Loss 0.62 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 009] Total-Loss 2.45 = T-Loss 1.83 + B-Loss 0.62 (train)[0m
+[Epoch 009] Total-Loss 3.35 = T-Loss 2.71 + B-Loss 0.64  (val)
+Total Time taken for Running 10 epoch is :3557.31125 secs
+
+real	59m48.781s
+user	65m46.646s
+sys	3m50.258s
+Traceback (most recent call last):
+  File "spot_inference.py", line 27, in <module>
+    from spot_lib.thumos_dataset import THUMOS_Dataset
+  File "/root/models/SPOTworktree/spot_lib/thumos_dataset.py", line 30, in <module>
+    def get_class_index_map(class_info_path=config['dataset']['training']['class_info']):
+KeyError: 'class_info'
+
+real	0m2.775s
+user	0m3.658s
+sys	0m9.957s
+(42195288064, 84987740160)
+{'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'video_anno_path_json': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'best_score': 'spot_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 400, 'temporal_scale': 100}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 25, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1, 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
+Loading train Video Information ...
+Loading unlabel Video Information ...
+Loading validation Video Information ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 295
+batch_size 25
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 31
+training: len(train_loader_pretrain) 31
+training: len(test_loader) 154
+(42195288064, 84987740160)
+{'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'video_anno_path_json': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'best_score': 'spot_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 400, 'temporal_scale': 100}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 25, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1, 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
+Loading train Video Information ...
+Loading unlabel Video Information ...
+Loading validation Video Information ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 295
+batch_size 25
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 31
+training: len(train_loader_pretrain) 31
+training: len(test_loader) 154
+(42195288064, 84987740160)
+{'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'video_anno_path_json': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'best_score': 'spot_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 400, 'temporal_scale': 100}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 25, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1, 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
+Loading train Video Information ...
+Loading unlabel Video Information ...
+Loading validation Video Information ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 295
+batch_size 25
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 31
+training: len(train_loader_pretrain) 31
+training: len(test_loader) 154
+(42195288064, 84987740160)
+{'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'video_anno_path_json': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'best_score': 'spot_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 400, 'temporal_scale': 100}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 25, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1, 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
+Loading train Video Information ...
+Loading unlabel Video Information ...
+Loading validation Video Information ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 295
+batch_size 25
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 31
+training: len(train_loader_pretrain) 31
+training: len(test_loader) 154
+(42195288064, 84987740160)
+{'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'video_anno_path_json': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'best_score': 'spot_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 400, 'temporal_scale': 100}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 25, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1, 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
+Loading train Video Information ...
+Loading unlabel Video Information ...
+Loading validation Video Information ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 295
+batch_size 25
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 31
+training: len(train_loader_pretrain) 31
+training: len(test_loader) 154
+(42195288064, 84987740160)
+{'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'video_anno_path_json': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'best_score': 'spot_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 400, 'temporal_scale': 100}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 25, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1, 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
+Loading train Video Information ...
+Loading unlabel Video Information ...
+Loading validation Video Information ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 295
+batch_size 25
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 31
+training: len(train_loader_pretrain) 31
+training: len(test_loader) 154
+(42195288064, 84987740160)
+{'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'video_anno_path_json': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'best_score': 'spot_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 400, 'temporal_scale': 100}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 25, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1, 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
+Loading train Video Information ...
+Loading unlabel Video Information ...
+Loading validation Video Information ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 295
+batch_size 25
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 31
+training: len(train_loader_pretrain) 31
+training: len(test_loader) 154
+(42195288064, 84987740160)
+{'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'video_anno_path_json': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'best_score': 'spot_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 400, 'temporal_scale': 100}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 25, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1, 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
+Loading train Video Information ...
+Loading unlabel Video Information ...
+Loading validation Video Information ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 295
+batch_size 25
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 31
+training: len(train_loader_pretrain) 31
+training: len(test_loader) 154
+(42195288064, 84987740160)
+{'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'video_anno_path_json': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'best_score': 'spot_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 400, 'temporal_scale': 100}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 25, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1, 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
+Loading train Video Information ...
+Loading unlabel Video Information ...
+Loading validation Video Information ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 295
+batch_size 25
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 31
+training: len(train_loader_pretrain) 31
+training: len(test_loader) 154
+(42195288064, 84987740160)
+{'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'video_anno_path_json': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'best_score': 'spot_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 400, 'temporal_scale': 100}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 25, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1, 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
+Loading train Video Information ...
+Loading unlabel Video Information ...
+Loading validation Video Information ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 295
+batch_size 25
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 31
+training: len(train_loader_pretrain) 31
+training: len(test_loader) 154
+(42195288064, 84987740160)
+{'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'video_anno_path_json': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'best_score': 'spot_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 400, 'temporal_scale': 100}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 25, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1, 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
+Loading train Video Information ...
+Loading unlabel Video Information ...
+Loading validation Video Information ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 295
+batch_size 25
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 31
+training: len(train_loader_pretrain) 31
+training: len(test_loader) 154
+(42195288064, 84987740160)
+{'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'video_anno_path_json': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'best_score': 'spot_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 400, 'temporal_scale': 100}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 25, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1, 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
+Loading train Video Information ...
+Loading unlabel Video Information ...
+Loading validation Video Information ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 295
+batch_size 25
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 31
+training: len(train_loader_pretrain) 31
+training: len(test_loader) 154
+(42195288064, 84987740160)
+{'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'video_anno_path_json': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'best_score': 'spot_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 400, 'temporal_scale': 100}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 25, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1, 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
+Loading train Video Information ...
+Loading unlabel Video Information ...
+Loading validation Video Information ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 295
+batch_size 25
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 31
+training: len(train_loader_pretrain) 31
+training: len(test_loader) 154
+(42195288064, 84987740160)
+{'dataset': {'name': 'anet', 'num_classes': 200, 'training': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True}, 'testing': {'video_info_path': './data/activitynet_annotations/video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': './data/activitynet_annotations/anet_anno_action.json', 'video_anno_path_json': './data/activitynet_annotations/anet_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'best_score': 'spot_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 400, 'temporal_scale': 100}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 25, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'feature_path': '/data/i5O/ActivityNet1.3/train/', 'num_gpu': 1, 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'feature_path': '/data/i5O/ActivityNet1.3/test/', 'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.6}}
+Loading train Video Information ...
+Loading unlabel Video Information ...
+Loading validation Video Information ...
+train_loader
+train_loader_pretrain
+train_loader_unlabel
+training: len(train_loader_unlabel) 295
+batch_size 25
+adjusted batch_size 24
+test_loader
+training: len(train_loader) 31
+training: len(train_loader_pretrain) 31
+training: len(test_loader) 154

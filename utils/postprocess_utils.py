@@ -17,12 +17,18 @@ with open(sys.argv[1], 'r', encoding='utf-8') as f:
         config = modify_config(yaml.load(tmp, Loader=yaml.FullLoader), *handle_args(sys.argv))
         temporal_scale = config['model']['temporal_scale']
         num_classes = config['dataset']['num_classes']
+        dataset_name = config['dataset']['name']
 
 
-vid_info = config['dataset']['training']['video_info_path']
-vid_anno = config['dataset']['training']['video_anno_path']
-vid_path = config['training']['feature_path']
+vid_info = config['dataset']['testing']['video_info_path']
+vid_anno = config['dataset']['testing']['video_anno_path_json']
+vid_path = config['testing']['feature_path']
 nms_thresh = config['testing']['nms_thresh']
+
+if dataset_name == 'anet':
+    testing_subset = 'validation'
+elif dataset_name == 'thumos':
+    testing_subset = 'testing'
 
 def load_json(file):
     with open(file) as json_file:
@@ -32,7 +38,7 @@ def load_json(file):
 
 def get_infer_dict():
 
-    breakpoint()
+    #breakpoint()
 
     df = pd.read_csv(vid_info)
     json_data = load_json(vid_anno)
@@ -52,7 +58,7 @@ def get_infer_dict():
         video_new_info['annotations'] = video_info['annotations']
         if len(video_anno) > 0:
             video_label = video_info['annotations'][0]['label']
-            if video_subset == 'validation':
+            if video_subset == testing_subset:
                     video_dict[video_name] = video_new_info
                     video_label_dict[video_name] = video_label
     return video_dict , video_label_dict
@@ -111,8 +117,13 @@ def IOU(s1, e1, s2, e2):
 
 
 def multithread_detection(video_name, video_cls, video_info, label_dict, pred_prop, best_cls, num_prop=num_classes, topk = 2):
+
+    if dataset_name == 'anet':
+        modified_video_name = "v_"+video_name
+    else:
+        modified_video_name = video_name
     
-    old_df = pred_prop[pred_prop.video_name == "v_"+video_name]
+    old_df = pred_prop[pred_prop.video_name == modified_video_name]
     # print(df)
     
     df = pd.DataFrame()
@@ -121,8 +132,8 @@ def multithread_detection(video_name, video_cls, video_info, label_dict, pred_pr
     df['xmin'] = old_df.xmin.values[:]
     df['xmax'] = old_df.xmax.values[:]
 
-    best_score = best_cls["v_"+video_name]["score"]
-    best_label = best_cls["v_"+video_name]["class"]
+    best_score = best_cls[modified_video_name]["score"]
+    best_label = best_cls[modified_video_name]["class"]
 
     if len(df) > 1:
         df = Soft_NMS(df, nms_thresh)
