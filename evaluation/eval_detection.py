@@ -205,7 +205,7 @@ class THUMOSdetection(object):
         ground_truth_by_label = self.ground_truth.groupby('label') # video-id, t-start, t-end, label - the ground truth actions  
         prediction_by_label = self.prediction.groupby('label') # video-id, t-start, t-end, label, score - the prediction actions
 
-        results = Parallel(n_jobs=1)(#len(self.thumos_index))(
+        results = Parallel(n_jobs=len(self.thumos_index))(
                     delayed(compute_average_precision_detection)(
                         ground_truth=ground_truth_by_label.get_group(cidx).reset_index(drop=True),
                         prediction=self._get_predictions_with_label(prediction_by_label, label_name, cidx),

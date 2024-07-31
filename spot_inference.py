@@ -49,7 +49,7 @@ torch.backends.cudnn.benchmark = False
 #######################################################
 
 (a,o,n) = (np.logical_and, np.logical_or, np.logical_not) # for brevity
-size_one_holes = False
+size_one_holes = True
 
 def save_plot(x,save_path):
     """[TODO:description]
@@ -211,6 +211,8 @@ if __name__ == '__main__':
 
             #print("index", idx)
 
+            #breakpoint()
+
             video_name = test_loader.dataset.subset_mask_list[idx[0]]
             vid_count+=1
             input_data = input_data.cuda()
@@ -270,12 +272,14 @@ if __name__ == '__main__':
             thres = class_snip_thresh
 
             ### cas_tuple will contain (for the current video), the segment in which the model has detected an action with a confidence score exceeding the threshold.
+            #breakpoint()
             cas_tuple = []
             for k in thres:
                 filt_seg_score = seg_score > k
                 integer_map1 = map(int,filt_seg_score)
                 filt_seg_score_int = list(integer_map1) # or just do filt_seg_score_int = filt_seg_score.astype(int)
                 filt_seg_score_int = fill_holes(filt_seg_score_int)
+                #breakpoint()
                 # result: filt_seg_score_int is a list of length temporal_scale; at locations where the model's confidence exceeds the threshold, a 1 is placed in that location.
                 if 1 in filt_seg_score_int: 
                     props_indices = find_proposals(filt_seg_score_int)

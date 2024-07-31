@@ -1,474 +1,105 @@
-(55164076032, 84987740160)
-{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 30, 'consecutive_warmup_epochs': 30, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 30, 'consecutive_train_epochs': 30, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
+./spot_train_eval.sh 0 THUMOS_2.txt ./configs/thumos.yaml pretraining.warmup_epoch=5 pretraining.consecutive_warmup_epochs=5 training.max_epoch=20 training.consecutive_train_epochs=20 dataset.training.output_path=./output/ dataset.testing.output_path=./output/ training.checkpoint_path=./output/
+(24883757056, 84987740160)
+{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 256, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 5, 'consecutive_warmup_epochs': 5, 'unlabeled_pretrain': False}, 'training': {'batch_size': 2, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 20, 'consecutive_train_epochs': 20, 'checkpoint_path': './output/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
 loading video frame data ...
 loading video frame data ...
 loading video frame data ...
 train_loader
 train_loader_pretrain
 train_loader_unlabel
-training: len(train_loader_unlabel) 7
-batch_size 20
-adjusted batch_size 24
+training: len(train_loader_unlabel) 9
+batch_size 2
+adjusted batch_size 20
 test_loader
-training: len(train_loader) 1
-training: len(train_loader_pretrain) 1
-training: len(test_loader) 10
-{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 30, 'consecutive_warmup_epochs': 30, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 30, 'consecutive_train_epochs': 30, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
+training: len(train_loader) 10
+training: len(train_loader_pretrain) 10
+training: len(test_loader) 106
+{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 256, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 5, 'consecutive_warmup_epochs': 5, 'unlabeled_pretrain': False}, 'training': {'batch_size': 2, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 20, 'consecutive_train_epochs': 20, 'checkpoint_path': './output/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
 
-Total Number of Learnable Paramters (in M) :  4.458968
+Total Number of Learnable Paramters (in M) :  4.859416
 No of Gpus using to Train :  1 
- Saving all Checkpoints in path : ./output_2/
+ Saving all Checkpoints in path : ./output/
 loading video frame data ...
-  0% 0/20 [00:00<?, ?it/s]100% 20/20 [00:00<00:00, 239.11it/s]
+  0% 0/20 [00:00<?, ?it/s]100% 20/20 [00:00<00:00, 221.31it/s]
 loading video frame data ...
-  0% 0/180 [00:00<?, ?it/s] 16% 29/180 [00:00<00:00, 282.82it/s] 33% 59/180 [00:00<00:00, 292.71it/s] 49% 89/180 [00:00<00:00, 264.78it/s] 64% 116/180 [00:00<00:00, 224.34it/s] 83% 150/180 [00:00<00:00, 258.73it/s]100% 180/180 [00:00<00:00, 272.48it/s]
+  0% 0/180 [00:00<?, ?it/s] 14% 26/180 [00:00<00:00, 255.17it/s] 32% 57/180 [00:00<00:00, 280.89it/s] 48% 86/180 [00:00<00:00, 250.48it/s] 62% 112/180 [00:00<00:00, 225.18it/s] 78% 140/180 [00:00<00:00, 240.71it/s] 94% 170/180 [00:00<00:00, 258.96it/s]100% 180/180 [00:00<00:00, 256.56it/s]
 loading video frame data ...
-  0% 0/212 [00:00<?, ?it/s] 12% 25/212 [00:00<00:00, 247.60it/s] 24% 51/212 [00:00<00:00, 252.85it/s] 36% 77/212 [00:00<00:00, 254.01it/s] 50% 107/212 [00:00<00:00, 270.84it/s] 64% 136/212 [00:00<00:00, 274.94it/s] 78% 166/212 [00:00<00:00, 283.01it/s] 92% 195/212 [00:00<00:00, 280.99it/s]100% 212/212 [00:00<00:00, 275.85it/s]train_loader
+  0% 0/212 [00:00<?, ?it/s] 12% 25/212 [00:00<00:00, 245.29it/s] 25% 53/212 [00:00<00:00, 260.75it/s] 38% 81/212 [00:00<00:00, 268.00it/s] 51% 108/212 [00:00<00:00, 213.28it/s] 63% 134/212 [00:00<00:00, 226.28it/s] 77% 163/212 [00:00<00:00, 238.58it/s] 89% 189/212 [00:00<00:00, 242.09it/s]100% 212/212 [00:00<00:00, 243.99it/s]train_loader
 train_loader_pretrain
 train_loader_unlabel
-training: len(train_loader_unlabel) 7
+training: len(train_loader_unlabel) 9
 test_loader
-training: len(train_loader) 1
-training: len(train_loader_pretrain) 1
-training: len(test_loader) 10
+training: len(train_loader) 10
+training: len(train_loader_pretrain) 10
+training: len(test_loader) 106
 0
 
-n_iter  0 : loss (0.253325) + tot_loss (0.938516) + tot_loss_crop (0.918755) + loss_clip_order (0.700033) = final_loss = 2.810629
-[Pretraining Epoch 000] Total-Loss 0.94 =  F-Loss 0.94 + Clip-Loss 0.70 (train)
+n_iter  0 : loss (0.254175) + tot_loss (0.962349) + tot_loss_crop (0.934166) + loss_clip_order (0.773951) = final_loss = 2.924641
+n_iter  1 : loss (0.249537) + tot_loss (0.926984) + tot_loss_crop (0.925755) + loss_clip_order (0.692898) = final_loss = 2.795173
+n_iter  2 : loss (0.244972) + tot_loss (0.946204) + tot_loss_crop (0.934412) + loss_clip_order (0.694437) = final_loss = 2.820024
+n_iter  3 : loss (0.244072) + tot_loss (0.985731) + tot_loss_crop (0.940626) + loss_clip_order (0.693534) = final_loss = 2.863964
+n_iter  4 : loss (0.238896) + tot_loss (0.930003) + tot_loss_crop (0.917481) + loss_clip_order (0.694478) = final_loss = 2.780857
+n_iter  5 : loss (0.239121) + tot_loss (0.919588) + tot_loss_crop (0.911966) + loss_clip_order (0.693927) = final_loss = 2.764603
+n_iter  6 : loss (0.232785) + tot_loss (0.930451) + tot_loss_crop (0.910986) + loss_clip_order (0.694272) = final_loss = 2.768494
+n_iter  7 : loss (0.232173) + tot_loss (0.917434) + tot_loss_crop (0.904495) + loss_clip_order (0.694264) = final_loss = 2.748366
+n_iter  8 : loss (0.226180) + tot_loss (0.931052) + tot_loss_crop (0.914944) + loss_clip_order (0.694256) = final_loss = 2.766432
+n_iter  9 : loss (0.217156) + tot_loss (0.922323) + tot_loss_crop (0.911004) + loss_clip_order (0.694244) = final_loss = 2.744728
+[Pretraining Epoch 000] Total-Loss 0.92 =  F-Loss 0.92 + Clip-Loss 0.69 (train)
 /root/models/venv_SPOT/lib/python3.8/site-packages/torch/nn/_reduction.py:42: UserWarning: size_average and reduce args will be deprecated, please use reduction='none' instead.
   warnings.warn(warning.format(ret))
-n_iter  0 : loss (0.247049) + tot_loss (0.919496) + tot_loss_crop (0.914148) + loss_clip_order (0.694122) = final_loss = 2.774815
-[Pretraining Epoch 001] Total-Loss 0.92 =  F-Loss 0.92 + Clip-Loss 0.69 (train)
-n_iter  0 : loss (0.243408) + tot_loss (0.897189) + tot_loss_crop (0.903274) + loss_clip_order (0.693434) = final_loss = 2.737305
-[Pretraining Epoch 002] Total-Loss 0.90 =  F-Loss 0.90 + Clip-Loss 0.69 (train)
-n_iter  0 : loss (0.241663) + tot_loss (0.876235) + tot_loss_crop (0.892285) + loss_clip_order (0.693810) = final_loss = 2.703994
-[Pretraining Epoch 003] Total-Loss 0.88 =  F-Loss 0.88 + Clip-Loss 0.69 (train)
-n_iter  0 : loss (0.243614) + tot_loss (0.861865) + tot_loss_crop (0.881703) + loss_clip_order (0.693323) = final_loss = 2.680506
-[Pretraining Epoch 004] Total-Loss 0.86 =  F-Loss 0.86 + Clip-Loss 0.69 (train)
-n_iter  0 : loss (0.246363) + tot_loss (0.854975) + tot_loss_crop (0.878629) + loss_clip_order (0.692774) = final_loss = 2.672740
-[Pretraining Epoch 005] Total-Loss 0.85 =  F-Loss 0.85 + Clip-Loss 0.69 (train)
-n_iter  0 : loss (0.247542) + tot_loss (0.851900) + tot_loss_crop (0.880360) + loss_clip_order (0.711995) = final_loss = 2.691796
-[Pretraining Epoch 006] Total-Loss 0.85 =  F-Loss 0.85 + Clip-Loss 0.71 (train)
-n_iter  0 : loss (0.244398) + tot_loss (0.850472) + tot_loss_crop (0.880076) + loss_clip_order (0.692235) = final_loss = 2.667180
-[Pretraining Epoch 007] Total-Loss 0.85 =  F-Loss 0.85 + Clip-Loss 0.69 (train)
-n_iter  0 : loss (0.240017) + tot_loss (0.850303) + tot_loss_crop (0.878926) + loss_clip_order (0.693965) = final_loss = 2.663210
-[Pretraining Epoch 008] Total-Loss 0.85 =  F-Loss 0.85 + Clip-Loss 0.69 (train)
-n_iter  0 : loss (0.234348) + tot_loss (0.850021) + tot_loss_crop (0.879708) + loss_clip_order (0.693087) = final_loss = 2.657164
-[Pretraining Epoch 009] Total-Loss 0.85 =  F-Loss 0.85 + Clip-Loss 0.69 (train)
-n_iter  0 : loss (0.229139) + tot_loss (0.849080) + tot_loss_crop (0.880214) + loss_clip_order (0.693367) = final_loss = 2.651799
-[Pretraining Epoch 010] Total-Loss 0.85 =  F-Loss 0.85 + Clip-Loss 0.69 (train)
-n_iter  0 : loss (0.226692) + tot_loss (0.847486) + tot_loss_crop (0.872035) + loss_clip_order (0.693556) = final_loss = 2.639770
-[Pretraining Epoch 011] Total-Loss 0.85 =  F-Loss 0.85 + Clip-Loss 0.69 (train)
-n_iter  0 : loss (0.220885) + tot_loss (0.844842) + tot_loss_crop (0.872662) + loss_clip_order (0.692199) = final_loss = 2.630589
-[Pretraining Epoch 012] Total-Loss 0.84 =  F-Loss 0.84 + Clip-Loss 0.69 (train)
-n_iter  0 : loss (0.215824) + tot_loss (0.841726) + tot_loss_crop (0.872766) + loss_clip_order (0.692072) = final_loss = 2.622388
-[Pretraining Epoch 013] Total-Loss 0.84 =  F-Loss 0.84 + Clip-Loss 0.69 (train)
-n_iter  0 : loss (0.215902) + tot_loss (0.838314) + tot_loss_crop (0.870964) + loss_clip_order (0.691290) = final_loss = 2.616469
-[Pretraining Epoch 014] Total-Loss 0.84 =  F-Loss 0.84 + Clip-Loss 0.69 (train)
-n_iter  0 : loss (0.212204) + tot_loss (0.834530) + tot_loss_crop (0.869950) + loss_clip_order (0.688528) = final_loss = 2.605212
-[Pretraining Epoch 015] Total-Loss 0.83 =  F-Loss 0.83 + Clip-Loss 0.69 (train)
-n_iter  0 : loss (0.213643) + tot_loss (0.830879) + tot_loss_crop (0.862072) + loss_clip_order (0.689966) = final_loss = 2.596560
-[Pretraining Epoch 016] Total-Loss 0.83 =  F-Loss 0.83 + Clip-Loss 0.69 (train)
-n_iter  0 : loss (0.210576) + tot_loss (0.827387) + tot_loss_crop (0.866282) + loss_clip_order (0.686688) = final_loss = 2.590934
-[Pretraining Epoch 017] Total-Loss 0.83 =  F-Loss 0.83 + Clip-Loss 0.69 (train)
-n_iter  0 : loss (0.212922) + tot_loss (0.824538) + tot_loss_crop (0.864282) + loss_clip_order (0.691407) = final_loss = 2.593149
-[Pretraining Epoch 018] Total-Loss 0.82 =  F-Loss 0.82 + Clip-Loss 0.69 (train)
-n_iter  0 : loss (0.205150) + tot_loss (0.822383) + tot_loss_crop (0.867470) + loss_clip_order (0.683962) = final_loss = 2.578965
-[Pretraining Epoch 019] Total-Loss 0.82 =  F-Loss 0.82 + Clip-Loss 0.68 (train)
-n_iter  0 : loss (0.198717) + tot_loss (0.821775) + tot_loss_crop (0.862040) + loss_clip_order (0.683575) = final_loss = 2.566107
-[Pretraining Epoch 020] Total-Loss 0.82 =  F-Loss 0.82 + Clip-Loss 0.68 (train)
-n_iter  0 : loss (0.194221) + tot_loss (0.821557) + tot_loss_crop (0.858049) + loss_clip_order (0.688365) = final_loss = 2.562193
-[Pretraining Epoch 021] Total-Loss 0.82 =  F-Loss 0.82 + Clip-Loss 0.69 (train)
-n_iter  0 : loss (0.188726) + tot_loss (0.821058) + tot_loss_crop (0.855625) + loss_clip_order (0.688120) = final_loss = 2.553529
-[Pretraining Epoch 022] Total-Loss 0.82 =  F-Loss 0.82 + Clip-Loss 0.69 (train)
-n_iter  0 : loss (0.186097) + tot_loss (0.818987) + tot_loss_crop (0.853833) + loss_clip_order (0.689042) = final_loss = 2.547959
-[Pretraining Epoch 023] Total-Loss 0.82 =  F-Loss 0.82 + Clip-Loss 0.69 (train)
-n_iter  0 : loss (0.179449) + tot_loss (0.816084) + tot_loss_crop (0.854915) + loss_clip_order (0.687923) = final_loss = 2.538371
-[Pretraining Epoch 024] Total-Loss 0.82 =  F-Loss 0.82 + Clip-Loss 0.69 (train)
-n_iter  0 : loss (0.177136) + tot_loss (0.812702) + tot_loss_crop (0.855126) + loss_clip_order (0.683834) = final_loss = 2.528797
-[Pretraining Epoch 025] Total-Loss 0.81 =  F-Loss 0.81 + Clip-Loss 0.68 (train)
-n_iter  0 : loss (0.181283) + tot_loss (0.809027) + tot_loss_crop (0.850816) + loss_clip_order (0.674636) = final_loss = 2.515762
-[Pretraining Epoch 026] Total-Loss 0.81 =  F-Loss 0.81 + Clip-Loss 0.67 (train)
-n_iter  0 : loss (0.181712) + tot_loss (0.805612) + tot_loss_crop (0.851310) + loss_clip_order (0.658314) = final_loss = 2.496949
-[Pretraining Epoch 027] Total-Loss 0.81 =  F-Loss 0.81 + Clip-Loss 0.66 (train)
-n_iter  0 : loss (0.189150) + tot_loss (0.804458) + tot_loss_crop (0.850593) + loss_clip_order (0.690627) = final_loss = 2.534829
-[Pretraining Epoch 028] Total-Loss 0.80 =  F-Loss 0.80 + Clip-Loss 0.69 (train)
-n_iter  0 : loss (0.162172) + tot_loss (0.805165) + tot_loss_crop (0.855663) + loss_clip_order (0.666973) = final_loss = 2.489973
-[Pretraining Epoch 029] Total-Loss 0.81 =  F-Loss 0.81 + Clip-Loss 0.67 (train)
+n_iter  0 : loss (0.216870) + tot_loss (0.923743) + tot_loss_crop (0.912135) + loss_clip_order (0.694342) = final_loss = 2.747089
+n_iter  1 : loss (0.208598) + tot_loss (0.879521) + tot_loss_crop (0.908121) + loss_clip_order (0.694956) = final_loss = 2.691196
+n_iter  2 : loss (0.210124) + tot_loss (0.887795) + tot_loss_crop (0.892366) + loss_clip_order (0.694311) = final_loss = 2.684595
+n_iter  3 : loss (0.203543) + tot_loss (0.920035) + tot_loss_crop (0.898477) + loss_clip_order (0.694397) = final_loss = 2.716452
+n_iter  4 : loss (0.206740) + tot_loss (0.865268) + tot_loss_crop (0.887295) + loss_clip_order (0.691964) = final_loss = 2.651268
+n_iter  5 : loss (0.191442) + tot_loss (0.840503) + tot_loss_crop (0.887404) + loss_clip_order (0.692423) = final_loss = 2.611772
+n_iter  6 : loss (0.208050) + tot_loss (0.845404) + tot_loss_crop (0.869526) + loss_clip_order (0.695128) = final_loss = 2.618108
+n_iter  7 : loss (0.190874) + tot_loss (0.836290) + tot_loss_crop (0.878345) + loss_clip_order (0.694673) = final_loss = 2.600182
+n_iter  8 : loss (0.204912) + tot_loss (0.850590) + tot_loss_crop (0.863730) + loss_clip_order (0.693877) = final_loss = 2.613109
+n_iter  9 : loss (0.195179) + tot_loss (0.844465) + tot_loss_crop (0.870999) + loss_clip_order (0.694588) = final_loss = 2.605231
+[Pretraining Epoch 001] Total-Loss 0.84 =  F-Loss 0.84 + Clip-Loss 0.69 (train)
+n_iter  0 : loss (0.188269) + tot_loss (0.855746) + tot_loss_crop (0.881547) + loss_clip_order (0.693494) = final_loss = 2.619055
+n_iter  1 : loss (0.188240) + tot_loss (0.810307) + tot_loss_crop (0.878025) + loss_clip_order (0.697620) = final_loss = 2.574192
+n_iter  2 : loss (0.190371) + tot_loss (0.824502) + tot_loss_crop (0.857415) + loss_clip_order (0.696265) = final_loss = 2.568553
+n_iter  3 : loss (0.186824) + tot_loss (0.867732) + tot_loss_crop (0.871415) + loss_clip_order (0.698655) = final_loss = 2.624625
+n_iter  4 : loss (0.190609) + tot_loss (0.821081) + tot_loss_crop (0.866950) + loss_clip_order (0.686032) = final_loss = 2.564672
+n_iter  5 : loss (0.184373) + tot_loss (0.800515) + tot_loss_crop (0.852873) + loss_clip_order (0.684376) = final_loss = 2.522136
+n_iter  6 : loss (0.157821) + tot_loss (0.813678) + tot_loss_crop (0.865989) + loss_clip_order (0.696933) = final_loss = 2.534422
+n_iter  7 : loss (0.178393) + tot_loss (0.810826) + tot_loss_crop (0.839483) + loss_clip_order (0.687802) = final_loss = 2.516503
+n_iter  8 : loss (0.150675) + tot_loss (0.829612) + tot_loss_crop (0.867672) + loss_clip_order (0.693248) = final_loss = 2.541206
+n_iter  9 : loss (0.140810) + tot_loss (0.824836) + tot_loss_crop (0.879608) + loss_clip_order (0.691694) = final_loss = 2.536948
+[Pretraining Epoch 002] Total-Loss 0.82 =  F-Loss 0.82 + Clip-Loss 0.69 (train)
+n_iter  0 : loss (0.164569) + tot_loss (0.839601) + tot_loss_crop (0.857002) + loss_clip_order (0.692944) = final_loss = 2.554115
+n_iter  1 : loss (0.143162) + tot_loss (0.801347) + tot_loss_crop (0.874244) + loss_clip_order (0.702626) = final_loss = 2.521379
+n_iter  2 : loss (0.151812) + tot_loss (0.811345) + tot_loss_crop (0.863840) + loss_clip_order (0.697576) = final_loss = 2.524574
+n_iter  3 : loss (0.155087) + tot_loss (0.848851) + tot_loss_crop (0.854354) + loss_clip_order (0.693517) = final_loss = 2.551809
+n_iter  4 : loss (0.178035) + tot_loss (0.804711) + tot_loss_crop (0.849524) + loss_clip_order (0.692775) = final_loss = 2.525045
+n_iter  5 : loss (0.150785) + tot_loss (0.780708) + tot_loss_crop (0.856249) + loss_clip_order (0.692133) = final_loss = 2.479876
+n_iter  6 : loss (0.161305) + tot_loss (0.790625) + tot_loss_crop (0.839013) + loss_clip_order (0.693072) = final_loss = 2.484016
+n_iter  7 : loss (0.169080) + tot_loss (0.784849) + tot_loss_crop (0.836007) + loss_clip_order (0.690292) = final_loss = 2.480229
+n_iter  8 : loss (0.201648) + tot_loss (0.803152) + tot_loss_crop (0.821632) + loss_clip_order (0.692598) = final_loss = 2.519030
+n_iter  9 : loss (0.159142) + tot_loss (0.798120) + tot_loss_crop (0.858670) + loss_clip_order (0.690639) = final_loss = 2.506570
+[Pretraining Epoch 003] Total-Loss 0.80 =  F-Loss 0.80 + Clip-Loss 0.69 (train)
+n_iter  0 : loss (0.164459) + tot_loss (0.812694) + tot_loss_crop (0.848583) + loss_clip_order (0.684092) = final_loss = 2.509829
+n_iter  1 : loss (0.185819) + tot_loss (0.777373) + tot_loss_crop (0.838456) + loss_clip_order (0.692162) = final_loss = 2.493809
+n_iter  2 : loss (0.182212) + tot_loss (0.784523) + tot_loss_crop (0.834027) + loss_clip_order (0.687109) = final_loss = 2.487871
+n_iter  3 : loss (0.143988) + tot_loss (0.823393) + tot_loss_crop (0.853577) + loss_clip_order (0.693160) = final_loss = 2.514118
+n_iter  4 : loss (0.202730) + tot_loss (0.785928) + tot_loss_crop (0.833762) + loss_clip_order (0.697227) = final_loss = 2.519647
+n_iter  5 : loss (0.165180) + tot_loss (0.764936) + tot_loss_crop (0.839072) + loss_clip_order (0.686380) = final_loss = 2.455568
+n_iter  6 : loss (0.161697) + tot_loss (0.777462) + tot_loss_crop (0.836571) + loss_clip_order (0.693170) = final_loss = 2.468899
+n_iter  7 : loss (0.166092) + tot_loss (0.772057) + tot_loss_crop (0.826662) + loss_clip_order (0.691463) = final_loss = 2.456275
+n_iter  8 : loss (0.145588) + tot_loss (0.791425) + tot_loss_crop (0.850446) + loss_clip_order (0.685614) = final_loss = 2.473073
+n_iter  9 : loss (0.150689) + tot_loss (0.786485) + tot_loss_crop (0.839645) + loss_clip_order (0.690322) = final_loss = 2.467142
+[Pretraining Epoch 004] Total-Loss 0.79 =  F-Loss 0.79 + Clip-Loss 0.69 (train)
 training epoch 0
 use Semi !!!
-[Iteration 000] Total-Loss 4.44 = T-Loss 3.59 + B-Loss 0.85 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 000] Total-Loss 4.44 = T-Loss 3.59 + B-Loss 0.85 (train)[0m
-[Epoch 000] Total-Loss 2.29 = T-Loss 1.44 + B-Loss 0.86  (val)
+[Iteration 000] Total-Loss 3.33 = T-Loss 3.09 + B-Loss 0.24 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 000] Total-Loss 1.72 = T-Loss 1.67 + B-Loss 0.05 (train)[0m
+[Epoch 000] Total-Loss 0.34 = T-Loss 0.34 + B-Loss 0.00  (val)
 training epoch 1
 use Semi !!!
-[Iteration 000] Total-Loss 2.22 = T-Loss 1.37 + B-Loss 0.85 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 001] Total-Loss 2.22 = T-Loss 1.37 + B-Loss 0.85 (train)[0m
-[Epoch 001] Total-Loss 2.40 = T-Loss 1.54 + B-Loss 0.86  (val)
+[Iteration 000] Total-Loss 1.65 = T-Loss 1.58 + B-Loss 0.07 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
+[94m[Epoch 001] Total-Loss 1.33 = T-Loss 1.30 + B-Loss 0.03 (train)[0m
+[Epoch 001] Total-Loss 0.45 = T-Loss 0.45 + B-Loss 0.00  (val)
 training epoch 2
 use Semi !!!
-[Iteration 000] Total-Loss 2.29 = T-Loss 1.44 + B-Loss 0.85 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 002] Total-Loss 2.29 = T-Loss 1.44 + B-Loss 0.85 (train)[0m
-[Epoch 002] Total-Loss 2.34 = T-Loss 1.49 + B-Loss 0.86  (val)
-training epoch 3
-use Semi !!!
-[Iteration 000] Total-Loss 2.23 = T-Loss 1.38 + B-Loss 0.85 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 003] Total-Loss 2.23 = T-Loss 1.38 + B-Loss 0.85 (train)[0m
-[Epoch 003] Total-Loss 2.24 = T-Loss 1.39 + B-Loss 0.85  (val)
-training epoch 4
-use Semi !!!
-[Iteration 000] Total-Loss 2.14 = T-Loss 1.29 + B-Loss 0.85 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 004] Total-Loss 2.14 = T-Loss 1.29 + B-Loss 0.85 (train)[0m
-[Epoch 004] Total-Loss 2.14 = T-Loss 1.29 + B-Loss 0.85  (val)
-training epoch 5
-use Semi !!!
-[Iteration 000] Total-Loss 2.06 = T-Loss 1.22 + B-Loss 0.84 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 005] Total-Loss 2.06 = T-Loss 1.22 + B-Loss 0.84 (train)[0m
-[Epoch 005] Total-Loss 2.10 = T-Loss 1.25 + B-Loss 0.85  (val)
-training epoch 6
-use Semi !!!
-[Iteration 000] Total-Loss 2.04 = T-Loss 1.20 + B-Loss 0.84 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 006] Total-Loss 2.04 = T-Loss 1.20 + B-Loss 0.84 (train)[0m
-[Epoch 006] Total-Loss 2.10 = T-Loss 1.26 + B-Loss 0.85  (val)
-training epoch 7
-use Semi !!!
-[Iteration 000] Total-Loss 2.06 = T-Loss 1.23 + B-Loss 0.84 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 007] Total-Loss 2.06 = T-Loss 1.23 + B-Loss 0.84 (train)[0m
-[Epoch 007] Total-Loss 2.12 = T-Loss 1.27 + B-Loss 0.85  (val)
-training epoch 8
-use Semi !!!
-[Iteration 000] Total-Loss 2.09 = T-Loss 1.26 + B-Loss 0.83 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 008] Total-Loss 2.09 = T-Loss 1.26 + B-Loss 0.83 (train)[0m
-[Epoch 008] Total-Loss 2.10 = T-Loss 1.25 + B-Loss 0.85  (val)
-training epoch 9
-use Semi !!!
-[Iteration 000] Total-Loss 2.06 = T-Loss 1.23 + B-Loss 0.83 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 009] Total-Loss 2.06 = T-Loss 1.23 + B-Loss 0.83 (train)[0m
-[Epoch 009] Total-Loss 2.07 = T-Loss 1.22 + B-Loss 0.84  (val)
-training epoch 10
-use Semi !!!
-[Iteration 000] Total-Loss 2.01 = T-Loss 1.18 + B-Loss 0.82 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 010] Total-Loss 2.01 = T-Loss 1.18 + B-Loss 0.82 (train)[0m
-[Epoch 010] Total-Loss 2.05 = T-Loss 1.21 + B-Loss 0.84  (val)
-training epoch 11
-use Semi !!!
-[Iteration 000] Total-Loss 1.97 = T-Loss 1.15 + B-Loss 0.82 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 011] Total-Loss 1.97 = T-Loss 1.15 + B-Loss 0.82 (train)[0m
-[Epoch 011] Total-Loss 2.06 = T-Loss 1.22 + B-Loss 0.84  (val)
-training epoch 12
-use Semi !!!
-[Iteration 000] Total-Loss 1.97 = T-Loss 1.15 + B-Loss 0.82 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 012] Total-Loss 1.97 = T-Loss 1.15 + B-Loss 0.82 (train)[0m
-[Epoch 012] Total-Loss 2.08 = T-Loss 1.24 + B-Loss 0.84  (val)
-training epoch 13
-use Semi !!!
-[Iteration 000] Total-Loss 1.97 = T-Loss 1.15 + B-Loss 0.81 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 013] Total-Loss 1.97 = T-Loss 1.15 + B-Loss 0.81 (train)[0m
-[Epoch 013] Total-Loss 2.09 = T-Loss 1.25 + B-Loss 0.84  (val)
-training epoch 14
-use Semi !!!
-[Iteration 000] Total-Loss 1.97 = T-Loss 1.16 + B-Loss 0.81 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 014] Total-Loss 1.97 = T-Loss 1.16 + B-Loss 0.81 (train)[0m
-[Epoch 014] Total-Loss 2.09 = T-Loss 1.25 + B-Loss 0.84  (val)
-training epoch 15
-use Semi !!!
-[Iteration 000] Total-Loss 1.97 = T-Loss 1.16 + B-Loss 0.81 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 015] Total-Loss 1.97 = T-Loss 1.16 + B-Loss 0.81 (train)[0m
-[Epoch 015] Total-Loss 2.09 = T-Loss 1.25 + B-Loss 0.84  (val)
-training epoch 16
-use Semi !!!
-[Iteration 000] Total-Loss 1.96 = T-Loss 1.16 + B-Loss 0.80 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 016] Total-Loss 1.96 = T-Loss 1.16 + B-Loss 0.80 (train)[0m
-[Epoch 016] Total-Loss 2.07 = T-Loss 1.23 + B-Loss 0.84  (val)
-training epoch 17
-use Semi !!!
-[Iteration 000] Total-Loss 1.94 = T-Loss 1.14 + B-Loss 0.80 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 017] Total-Loss 1.94 = T-Loss 1.14 + B-Loss 0.80 (train)[0m
-[Epoch 017] Total-Loss 2.05 = T-Loss 1.21 + B-Loss 0.84  (val)
-training epoch 18
-use Semi !!!
-[Iteration 000] Total-Loss 1.92 = T-Loss 1.12 + B-Loss 0.80 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 018] Total-Loss 1.92 = T-Loss 1.12 + B-Loss 0.80 (train)[0m
-[Epoch 018] Total-Loss 2.03 = T-Loss 1.19 + B-Loss 0.84  (val)
-training epoch 19
-use Semi !!!
-[Iteration 000] Total-Loss 1.91 = T-Loss 1.11 + B-Loss 0.79 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 019] Total-Loss 1.91 = T-Loss 1.11 + B-Loss 0.79 (train)[0m
-[Epoch 019] Total-Loss 2.02 = T-Loss 1.18 + B-Loss 0.84  (val)
-training epoch 20
-use Semi !!!
-[Iteration 000] Total-Loss 1.89 = T-Loss 1.10 + B-Loss 0.79 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 020] Total-Loss 1.89 = T-Loss 1.10 + B-Loss 0.79 (train)[0m
-[Epoch 020] Total-Loss 2.02 = T-Loss 1.18 + B-Loss 0.84  (val)
-training epoch 21
-use Semi !!!
-[Iteration 000] Total-Loss 1.89 = T-Loss 1.10 + B-Loss 0.79 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 021] Total-Loss 1.89 = T-Loss 1.10 + B-Loss 0.79 (train)[0m
-[Epoch 021] Total-Loss 2.02 = T-Loss 1.18 + B-Loss 0.84  (val)
-training epoch 22
-use Semi !!!
-[Iteration 000] Total-Loss 1.88 = T-Loss 1.09 + B-Loss 0.79 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 022] Total-Loss 1.88 = T-Loss 1.09 + B-Loss 0.79 (train)[0m
-[Epoch 022] Total-Loss 2.02 = T-Loss 1.18 + B-Loss 0.84  (val)
-training epoch 23
-use Semi !!!
-[Iteration 000] Total-Loss 1.86 = T-Loss 1.08 + B-Loss 0.78 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 023] Total-Loss 1.86 = T-Loss 1.08 + B-Loss 0.78 (train)[0m
-[Epoch 023] Total-Loss 2.01 = T-Loss 1.17 + B-Loss 0.84  (val)
-training epoch 24
-use Semi !!!
-[Iteration 000] Total-Loss 1.84 = T-Loss 1.06 + B-Loss 0.78 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 024] Total-Loss 1.84 = T-Loss 1.06 + B-Loss 0.78 (train)[0m
-[Epoch 024] Total-Loss 2.01 = T-Loss 1.17 + B-Loss 0.84  (val)
-training epoch 25
-use Semi !!!
-[Iteration 000] Total-Loss 1.82 = T-Loss 1.05 + B-Loss 0.77 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 025] Total-Loss 1.82 = T-Loss 1.05 + B-Loss 0.77 (train)[0m
-[Epoch 025] Total-Loss 2.01 = T-Loss 1.17 + B-Loss 0.84  (val)
-training epoch 26
-use Semi !!!
-[Iteration 000] Total-Loss 1.80 = T-Loss 1.03 + B-Loss 0.77 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 026] Total-Loss 1.80 = T-Loss 1.03 + B-Loss 0.77 (train)[0m
-[Epoch 026] Total-Loss 2.01 = T-Loss 1.18 + B-Loss 0.83  (val)
-training epoch 27
-use Semi !!!
-[Iteration 000] Total-Loss 1.78 = T-Loss 1.02 + B-Loss 0.76 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 027] Total-Loss 1.78 = T-Loss 1.02 + B-Loss 0.76 (train)[0m
-[Epoch 027] Total-Loss 2.01 = T-Loss 1.18 + B-Loss 0.83  (val)
-training epoch 28
-use Semi !!!
-[Iteration 000] Total-Loss 1.76 = T-Loss 1.00 + B-Loss 0.76 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 028] Total-Loss 1.76 = T-Loss 1.00 + B-Loss 0.76 (train)[0m
-[Epoch 028] Total-Loss 2.00 = T-Loss 1.17 + B-Loss 0.83  (val)
-training epoch 29
-use Semi !!!
-[Iteration 000] Total-Loss 1.73 = T-Loss 0.98 + B-Loss 0.75 + C-Loss 0.00 + C-EMA-Loss 0.00  (train)
-[94m[Epoch 029] Total-Loss 1.73 = T-Loss 0.98 + B-Loss 0.75 (train)[0m
-[Epoch 029] Total-Loss 1.97 = T-Loss 1.15 + B-Loss 0.83  (val)
-Total Time taken for Running 30 epoch is :519.643 secs
-
-real	9m6.422s
-user	10m39.323s
-sys	2m13.826s
-{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 30, 'consecutive_warmup_epochs': 30, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 30, 'consecutive_train_epochs': 30, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
-loading video frame data ...
-  0% 0/212 [00:00<?, ?it/s] 14% 29/212 [00:00<00:00, 288.57it/s] 27% 58/212 [00:00<00:00, 267.04it/s] 42% 89/212 [00:00<00:00, 281.62it/s] 56% 118/212 [00:00<00:00, 274.26it/s] 69% 146/212 [00:00<00:00, 261.65it/s] 82% 173/212 [00:00<00:00, 245.89it/s] 94% 199/212 [00:00<00:00, 249.36it/s]100% 212/212 [00:00<00:00, 260.05it/s]len(test_loader), 212
-Inference start
-
-Inference finished
-Start Post-Processing
-End Post-Processing
-
-real	0m54.695s
-user	1m22.419s
-sys	0m23.750s
-(42195288064, 84987740160)
-{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 30, 'consecutive_warmup_epochs': 30, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 30, 'consecutive_train_epochs': 30, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
-loading video frame data ...
-loading video frame data ...
-loading video frame data ...
-train_loader
-train_loader_pretrain
-train_loader_unlabel
-training: len(train_loader_unlabel) 7
-batch_size 20
-adjusted batch_size 24
-test_loader
-training: len(train_loader) 1
-training: len(train_loader_pretrain) 1
-training: len(test_loader) 10
-(42195288064, 84987740160)
-{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 30, 'consecutive_warmup_epochs': 30, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 30, 'consecutive_train_epochs': 30, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
-loading video frame data ...
-loading video frame data ...
-loading video frame data ...
-train_loader
-train_loader_pretrain
-train_loader_unlabel
-training: len(train_loader_unlabel) 7
-batch_size 20
-adjusted batch_size 24
-test_loader
-training: len(train_loader) 1
-training: len(train_loader_pretrain) 1
-training: len(test_loader) 10
-(48505618432, 84987740160)
-{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
-loading video frame data ...
-loading video frame data ...
-loading video frame data ...
-train_loader
-train_loader_pretrain
-train_loader_unlabel
-training: len(train_loader_unlabel) 7
-batch_size 20
-adjusted batch_size 24
-test_loader
-training: len(train_loader) 1
-training: len(train_loader_pretrain) 1
-training: len(test_loader) 10
-(48505618432, 84987740160)
-{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
-loading video frame data ...
-loading video frame data ...
-loading video frame data ...
-train_loader
-train_loader_pretrain
-train_loader_unlabel
-training: len(train_loader_unlabel) 7
-batch_size 20
-adjusted batch_size 24
-test_loader
-training: len(train_loader) 1
-training: len(train_loader_pretrain) 1
-training: len(test_loader) 10
-(48505618432, 84987740160)
-{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
-loading video frame data ...
-loading video frame data ...
-loading video frame data ...
-train_loader
-train_loader_pretrain
-train_loader_unlabel
-training: len(train_loader_unlabel) 7
-batch_size 20
-adjusted batch_size 24
-test_loader
-training: len(train_loader) 1
-training: len(train_loader_pretrain) 1
-training: len(test_loader) 10
-(48505618432, 84987740160)
-{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
-loading video frame data ...
-loading video frame data ...
-loading video frame data ...
-train_loader
-train_loader_pretrain
-train_loader_unlabel
-training: len(train_loader_unlabel) 7
-batch_size 20
-adjusted batch_size 24
-test_loader
-training: len(train_loader) 1
-training: len(train_loader_pretrain) 1
-training: len(test_loader) 10
-(48505618432, 84987740160)
-{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
-loading video frame data ...
-loading video frame data ...
-loading video frame data ...
-train_loader
-train_loader_pretrain
-train_loader_unlabel
-training: len(train_loader_unlabel) 7
-batch_size 20
-adjusted batch_size 24
-test_loader
-training: len(train_loader) 1
-training: len(train_loader_pretrain) 1
-training: len(test_loader) 10
-(48505618432, 84987740160)
-{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
-loading video frame data ...
-loading video frame data ...
-loading video frame data ...
-train_loader
-train_loader_pretrain
-train_loader_unlabel
-training: len(train_loader_unlabel) 7
-batch_size 20
-adjusted batch_size 24
-test_loader
-training: len(train_loader) 1
-training: len(train_loader_pretrain) 1
-training: len(test_loader) 10
-(48505618432, 84987740160)
-{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
-loading video frame data ...
-loading video frame data ...
-loading video frame data ...
-train_loader
-train_loader_pretrain
-train_loader_unlabel
-training: len(train_loader_unlabel) 7
-batch_size 20
-adjusted batch_size 24
-test_loader
-training: len(train_loader) 1
-training: len(train_loader_pretrain) 1
-training: len(test_loader) 10
-(61826727936, 84987740160)
-{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
-loading video frame data ...
-loading video frame data ...
-loading video frame data ...
-train_loader
-train_loader_pretrain
-train_loader_unlabel
-training: len(train_loader_unlabel) 7
-batch_size 20
-adjusted batch_size 24
-test_loader
-training: len(train_loader) 1
-training: len(train_loader_pretrain) 1
-training: len(test_loader) 10
-(61826727936, 84987740160)
-{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
-loading video frame data ...
-loading video frame data ...
-loading video frame data ...
-train_loader
-train_loader_pretrain
-train_loader_unlabel
-training: len(train_loader_unlabel) 7
-batch_size 20
-adjusted batch_size 24
-test_loader
-training: len(train_loader) 1
-training: len(train_loader_pretrain) 1
-training: len(test_loader) 10
-(61826727936, 84987740160)
-{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
-loading video frame data ...
-loading video frame data ...
-loading video frame data ...
-train_loader
-train_loader_pretrain
-train_loader_unlabel
-training: len(train_loader_unlabel) 7
-batch_size 20
-adjusted batch_size 24
-test_loader
-training: len(train_loader) 1
-training: len(train_loader_pretrain) 1
-training: len(test_loader) 10
-(61826727936, 84987740160)
-{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
-loading video frame data ...
-loading video frame data ...
-loading video frame data ...
-train_loader
-train_loader_pretrain
-train_loader_unlabel
-training: len(train_loader_unlabel) 7
-batch_size 20
-adjusted batch_size 24
-test_loader
-training: len(train_loader) 1
-training: len(train_loader_pretrain) 1
-training: len(test_loader) 10
-(48914563072, 84987740160)
-{'dataset': {'name': 'thumos', 'num_classes': 20, 'training': {'video_info_path': 'data/thumos_annotations/val_video_info.csv', 'video_info_path_unlabeled': './data/thumos_annotations', 'video_anno_path': 'data/thumos_annotations/val_Annotation_ours.csv', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'clip_length': 256, 'clip_stride': 30, 'crop_size': 96, 'class_info': './data/thumos_annotations/Class Index_Detection.txt'}, 'testing': {'video_info_path': 'data/thumos_annotations/test_video_info_new.csv', 'video_info_path_unlabeled': './data/activitynet_annotations/', 'video_anno_path': 'data/thumos_annotations/test_Annotation_ours.csv', 'video_anno_path_json': 'data/thumos_annotations/thumos_anno_action.json', 'num_frame': 16, 'output_path': './output_2/', 'unlabel_percent': 0.9, 'use_semi': True, 'crop_size': 96, 'clip_length': 256, 'clip_stride': 128, 'best_score': 'thumos_best_score.json'}}, 'model': {'embedding_head': 4, 'feat_dim': 320, 'temporal_scale': 256}, 'pretraining': {'warmup_epoch': 10, 'consecutive_warmup_epochs': 10, 'unlabeled_pretrain': False}, 'training': {'batch_size': 20, 'learning_rate': 0.0004, 'weight_decay': 0.005, 'alternate': True, 'max_epoch': 10, 'consecutive_train_epochs': 10, 'checkpoint_path': './output_2/', 'random_seed': 1, 'step': 10, 'gamma': 0.2, 'scheduler': False, 'num_gpu': 1, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/', 'loss_balance': 0.1, 'loss_balance_full': 0.5, 'regular_eval': False}, 'loss': {'lambda_1': 0.5, 'lambda_2': 0.4}, 'testing': {'cls_thresh': 0.01, 'mask_thresh': [0, 0.2, 0.4, 0.6, 0.8], 'class_thresh': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'top_k_snip': 10, 'top_k': 500, 'nms_thresh': 0.4, 'feature_path': '/data/i5O/THUMOS14/I3D_fromSPOTrepo/test/'}}
-loading video frame data ...
-loading video frame data ...
-loading video frame data ...
-train_loader
-train_loader_pretrain
-train_loader_unlabel
-training: len(train_loader_unlabel) 7
-batch_size 20
-adjusted batch_size 24
-test_loader
-training: len(train_loader) 1
-training: len(train_loader_pretrain) 1
-training: len(test_loader) 10

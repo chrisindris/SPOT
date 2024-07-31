@@ -21,10 +21,10 @@ if (( gpu == 0 )); then
   output_pth="./output/"
 
   ./spot_train_eval.sh "$gpu" THUMOS_2.txt ./configs/thumos.yaml \
-    pretraining.warmup_epoch=1 \
-    pretraining.consecutive_warmup_epochs=1 \
-    training.max_epoch=1 \
-    training.consecutive_train_epochs=1 \
+    pretraining.warmup_epoch=10 \
+    pretraining.consecutive_warmup_epochs=10 \
+    training.max_epoch=20 \
+    training.consecutive_train_epochs=20 \
     dataset.training.output_path=$output_pth \
     dataset.testing.output_path=$output_pth \
     training.checkpoint_path=$output_pth
@@ -34,9 +34,9 @@ else
  
   ./spot_train_eval.sh "$gpu" THUMOS_2.txt ./configs/thumos.yaml \
     pretraining.warmup_epoch=10 \
-    pretraining.consecutive_warmup_epochs=10 \
-    training.max_epoch=10 \
-    training.consecutive_train_epochs=10 \
+    pretraining.consecutive_warmup_epochs=4 \
+    training.max_epoch=5 \
+    training.consecutive_train_epochs=1 \
     dataset.training.output_path=$output_pth \
     dataset.testing.output_path=$output_pth \
     training.checkpoint_path=$output_pth

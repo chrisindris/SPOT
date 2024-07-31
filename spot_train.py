@@ -305,7 +305,7 @@ def pretrain(data_loader, model, optimizer, pretrain_epoch=0):
             #print(torch.stack([input_data.cuda(),input_data_tdrop],dim=0).shape)
             input_data_aug = torch.stack([input_data.cuda(),input_data_tdrop],dim=0).view(-1,feat_dim,temporal_scale) # with an without dropout is being stacked together; I suspect this is for the different branches that need one or the other. [25+25, 2048, temporal_scale] -> [256, feat_dim, temporal_scale] (same temporal scale, feature vector size goes from 2048 to feat_dim)
             input_data_aug[input_data_aug != input_data_aug] = 0 # seems to be behaving okay
-
+            # NOTE IDEA: is it necessary to stack the origin and the tdrop one? Could we just use the tdrop one?
 
             #print(input_data_aug.shape)
             input_data_aug_b = torch.stack([input_data_big.cuda(),input_data_tdrop_big],dim=0).view(-1,feat_dim,2*temporal_scale)
@@ -351,7 +351,7 @@ def pretrain(data_loader, model, optimizer, pretrain_epoch=0):
                 con_loss = contrast_loss(c_pair_label)
                 con_loss_crop = contrast_loss(c_pair_label_crop)
 
-
+            # The Motion_MSEloss minimizes the squared difference between the input features (input_data_aug) and the feat (input_data_aug after embedding via transformer). This is a "reconstruction loss".
             feat_loss = Motion_MSEloss(feat,input_data_aug)                         
             feat_loss_crop = Motion_MSEloss(feat_crop,mod_input_data)
             
@@ -373,7 +373,13 @@ def pretrain(data_loader, model, optimizer, pretrain_epoch=0):
             label_order = [0] * (batch_size // 2) + [1] * (batch_size - batch_size // 2) # [0, ..., 0, 1, ..., 1]
             label_order = torch.tensor(label_order).long().cuda()
             out = model(input_all, clip_order=True) # [512, 2]
+            
+            #breakpoint()
             loss_clip_order = order_clip_criterion(out, label_order)
+            #label_order = F.one_hot(label_order).to(float)
+            #out = torch.sigmoid(out).to(float)
+            #loss_clip_order = nn.BCELoss()(out, label_order)
+
 
             if not_freeze_class:
                 loss = spot_loss(top_br_gt,top_br_pred,bottom_br_gt,bottom_br_pred, action_gt,label_gt,pretrain=False)
@@ -540,7 +546,7 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
 
         #print("shapes", input_data.shape, action_gt.shape, label_gt.shape, bottom_br_gt.shape)
     
-        input_data = model.module.feature_downsize(input_data.cuda().permute(0,2,1)).permute(0,2,1) # HACK # NOTE: could this be confusing the model? I should follow the pretrain() method to see if I can fix.
+        input_data = model.module.feature_downsize(input_data.cuda()) # HACK # NOTE: could this be confusing the model? I should follow the pretrain() method to see if I can fix.
 
         #print("shapes", input_data.shape, action_gt.shape, label_gt.shape, bottom_br_gt.shape)
 
@@ -600,7 +606,7 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
             input_data_unlabel = input_data_unlabel[0].cuda()
 
         ## strong augmentations --
-        input_data_unlabel = model.module.feature_downsize(input_data_unlabel.cuda().permute(0,2,1)).permute(0,2,1)
+        input_data_unlabel = model.module.feature_downsize(input_data_unlabel.cuda())
         top_br_pred_unlabel, bottom_br_pred_unlabel, feat_unlabel = model(input_data_unlabel)
 
         dynmaic_thres = False # True also seems to work
@@ -813,7 +819,7 @@ def train_semi_full(data_loader, model, optimizer, epoch):
         # update step
         optimizer.zero_grad()
         #loss[0].backward()
-        weighed_loss = loss_balance_full * loss[1] + (1 - loss_balance_full) * loss[2]
+        weighed_loss = loss_balance_full * loss[1] + (1 - loss_balance_full) * loss[2] # TODO: play instead with the balance within the spot_loss function (tot_loss in it is calculated as a sum, so play with the balance there.)
         weighed_loss.backward()
         optimizer.step()
         global_step += 1
@@ -832,7 +838,7 @@ def test_semi(data_loader, model, epoch, best_loss): # NOTE: if we set this data
 
             # forward pass
             top_br_pred, bottom_br_pred, _ = model(input_data.cuda())
-            loss = spot_loss(top_br_gt,top_br_pred,bottom_br_gt,bottom_br_pred, action_gt,label_gt)
+            loss = spot_loss(top_br_gt,top_br_pred,bottom_br_gt,bottom_br_pred,action_gt,label_gt)
     print("[Epoch {0:03d}] Total-Loss {1:.2f} = T-Loss {2:.2f} + B-Loss {3:.2f}  (val)".format(
     epoch, loss[0],loss[1],loss[2]))
 
@@ -978,6 +984,9 @@ if __name__ == '__main__':
         if train_epoch < epoch:
             for e in range(config["training"]["consecutive_train_epochs"]):
                 print("training epoch", str(train_epoch))
+
+                if train_epoch == 5:
+                    breakpoint()
 
                 if use_semi:
                     if unlabel_percent == 0.:

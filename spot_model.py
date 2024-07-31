@@ -175,21 +175,29 @@ class SPOT(nn.Module):
         #                             dim_head = temporal_scale
         #                         )   
 
-        self.feature_downsize = nn.Linear(2048, feat_dim) # Equivalent & slightly faster than nn.Conv2d(2048, feat_dim, 1). NOTE: this needs to be in the state_dict, so make sure to run the pretrain before running the train.
+        self.feature_downsize = nn.Sequential(
+                nn.Conv1d(in_channels=2048, out_channels=1024, kernel_size=1), # nn.Linear(2048, feat_dim) is equivalent & slightly faster than nn.Conv2d(2048, feat_dim, 1). NOTE: this needs to be in the state_dict, so make sure to run the pretrain before running the train.
+                nn.Conv1d(in_channels=1024, out_channels=512, kernel_size=1),
+                nn.Conv1d(in_channels=512, out_channels=feat_dim, kernel_size=1)
+        )
 
         self.embedding = SnippetEmbedding(self.n_heads, self.len_feat, self.len_feat, self.len_feat, 0.3)
-        self.clip_trans = SnippetEmbedding(self.n_heads, self.len_feat, self.len_feat, self.len_feat , 0.1,True)
+        self.clip_trans = SnippetEmbedding(self.n_heads, self.len_feat, self.len_feat, self.len_feat, 0.3,True)
 
         self.classifier = nn.Sequential(
-            nn.Conv1d(in_channels=self.len_feat, out_channels=self.num_classes, kernel_size=1,
-            padding=0)
+            nn.Conv1d(in_channels=self.len_feat, out_channels=self.len_feat // 2, kernel_size=3,padding=1),
+            nn.Conv1d(in_channels=self.len_feat // 2, out_channels=self.num_classes, kernel_size=3,padding=1)
         )
 
         self.clip_order_drop = nn.Dropout(0.5)
-        self.clip_order_linear = nn.Linear(temporal_scale, 2)
+        self.clip_order_linear = nn.Sequential(
+                nn.Linear(temporal_scale, temporal_scale // 2),
+                nn.Linear(temporal_scale // 2, 2)
+        )
 
         self.clip_order = nn.Sequential(
-            nn.Conv1d(feat_dim, 1, kernel_size=3, padding=1),  # 256
+            nn.Conv1d(feat_dim, feat_dim // 2, kernel_size=3, padding=1),  # 256
+            nn.Conv1d(feat_dim // 2, 1, kernel_size=3, padding=1),  # 256
             nn.ReLU(inplace=True)
         )
 
@@ -233,17 +241,23 @@ class SPOT(nn.Module):
 
         # HACK: later this switch will be specifiable based on a class attribute.
         batch_size, feature_dim, temporal_scale = snip.size()
+        
         if feature_dim > feat_dim:
+            #breakpoint()
+            snip_ = snip_.permute(0,2,1)
             snip_ = self.feature_downsize(snip_)
+            snip_ = snip_.permute(0,2,1)
+        
 
         out = self.embedding(snip_,snip_,snip_)
         out = out.permute(0,2,1)
         batch_size,_,_ = out.size()
         features = out
-        if clip_order:            
+        if clip_order:
+            #breakpoint()
             new_feat = features.permute(0,2,1)           
             new_feat_order = self.clip_trans(new_feat,new_feat,new_feat)
-            self_att_feat = new_feat.permute(0,2,1)
+            self_att_feat = new_feat_order.permute(0,2,1) # defaults to new_feat
             clip_drop = self.clip_order_drop(self.clip_order(self_att_feat).view(batch_size, temporal_scale))
 
             return self.clip_order_linear(clip_drop)

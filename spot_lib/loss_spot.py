@@ -19,6 +19,9 @@ with open(sys.argv[1], 'r', encoding='utf-8') as f:
 
 
 ce = nn.CrossEntropyLoss()
+bce = nn.BCELoss()
+mse = nn.MSELoss()
+nll = nn.NLLLoss()
 
 lambda_1 = config['loss']['lambda_1']
 lambda_2 = config['loss']['lambda_2']
@@ -140,9 +143,6 @@ class ACSL(nn.Module):
         return torch.sum(weight_mask * cls_loss) / (self.n_i*temporal_scale)
 
 
-
-
-
 def top_lr_loss(target,pred):
 
     gt_action = target
@@ -219,7 +219,7 @@ def top_ce_loss(gt_cls, pred_cls, nm=False):
     return loss
 
 
-def bottom_branch_loss(gt_action, pred_action, f_loss=False): # gt action and pred action are both shape [256, temporal_scale, temporal_scale] 
+def bottom_branch_loss(gt_action, pred_action, f_loss=False, cross_entropy_loss=False, parabola=False): # gt action and pred action are both shape [256, temporal_scale, temporal_scale] 
 
     pmask = (gt_action == 1).float()
     nmask = (gt_action == 0).float()
@@ -245,27 +245,35 @@ def bottom_branch_loss(gt_action, pred_action, f_loss=False): # gt action and pr
     if f_loss:
         #print("F_loss")
         return F_loss
+    elif cross_entropy_loss:
+        return bce(pred_action, gt_action) 
+    elif parabola:
+        return torch.mean(torch.pow(gt_action-pred_action, 2))
     else:
         #print("MSELoss")
-        return nn.MSELoss()(gt_action, pred_action)
+        return mse(gt_action, pred_action) #mse(gt_action, pred_action)
     
     #return F_loss #nn.MSELoss()(gt_action, pred_action) #dice(pred_action, gt_action) # F_loss, could try MSE or L1 # HACK, as just using MSELoss seems to improve the results a bit and let the model improve. However, it would be best to get the author's goal function working.
 
 
-def top_branch_loss(gt_cls, pred_cls, mask_gt):
+def top_branch_loss(gt_cls, pred_cls, mask_gt, nll_loss=False):
     #breakpoint()
-    loss = nn.NLLLoss()(nn.LogSoftmax(dim=1)(pred_cls), gt_cls.to(0)) #nn.MSELoss()(gt_cls, pred_cls) # lambda_1*top_ce_loss(gt_cls.cuda(), pred_cls) 
-    return loss
+    if nll_loss:
+        return nll(nn.LogSoftmax(dim=1)(pred_cls), gt_cls.cuda()) #nn.MSELoss()(gt_cls, pred_cls) # lambda_1*top_ce_loss(gt_cls.cuda(), pred_cls)
+    else:
+        return ce(pred_cls, gt_cls.cuda().to(int))
 
-def spot_loss(gt_cls, pred_cls ,gt_action , pred_action, mask_gt , label_gt, pretrain=False):
+
+def spot_loss(gt_cls, pred_cls ,gt_action , pred_action, mask_gt, label_gt, pretrain=False):
     
 
     if pretrain:
         bottom_loss = bottom_branch_loss(gt_action.cuda(), pred_action)
         return bottom_loss
     else:
+        #breakpoint()
         top_loss = top_branch_loss(gt_cls, pred_cls, mask_gt)
-        bottom_loss = bottom_branch_loss(gt_action.cuda(), pred_action, f_loss=True) 
+        bottom_loss = bottom_branch_loss(gt_action.cuda(), pred_action) # NOTE: for ANet, I keep f_loss=true. 
         tot_loss = top_loss + bottom_loss
         return tot_loss, top_loss, bottom_loss
 
