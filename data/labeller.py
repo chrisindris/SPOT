@@ -56,7 +56,7 @@ def build_subset(count):
     return subset
 
 
-if __name__ == "__main__":
+def thumos():
     parser = argument_parser()
     args = parser.parse_args()
 
@@ -138,5 +138,13 @@ if __name__ == "__main__":
 
     # --- propose a partition into training_unlabel and training ---
     #video_info['subset'] = build_subset(len(video_info))
+
+
+def i5O():
+    print('hw')
+
+
+if __name__ == "__main__":
+    i5O()
      
 

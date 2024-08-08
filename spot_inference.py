@@ -1,6 +1,7 @@
 import os
 import math
 import numpy as np
+from numpy.ma import mask_or
 import pandas as pd
 import torch.nn.parallel
 import itertools,operator
@@ -99,7 +100,7 @@ def post_process_multi(detection_thread,get_infer_dict):
                 cls_data_cls[vid] = best_cls[vid]["class"]
 
 
-    parallel = Parallel(n_jobs=15, prefer="processes") # n_jobs=15
+    parallel = Parallel(n_jobs=1, prefer="processes") # n_jobs=15
     detection = parallel(delayed(detection_thread)(vid, video_cls, infer_dict['v_'+vid if dataset_name == 'anet' else vid], label_dict, pred_data, best_cls)
                         for vid, video_cls in cls_data_cls.items())
     detection_dict = {}
@@ -144,7 +145,7 @@ def find_proposals(arr):
         return [(start_pt1, end_pt1)]
 
 
-if __name__ == '__main__':
+def main_anet():
     mode = "semi"  ## "semi", "semi_ema" ,"" 
     # im_fig_path = config['testing']['fig_path']
     is_postprocess = True
@@ -272,7 +273,7 @@ if __name__ == '__main__':
             thres = class_snip_thresh
 
             ### cas_tuple will contain (for the current video), the segment in which the model has detected an action with a confidence score exceeding the threshold.
-            #breakpoint()
+            breakpoint()
             cas_tuple = []
             for k in thres:
                 filt_seg_score = seg_score > k
@@ -396,5 +397,174 @@ if __name__ == '__main__':
     #breakpoint()
     post_process_multi(multithread_detection,get_infer_dict)
     print("End Post-Processing")
+
+
+
+def main_thumos():
+    mode = "semi"  ## "semi", "semi_ema" ,"" 
+    # im_fig_path = config['testing']['fig_path']
+    is_postprocess = True
+    if not os.path.exists(output_path + "/results"):
+        os.makedirs(output_path + "/results")
+
+    if dataset_name == 'anet':
+        import spot_lib.spot_dataloader as spot_dataset
+        dataset = spot_dataset.SPOTDataset(subset='validation', mode='inference')
+        class_dictionary = activity_dict
+    elif dataset_name == 'thumos':
+        from spot_lib.thumos_dataset import THUMOS_Dataset
+        dataset = THUMOS_Dataset(training=False, subset='testing', mode='inference')
+        class_dictionary = thumos_dict 
+
+    model = SPOT()
+    model = torch.nn.DataParallel(model, device_ids=[0]).cuda() # NOTE GPU: This works with an arbitrary CUDA_VISIBLE_DEVICES=X (as long as X is 1 GPU). To make this work with more, change it to range(config['training']['num_gpus'])
+
+    ### Load Checkpoint ###
+    checkpoint = torch.load(output_path + "/SPOT_best_semi.pth.tar")
+    model.load_state_dict(checkpoint['state_dict'])
+    model.eval()
+    ### Load Dataloader ###
+    test_loader = torch.utils.data.DataLoader(dataset, # to get validation set (which is /data/i5O/ActivityNet1.3/test/): subset='validation', mode='inference'
+                                              batch_size=1, shuffle=False,
+                                              num_workers=8, pin_memory=True, drop_last=False)
+
+    print("len(test_loader),", len(test_loader))
+
+    # im_path = os.path.join(im_fig_path,"SOLO_PIC")
+   
+    # the classes: key_list are the string names, val_list are the indexes 
+    key_list = list(class_dictionary.keys())
+    val_list = list(class_dictionary.values())
     
+    file = "spot_output_"+mode+".csv"
+    if(os.path.exists(file) and os.path.isfile(file)):
+        os.remove(file)
+    print("Inference start")
+    with torch.no_grad():
+        vid_count=0
+        match_count=0
+        vid_label_dict = {}
+        results = {}
+        result_dict = {}
+        class_thres = config['testing']['cls_thresh']
+        num_class = config['dataset']['num_classes']
+        top_k_snip = config['testing']['top_k_snip']
+        class_snip_thresh = config['testing']['class_thresh']
+        mask_snip_thresh = config['testing']['mask_thresh']
+        temporal_scale = config['model']['temporal_scale']
+        full_label = True
         
+
+        new_props = list()
+
+        for idx, input_data, input_data_big, input_data_small,f_mask in test_loader:
+            video_name = test_loader.dataset.subset_mask_list[idx[0]]
+            vid_count+=1
+            input_data = input_data.cuda()
+            input_data_s = input_data_small.cuda()
+            input_data_b = input_data_big.cuda()
+            if not os.path.exists(output_path + "/fig/"+video_name):
+                os.makedirs(output_path + "/fig/"+video_name)
+
+            # forward pass
+            top_br_pred, bottom_br_pred, feat = model(input_data.cuda())
+            # - top_br_pred: [1, 201, 100]; aims to match a one-hot encode of the class at each time step
+            # - bottom_br_pred: [1, 100, 100]; binary mask for where actions occur
+            # - feat: [1, 400, 100]: Spot determines a feature for each of the temporal locations (the clips)
+ 
+
+            ### classifier branch prediction ###
+
+            if full_label:
+                #breakpoint()
+                best_cls = load_json(best_score)
+                full_cls = best_cls[video_name]["class"]
+                full_cls_score = best_cls[video_name]["score"]
+
+
+            soft_cas = torch.softmax(top_br_pred[0],dim=0) # a "softmax" of the top branch; this makes the prediction closer to the one-hot. 
+            soft_cas_topk,soft_cas_topk_loc = torch.topk(soft_cas[:num_class],2,dim=0) # from top_branch, the top k=2 classes and their likelihood. # NOTE: this is not used, I should make use of it for a mode in which we do top-2; note that I will need to keep the classes in mind.
+            top_br_np = softmax(top_br_pred[0].detach().cpu().numpy(),axis=0)[:num_class] # softmax among the non-background classes; np = numpy 
+
+            # For those in this block, use :num_class since over the entire video, background is likely to be the most-predicted.
+            label_pred = torch.softmax(torch.mean(top_br_pred[0][:num_class,:],dim=1),axis=0).detach().cpu().numpy() # The mean score for each class across the whole video (shape [num_classes])
+            vid_label_id = np.argmax(label_pred) # the whole-video max-predicted class
+            vid_label_sc = np.amax(label_pred) # the max score associated with that class; sc = score 
+            top_br_np = softmax(top_br_pred[0].detach().cpu().numpy(),axis=0)[:num_class]
+
+            top_br_mean = np.mean(top_br_np,axis=1) # The mean score for each class after the softmax
+            top_br_mean_max = np.amax(top_br_np,axis=1) # the maximum of those mean scores (ie. the score leading to the most likely class, for the full video)
+            top_br_mean_id = np.argmax(top_br_mean) # the class of it; id = index  
+            soft_cas_np = soft_cas[:num_class].detach().cpu().numpy() # soft_cas, but no background
+
+            ### for each snippet (ie. temporal location), store the max score and predicted class for that snippet ####
+            seg_score, seg_cls = torch.softmax(top_br_pred[0, :num_class], dim=1).max(dim=0)
+
+            # ---===--- bottom_br_pred ---===---
+            gt_action = f_mask[0].to(int)
+            gt_background = 1 - gt_action
+            pred_action_2d = bottom_br_pred[0]
+
+            dim = torch.argmax(torch.Tensor([pred_action_2d.mean(dim=d).var() for d in range(2)])).item() # the more informative dimension (higher variance)
+
+            # HACK: HACK: HACK: This is only because sometimes the model predicts actions with lower confidence. I should make sure through training that the mean of the action regions is always better than the mean of the non-action regions.
+            x = torch.argmax(torch.Tensor([((x.cuda() * pred_action_2d.mean(dim)).sum() / x.sum()).item() for x in [gt_action, gt_background]]))
+            if x == 1:
+                pred_action_2d = 1 - pred_action_2d # if the model was created so that on this action it predicts that actions have lower values, we switch the order.
+
+            ### global mask prediction ####
+            props = pred_action_2d.detach().cpu().numpy() # The proposals for where actions occur
+            props_mod = props[props>0] # Never used
+
+            # some potentially useful thresholds
+            otsu = cv2.threshold((pred_action_2d.mean(dim) * 255).cpu().numpy().astype(np.uint8), 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[0] / 255
+            mean = pred_action_2d.mean().item()
+            max_ = pred_action_2d.mean(dim).max()
+            max_floor = (max_ * 100 // 1 / 100).item() # (round down to nearest two decimals, so 0.9995 -> 0.99)
+            strong_action_thresholds = max_.cpu() - np.geomspace(0.01, 0.1, 11)
+            max_ = max_.item()
+            mask_thres = [otsu, mean] + strong_action_thresholds.tolist()[::-1] # all of the thresholds to be used
+
+            pred_action = pred_action_2d.mean(dim)
+
+            pred_action_stack = torch.stack([(pred_action > k).to(int) for k in mask_thres])
+
+            cas_tuple = []
+            for k in mask_thres:
+                filtered_seq_int = (pred_action > k).to(int)
+                if 1 in filtered_seq_int:
+                    props_indices = find_proposals(filtered_seq_int.tolist())
+                    #start_pt1 = filt_seg_score_int.index(1)
+                    #end_pt1 = len(filt_seg_score_int) - 1 - filt_seg_score_int[::-1].index(1) # Finds the index of the last "1" in the video.
+                    for (start_pt1, end_pt1) in props_indices:
+                        if end_pt1 - start_pt1 > 1: # A detected action of length 1 (ie. [...,0,0,1,0,0,...]) is ignored.
+                            reg_score = pred_action[start_pt1:end_pt1].mean().item()
+                            cls_score = seg_score[start_pt1:end_pt1].mean().item()
+                            cls_label = max(set(seg_cls[start_pt1:end_pt1].tolist()), key=seg_cls.tolist().count) # FIX: the label is chosen as the most frequent predicted label over the entire video. We might want to do it over the current annotation [start_pt1:end_pt1], or tie-break via mean confidence. -done, it does use the segment 
+                            cas_tuple.append([start_pt1,end_pt1,cls_score,cls_label])
+                            
+                            prop_start = start_pt1 / temporal_scale
+                            prop_end = end_pt1 / temporal_scale
+
+                            new_props.append([video_name,prop_start,prop_end,cls_score,reg_score,cls_label])
+
+            #breakpoint()
+
+        new_props = np.stack(new_props)
+        b_set = set(map(tuple,new_props))  
+        result = map(list,b_set) 
+
+        ### save the proposals in a csv file ###
+        col_name = ["video_name","xmin", "xmax", "clr_score", "reg_score","label"]
+        new_df = pd.DataFrame(result, columns=col_name)
+        new_df.to_csv("spot_output_"+mode+".csv", index=False) 
+
+    ###### Post-Process #####
+    print("Start Post-Processing")
+    post_process_multi(multithread_detection,get_infer_dict)
+    print("End Post-Processing")
+                 
+
+
+if __name__ == '__main__':
+    main_thumos()

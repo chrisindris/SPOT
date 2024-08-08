@@ -1,0 +1,70 @@
+dataset:
+  name: "i5O"
+  num_classes: 20 # Don't use ambiguous
+  training:
+    video_info_path: "data/thumos_annotations/val_video_info.csv" # from AFSD. TODO: we are using the validation set for training? Not something like the actionformer subset?
+    video_info_path_unlabeled: "./data/thumos_annotations"
+    video_anno_path: "data/thumos_annotations/val_Annotation_ours.csv" # from AFSD 
+    num_frame: 16
+    output_path: '/root/models/SPOT/thumos_output/'
+    unlabel_percent: 0.9
+    use_semi: True
+    clip_length: 256 # from AFSD
+    clip_stride: 30 # from AFSD
+    crop_size: 96 # from AFSD
+    class_info: "./data/thumos_annotations/Class Index_Detection.txt"
+    
+  testing:
+    video_info_path: "data/thumos_annotations/test_video_info_new.csv" # from AFSD 
+    video_info_path_unlabeled: "./data/activitynet_annotations/"
+    video_anno_path: "data/thumos_annotations/test_Annotation_ours.csv" # from AFSD
+    video_anno_path_json: "data/thumos_annotations/thumos_anno_action.json"
+    num_frame: 16
+    output_path: '/root/models/SPOT/thumos_output/'
+    unlabel_percent: 0.9
+    use_semi: True
+    crop_size: 96 # for AFSD
+    clip_length: 256 # for AFSD
+    clip_stride: 128 # for AFSD
+    best_score: "thumos_best_score.json"
+
+model:
+  embedding_head: 4
+  feat_dim: 256 # this is the internal feature width (d_model). NOTE: must divide 2*batch_size*(input feature size)
+  temporal_scale: 256 # TODO: we want the temporal scale to be about 300 to include almost all of the videos (although 100 is likely good enough), but we need to make sure the model can handle that. Might want to change all instances of 100 to self.temporal_scale
+
+pretraining:
+  warmup_epoch: 30 # Default 30
+  consecutive_warmup_epochs: 3 # 3 works well
+  unlabeled_pretrain: False
+
+training:
+  batch_size: 2
+  learning_rate: 0.0004
+  weight_decay: 0.0005
+  alternate: True
+  max_epoch: 25
+  consecutive_train_epochs: 3 # 3 works well
+  checkpoint_path: "/root/models/SPOT/thumos_output/"
+  random_seed: 1
+  step: 10
+  gamma: 0.2
+  scheduler: False
+  num_gpu: 1
+  feature_path: "/data/i5O/i5OData/video_features/r21d/r2plus1d_18_16_kinetics/stack_size16step_size4extraction_fpsNone_flat/"  #TODO: add the path to the features to be used; corresponds to video_data_path
+  loss_balance: 0.5
+  loss_balance_full: 0.5
+  regular_eval: False
+
+loss:
+  lambda_1: 0.5
+  lambda_2: 0.4
+
+testing: 
+  cls_thresh: 0.01
+  mask_thresh: [0,0.2,0.4,0.6,0.8]
+  class_thresh: [0.10,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19] #[0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09]
+  top_k_snip: 10
+  top_k: 500
+  nms_thresh: 0.4
+  feature_path: "/data/i5O/i5OData/video_features/r21d/r2plus1d_18_16_kinetics/stack_size16step_size4extraction_fpsNone_flat/"  #TODO: add the path to the features to be used; corresponds to video_data_path

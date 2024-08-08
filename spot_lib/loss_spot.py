@@ -16,6 +16,10 @@ with open(sys.argv[1], 'r', encoding='utf-8') as f:
         config = modify_config(yaml.load(tmp, Loader=yaml.FullLoader), *handle_args(sys.argv))
         temporal_scale = config['model']['temporal_scale']
         num_classes = config['dataset']['num_classes']
+        temporal_scale = config['model']['temporal_scale']
+        batch_size = config['training']['batch_size']
+        loss_balance = config["training"]["loss_balance"]
+        loss_balance_full = config['training']['loss_balance_full']
 
 
 ce = nn.CrossEntropyLoss()
@@ -219,6 +223,26 @@ def top_ce_loss(gt_cls, pred_cls, nm=False):
     return loss
 
 
+def alternative_bottom_branch_loss(gt_action, pred_action):
+
+    #breakpoint()
+
+    C, H, W = gt_action.shape
+    
+    mean = pred_action.mean(dim=(1,2)).expand(H, W, C).permute(2,0,1) # size [batch_size, temporal_scale, temporal_scale] tensor; each entry is the mean pred_action score for the image.
+
+    action_mean = (gt_action * pred_action).sum(dim=(1,2)) / gt_action.sum(dim=(1,2)) # size [batch_size] tensor; each entry is the mean pred_action score for the image for scores that fall on a ground-truth action; we want this to -> 1
+    action_mean = torch.where(action_mean.nan_to_num() != 0, action_mean, 1 - mean.mean(dim=(1,2))) # if image i has no ground truth actions (and hence action_mean[i] == nan), we set action_mean[i] to the 1-mean of all pred_action scores for the image (since we want all scores to be small if there is no ground truth action).
+    action_mean = action_mean.mean() # average across the videos
+
+    background_mean = ((1-gt_action) * pred_action).sum(dim=(1,2)) / (1-gt_action).sum(dim=(1,2)) # size [batch_size, temporal_scale, temporal_scale] tensor; each entry is the mean pred_action score for the image; we want this to -> 0
+    background_mean = torch.where(background_mean.nan_to_num() != 0, background_mean, mean.mean(dim=(1,2))) # if all of image i is an action
+    background_mean = background_mean.mean() # average across the videos
+    #breakpoint()
+    return background_mean.item(), action_mean.item(), (action_mean.item() - background_mean.item()) # we want to make this loss small; this will encourage the background region scores to go to 0, the action mean scores to go to 1; this will also spread background_mean and action_mean apart, to differentiate them.
+    
+
+
 def bottom_branch_loss(gt_action, pred_action, f_loss=False, cross_entropy_loss=False, parabola=False): # gt action and pred action are both shape [256, temporal_scale, temporal_scale] 
 
     pmask = (gt_action == 1).float()
@@ -241,12 +265,17 @@ def bottom_branch_loss(gt_action, pred_action, f_loss=False, cross_entropy_loss=
     #breakpoint()
 
     #print("losses", w_bce_loss, dice(pred_action, gt_action))
-
     if f_loss:
         #print("F_loss")
         return F_loss
     elif cross_entropy_loss:
-        return bce(pred_action, gt_action) 
+        #return bce(pred_action, gt_action)
+        #breakpoint()
+        weights = gt_action * 2 + (1 - gt_action) * 0.5
+        print(alternative_bottom_branch_loss(gt_action, pred_action))
+        #breakpoint()
+        #print((1 - (gt_action * pred_action).sum() / gt_action.sum()))
+        return F.binary_cross_entropy(pred_action, gt_action, weight=weights) + (1 - pred_action.var()) + (1 - (gt_action * pred_action).sum() / gt_action.sum()) + (((1-gt_action) * pred_action).sum() / (1-gt_action).sum())
     elif parabola:
         return torch.mean(torch.pow(gt_action-pred_action, 2))
     else:
@@ -264,17 +293,18 @@ def top_branch_loss(gt_cls, pred_cls, mask_gt, nll_loss=False):
         return ce(pred_cls, gt_cls.cuda().to(int))
 
 
-def spot_loss(gt_cls, pred_cls ,gt_action , pred_action, mask_gt, label_gt, pretrain=False):
+def spot_loss(gt_cls, pred_cls ,gt_action, pred_action, mask_gt, label_gt, pretrain=False, full=False):
     
+    balance = loss_balance_full if full else loss_balance 
 
     if pretrain:
-        bottom_loss = bottom_branch_loss(gt_action.cuda(), pred_action)
+        bottom_loss = bottom_branch_loss(gt_action.cuda(), pred_action, cross_entropy_loss=True)
         return bottom_loss
     else:
         #breakpoint()
         top_loss = top_branch_loss(gt_cls, pred_cls, mask_gt)
-        bottom_loss = bottom_branch_loss(gt_action.cuda(), pred_action) # NOTE: for ANet, I keep f_loss=true. 
-        tot_loss = top_loss + bottom_loss
+        bottom_loss = bottom_branch_loss(gt_action.cuda(), pred_action, cross_entropy_loss=True) # NOTE: for ANet, I keep f_loss=true. 
+        tot_loss = balance * top_loss + (1 - balance) * bottom_loss
         return tot_loss, top_loss, bottom_loss
 
 
