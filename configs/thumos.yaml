@@ -41,7 +41,7 @@ pretraining:
 training:
   batch_size: 2
   learning_rate: 0.0004
-  weight_decay: 0.005
+  weight_decay: 0.0005
   alternate: True
   max_epoch: 25
   consecutive_train_epochs: 3 # 3 works well
@@ -52,7 +52,7 @@ training:
   scheduler: False
   num_gpu: 1
   feature_path: "/data/i5O/THUMOS14/I3D_fromSPOTrepo/train/"  #TODO: add the path to the features to be used; corresponds to video_data_path
-  loss_balance: 0.1
+  loss_balance: 0.5
   loss_balance_full: 0.5
   regular_eval: False
 
@@ -63,7 +63,7 @@ loss:
 testing: 
   cls_thresh: 0.01
   mask_thresh: [0,0.2,0.4,0.6,0.8]
-  class_thresh: [0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09]
+  class_thresh: [0.10,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19] #[0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09]
   top_k_snip: 10
   top_k: 500
   nms_thresh: 0.4

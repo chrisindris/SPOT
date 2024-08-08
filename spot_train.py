@@ -584,7 +584,7 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
         #print("loss_shift", [x for x in loss_shift])
 
         loss_feat_label = Motion_MSEloss(feat,input_data.cuda())
-        loss_label =  loss_shift
+        loss_label = loss_shift
         ## unlabeled data 
         try:
             input_data_unlabel = unlabeled_train_iter.next()
@@ -758,8 +758,9 @@ def train_semi(data_loader, train_loader_unlabel, model, optimizer, epoch):
             loss_all = loss_total[0] + consistency_loss + loss_feat_unlabel + loss_contrast_label + loss_contrast_unlabel + loss_feat_label
 
         optimizer.zero_grad()
-        weighed_loss = loss_balance * loss_total[1] + (1 - loss_balance) * loss_total[2] # NOTE Hyperparam: should be made adjustable
-        weighed_loss.backward() # loss_all.backward()
+        #weighed_loss = loss_balance * loss_total[1] + (1 - loss_balance) * loss_total[2] # NOTE Hyperparam: should be made adjustable
+        #weighed_loss.backward() # loss_all.backward()
+        loss_total[0].backward()
         optimizer.step()
         global_step += 1
         # update_ema_variables(model, model_ema, 0.999, float(global_step/20))   # //5  //25
@@ -815,7 +816,7 @@ def train_semi_full(data_loader, model, optimizer, epoch):
     #for n_iter, (input_data, top_br_gt, bottom_br_gt, action_gt, label_gt) in enumerate(data_loader):
         # forward pass
         top_br_pred, bottom_br_pred, feat = model(input_data.cuda())
-        loss = spot_loss(top_br_gt,top_br_pred,bottom_br_gt,bottom_br_pred, action_gt,label_gt)
+        loss = spot_loss(top_br_gt,top_br_pred,bottom_br_gt,bottom_br_pred, action_gt,label_gt, full=True)
         # update step
         optimizer.zero_grad()
         #loss[0].backward()
@@ -985,8 +986,8 @@ if __name__ == '__main__':
             for e in range(config["training"]["consecutive_train_epochs"]):
                 print("training epoch", str(train_epoch))
 
-                if train_epoch == 5:
-                    breakpoint()
+                #if train_epoch >= 2:
+                #    breakpoint()
 
                 if use_semi:
                     if unlabel_percent == 0.:

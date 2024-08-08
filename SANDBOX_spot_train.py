@@ -39,8 +39,10 @@ unlabel_percent = config['dataset']['training']['unlabel_percent']
 
 if 'anet' in sys.argv[1]:
     dataset_name = 'anet'
-else:
+elif 'thumos' in sys.argv[1]:
     dataset_name = 'thumos'
+else:
+    dataset_name = 'i5O'
 
 
 if dataset_name == 'anet':
@@ -52,6 +54,9 @@ elif dataset_name == 'thumos':
     train_dataset = THUMOS_Dataset(training=True, subset='train', labeled=True)
     train_unlabel_dataset = THUMOS_Dataset(training=True, subset='train', unlabeled=True)
     test_dataset = THUMOS_Dataset(training=False, subset='testing')
+else:
+    from spot_lib.i5O_dataset import I5ODataset
+    train_dataset = I5ODataset(training=True, subset='train', labeled=True)
 
 
 print('train_loader')

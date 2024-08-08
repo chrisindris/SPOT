@@ -176,9 +176,9 @@ class SPOT(nn.Module):
         #                         )   
 
         self.feature_downsize = nn.Sequential(
-                nn.Conv1d(in_channels=2048, out_channels=1024, kernel_size=1), # nn.Linear(2048, feat_dim) is equivalent & slightly faster than nn.Conv2d(2048, feat_dim, 1). NOTE: this needs to be in the state_dict, so make sure to run the pretrain before running the train.
-                nn.Conv1d(in_channels=1024, out_channels=512, kernel_size=1),
-                nn.Conv1d(in_channels=512, out_channels=feat_dim, kernel_size=1)
+                #nn.Conv1d(in_channels=2048, out_channels=1024, kernel_size=1), # nn.Linear(2048, feat_dim) is equivalent & slightly faster than nn.Conv2d(2048, feat_dim, 1). NOTE: this needs to be in the state_dict, so make sure to run the pretrain before running the train.
+                #nn.Conv1d(in_channels=1024, out_channels=512, kernel_size=1),
+                nn.Conv1d(in_channels=2048, out_channels=feat_dim, kernel_size=1) # let's try keeping this simple
         )
 
         self.embedding = SnippetEmbedding(self.n_heads, self.len_feat, self.len_feat, self.len_feat, 0.3)
@@ -241,8 +241,10 @@ class SPOT(nn.Module):
 
         # HACK: later this switch will be specifiable based on a class attribute.
         batch_size, feature_dim, temporal_scale = snip.size()
+
+        #print(snip.size(), feature_dim, feat_dim)
         
-        if feature_dim > feat_dim:
+        if feature_dim > feat_dim: # Not used for THUMOS?
             #breakpoint()
             snip_ = snip_.permute(0,2,1)
             snip_ = self.feature_downsize(snip_)
@@ -265,9 +267,11 @@ class SPOT(nn.Module):
         if recons:
             return features
         ### Classifier Branch ###
+        #print("features", features.shape)
         top_br = self.classifier(features)
         ### Global Segmentation Mask Branch ###
         bottom_br = self.global_mask(features)
+        #print("bottom_br", bottom_br.shape)
 
         return top_br, bottom_br, features
 
