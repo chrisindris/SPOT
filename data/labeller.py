@@ -6,6 +6,7 @@ import os
 import numpy as np
 import re
 import pandas as pd
+import pdb
 
 
 def argument_parser():
@@ -141,10 +142,34 @@ def thumos():
 
 
 def i5O():
-    print('hw')
+    print('copy in the stuff from __main__ here after debugging') 
 
 
 if __name__ == "__main__":
     i5O()
+    df_info = pd.read_csv('/data/i5O/i5OData/annotations/i5Oannotations.csv')
+    df_info = df_info.drop('Unnamed: 0', axis=1)
+    df_info['action_orientation'] = df_info.apply(lambda r: 'left' if 'left' in r['video_path'] else 'right', axis=1)
+
+    # TODO: check this case undercover-left_20220413_144609.npy
+    # Confirmed: all videos exist in the directory, and none don't.
+
+    df_info = df_info[['video_path', 'action_orientation', 'video_basename', 'frame_rate', 'duration_secs', 'frame_count', 'split']].drop_duplicates(['video_path']) # This forms the basis of our video info file.
+
+
+    #df_info[['video_path']].drop_duplicates().apply(lambda r : re.search(".*(left|right).*", str(r['video_path'])).group(1), axis=1)
+    video_dirnames = df_info[['video_path']].drop_duplicates().apply(lambda r : re.search(".*videos/(\d+).*", str(r['video_path'])).group(1), axis=1) 
+    df_info.insert(2, 'video_dirname', video_dirnames)
+
+    df_info['video_basename'] = df_info[['video_path']].drop_duplicates().apply(lambda r : re.search(".*/(\d+)\.mp4.*", str(r['video_path'])).group(1), axis=1)
+    
+    df_info = df_info.reset_index().drop(['index'], axis=1) # axis is now range(num_videos)
+    
+    for k in range(11):
+        df_info_k = df_info.copy()
+        unlabel_percentage = (10 - k) / 10
+        df_info_k['split'] = df_info.apply(lambda r: r['split'] + str(['_unlabel', ''][(r.name % (12 - round(k / 12)*2) in range(k)) or (r['split'] == 'Test') or (r.name % 60 in range(60-k,60))]), axis=1)
+        df_info_k.to_csv("~/models/SPOT/data/i5O_annotations/video_info_new_" + str(unlabel_percentage) + ".csv", index=False)
+        #breakpoint()
      
 

@@ -272,10 +272,11 @@ def bottom_branch_loss(gt_action, pred_action, f_loss=False, cross_entropy_loss=
         #return bce(pred_action, gt_action)
         #breakpoint()
         weights = gt_action * 2 + (1 - gt_action) * 0.5
-        print(alternative_bottom_branch_loss(gt_action, pred_action))
+        #print(alternative_bottom_branch_loss(gt_action, pred_action))
         #breakpoint()
         #print((1 - (gt_action * pred_action).sum() / gt_action.sum()))
-        return F.binary_cross_entropy(pred_action, gt_action, weight=weights) + (1 - pred_action.var()) + (1 - (gt_action * pred_action).sum() / gt_action.sum()) + (((1-gt_action) * pred_action).sum() / (1-gt_action).sum())
+        #print((1 - (gt_action * pred_action).sum() / gt_action.sum()).item())
+        return F.binary_cross_entropy(pred_action, gt_action, weight=weights) + (1 - pred_action.var()) + (1 - (gt_action * pred_action).sum() / gt_action.sum()) + (((1-gt_action) * pred_action).sum() / (1-gt_action).sum()) 
     elif parabola:
         return torch.mean(torch.pow(gt_action-pred_action, 2))
     else:

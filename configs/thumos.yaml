@@ -1,6 +1,7 @@
 dataset:
   name: "thumos"
   num_classes: 20 # Don't use ambiguous
+  input_feat_dim: 2048
   training:
     video_info_path: "data/thumos_annotations/val_video_info.csv" # from AFSD. TODO: we are using the validation set for training? Not something like the actionformer subset?
     video_info_path_unlabeled: "./data/thumos_annotations"

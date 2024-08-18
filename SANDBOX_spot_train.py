@@ -56,7 +56,9 @@ elif dataset_name == 'thumos':
     test_dataset = THUMOS_Dataset(training=False, subset='testing')
 else:
     from spot_lib.i5O_dataset import I5ODataset
-    train_dataset = I5ODataset(training=True, subset='train', labeled=True)
+    train_dataset = I5ODataset(training=True, subset='Validation', labeled=True)
+    train_unlabel_dataset = I5ODataset(training=True, subset='Validation', unlabeled=True)
+    test_dataset = I5ODataset(training=False, subset='Test')
 
 
 print('train_loader')

@@ -29,6 +29,9 @@ if dataset_name == 'anet':
     testing_subset = 'validation'
 elif dataset_name == 'thumos':
     testing_subset = 'testing'
+elif dataset_name == 'i5O':
+    testing_subset == 'Test'
+
 
 def load_json(file):
     with open(file) as json_file:

@@ -14,7 +14,7 @@ from utils.arguments import handle_args, modify_config
 from torch.functional import F
 import copy
 import pdb
-from configs.dataset_class import thumos_dict
+from configs.dataset_class import i5O_dict
 
 with open(sys.argv[1], 'r', encoding='utf-8') as f:
         tmp = f.read()
@@ -42,20 +42,21 @@ class I5ODataset(Dataset):
         self.temporal_gap = 1. / self.temporal_scale
         self.subset = subset
         self.mode = mode
-        self.class_to_idx = thumos_dict
+        self.class_to_idx = i5O_dict
 
-        self.split = {'train': 'training', 'validation': 'testing', 'testing': 'testing'}[self.subset]
+        self.split = {'Validation': 'training', 'Test': 'testing'}[self.subset]
 
         self.video_info_path_unlabeled = config['dataset']['training']['video_info_path_unlabeled'] # NOTE: unlabel_percent only matters for training. We always use the full dataset for testing.
         self.unlabel_percent = config['dataset']['training']['unlabel_percent']
-        self.video_info_path = os.path.join(self.video_info_path_unlabeled, "val_video_info_"+str(self.unlabel_percent)+".csv") if self.training else config['dataset'][self.split]['video_info_path']
+        self.video_info_path = os.path.join(self.video_info_path_unlabeled,"video_info_new_"+str(self.unlabel_percent)+".csv")
         self.video_anno_path = config['dataset'][self.split]['video_anno_path']
-        self.npy_data_path = config[self.split]['feature_path'] 
+        self.npy_data_path = config[self.split]['feature_path']
  
-        self.video_infos = self.get_video_info()
+        self.video_infos = self.get_video_info() 
         self.subset_mask_list = list(self.video_infos.keys())
         self.video_annos = self.get_video_anno()
         self.data_dict = self.load_video_data()
+        #breakpoint()
         self.clip_length = config['dataset'][self.split]['clip_length']
         self.crop_size = config['dataset'][self.split]['crop_size']
         self.stride = config['dataset'][self.split]['clip_stride']
@@ -66,12 +67,12 @@ class I5ODataset(Dataset):
 
         self.origin_ratio = origin_ratio
 
-        self.training_list, self.th = split_videos(
-            self.video_infos,
-            self.video_annos,
-            self.clip_length,
-            self.stride
-        )
+        #self.training_list, self.th = split_videos(
+        #    self.video_infos,
+        #    self.video_annos,
+        #    self.clip_length,
+        #    self.stride
+        #)
         # np.random.shuffle(self.training_list)
 
 
@@ -94,25 +95,21 @@ class I5ODataset(Dataset):
         
         Does not differ between regular and unlabeled
         """
-
-        df_info = pd.read_csv('/data/i5O/i5OData/annotations/i5Oannotations.csv')
-        df_info[['video_path']].drop_duplicates().apply(lambda r : re.search(".*(left|right).*", str(r['video_path'])).group(1), axis=1)
-        df_info[['video_path']].drop_duplicates().apply(lambda r : re.search(".*videos/(\d+).*", str(r['video_path'])).group(1), axis=1)
-        df_info[['video_path']].drop_duplicates().apply(lambda r : re.search(".*/(\d+)\.mp4.*", str(r['video_path'])).group(1), axis=1)
-
-
-        df_info = pd.DataFrame(pd.read_csv(self.video_info_path)).values[:]
+        df_info = pd.DataFrame(pd.read_csv(self.video_info_path, converters={'video_basename': str})).values[:]
         video_infos = {}
         for info in df_info:
-            if self.subset in info[5] and ((self.subset == 'testing') or (self.labeled and 'unlabel' not in info[5]) or (self.unlabeled and 'unlabel' in info[5])):
+            if self.subset in info[7] and ((self.subset == 'Test') or (self.labeled and 'unlabel' not in info[7]) or (self.unlabeled and 'unlabel' in info[7])):
                 video_infos[info[0]] = {
-                    'fps': info[1],
-                    'sample_fps': info[2],
-                    'count': info[3],
-                    'sample_count': info[4],
-                    'duration': info[3] / info[1], # sample and non-sample have same length in seconds
-                    'subset': 'training' if 'val' in self.video_info_path else 'testing'} # HACK: I will need to base this off of a video_info_new_*.csv-type file that has the training set (incl. unlabel); this should be in (training, training_unlabel, validation, testing)
-            return video_infos
+                    'action_orientation': info[1],
+                    'video_dirname': info[2],
+                    'video_basename': info[3],
+                    'fps': info[4],
+                    'sample_fps': info[4],
+                    'count': info[6],
+                    'sample_count': info[6],
+                    'duration': info[5], # sample and non-sample have same length in seconds
+                    'subset': info[7]} # HACK: I will need to base this off of a video_info_new_*.csv-type file that has the training set (incl. unlabel); this should be in (training, training_unlabel, validation, testing)
+        return video_infos
 
 
     def get_video_anno(self):
@@ -137,29 +134,28 @@ class I5ODataset(Dataset):
         # if self.unlabeled:
             # breakpoint()
 
-        #breakpoint()
-        df_anno = pd.DataFrame(pd.read_csv(self.video_anno_path))#.values[:]
-        df_anno = df_anno[df_anno['video'].isin(self.video_infos.keys())]
-        df_anno = df_anno.values[:]
-        originidx_to_idx, idx_to_class = get_class_index_map() # NOTE: should "Ambiguous" be used as a class? No, use val_Annotation_ours.csv
+        df_anno = pd.DataFrame(pd.read_csv(self.video_anno_path)).drop('Unnamed: 0', axis=1)#.values[:]
+        df_anno = df_anno[df_anno['video_path'].isin(self.video_infos.keys())] # drop the videos not in video_infos (by doing this, this ensures that the correct subset is being used)
+        df_anno = df_anno[df_anno['action'] != 'Background']
+        df_anno = df_anno.values[:] 
         video_annos = {}
         for anno in df_anno:
 
             video_name = anno[0]
-            originidx = anno[2]
-            start_frame = anno[-2]
-            end_frame = anno[-1]
-            count = self.video_infos[video_name]['count']
-            sample_count = self.video_infos[video_name]['sample_count']
-            sample_fps = self.video_infos[video_name]['sample_fps']
-            duration = self.video_infos[video_name]['duration']
-            ratio = sample_count * 1.0 / count # the downsampling ratio.
+            originidx = anno[6]
+            start_frame = anno[9]
+            end_frame = anno[10]
+            count = anno[4]
+            sample_count = anno[4]
+            sample_fps = anno[2] 
+            duration = anno[3] 
+            ratio = 1.0 # the downsampling ratio.
      
             start_gt = start_frame * ratio
             end_gt = end_frame * ratio
-            start_gt_time = (start_gt / sample_fps)
-            end_gt_time = (end_gt / sample_fps)
-            class_idx = self.class_to_idx[idx_to_class[originidx_to_idx[originidx]]] #originidx_to_idx[originidx]
+            start_gt_time = anno[7] 
+            end_gt_time = anno[8]
+            class_idx = self.class_to_idx[originidx] #originidx_to_idx[originidx]
 
             # maintaining temporal scale
             clip_factor = self.temporal_scale / (duration * (sample_count+1))
@@ -197,10 +193,11 @@ class I5ODataset(Dataset):
                     T: the number of clips. T = num_of_frames_in_video / (16 + 3) (each clip is len 16, step_size 3)
                     D: the dimension of the clip's feature vector. eg. 2048
         """
+        #breakpoint()
         data_dict = {}
         print('loading video frame data ...')
         for video_name in tqdm.tqdm(list(self.video_infos.keys()), ncols=0):
-            data = np.load(os.path.join(self.npy_data_path, video_name + '.npy'))
+            data = np.load(os.path.join(self.npy_data_path, 'undercover-'+self.video_infos[video_name]['action_orientation']+'_'+str(self.video_infos[video_name]['video_dirname'])+'_'+str(self.video_infos[video_name]['video_basename'])+'.npy'))
             #data = np.transpose(data, [3, 0, 1, 2])
             feat_tensor = torch.Tensor(data)
             video_data = torch.transpose(feat_tensor, 0, 1) # torch.Size([T, D]) -> torch.Size([D, T])
@@ -293,6 +290,8 @@ class I5ODataset(Dataset):
         Returns:
             [TODO:return]
         """
+
+
         #print("index =", index)
 
         #breakpoint()
@@ -326,15 +325,18 @@ class I5ODataset(Dataset):
           lbl_id = label_id[idx] # get the class
           start_indexes.append(start_id[idx]+1)
           end_indexes.append(end_id[idx]-1)
-          tuple_list.append([start_id[idx]+1, end_id[idx]-1, lbl_id]) # NOTE: reduce the segment's size by 2, but I could do away with this. 
+          tuple_list.append([start_id[idx]+1, end_id[idx], lbl_id]) # NOTE: reduce the segment's size by 2, but I could do away with this. # end_id doesn't get a -1 since it will get cut by the indexing. 
 
         temp_mask_cls = np.zeros([self.temporal_scale])
 
         for idx in range(len(start_id)):
+            #breakpoint()
             temp_mask_cls[tuple_list[idx][0]:tuple_list[idx][1]]=1 # create a mask of annotation, where the clips contained in the annotation get a 1, otherwise 0
             lbl_idx = int(tuple_list[idx][2])
 
-            cls_mask[lbl_idx,:]= temp_mask_cls # one-hot encode to track when an action occurs, and (via one-hot) track the action label. 
+            cls_mask[lbl_idx, tuple_list[idx][0]:tuple_list[idx][1]] = 1 # one-hot encode to track when an action occurs, and (via one-hot) track the action label.
+
+        #breakpoint()
 
         temporary_mask = copy.deepcopy(temp_mask_cls)
  

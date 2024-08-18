@@ -1,6 +1,7 @@
 dataset:
   name: "anet"
   num_classes: 200
+  input_feat_dim: 2048
   training:
     video_info_path: "./data/activitynet_annotations/video_info_new.csv"
     video_info_path_unlabeled: "./data/activitynet_annotations/"
